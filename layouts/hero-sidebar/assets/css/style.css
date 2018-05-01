@@ -1,0 +1,359 @@
+@import url('normalize.css');
+@import url('demo.css');
+
+/* #chart-container {
+	margin: 0 auto 50px auto;
+	background: rgba(255,255,255,0.5);
+	box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+	padding: 20px 30px;
+} */
+
+/* #chart-container h2 {
+	color: #444;
+	margin: 0 0 10px;
+	font-weight: 300;
+	padding: 12px;
+	text-shadow: 0 1px 1px rgba(255,255,255,0.8);
+	font-size: 24px;
+} */
+
+svg {
+	font-family: 'Lato', Arial, serif;
+	font-size: 12px;
+	font-weight: 800;
+	text-shadow: 0 1px 1px rgba(255,255,255,0.8);
+}
+
+text.country-title {
+	font-size: 15px;
+}
+
+text.instructions {
+	font-size: 16px;
+}
+
+g.context g.brush rect.background {
+	fill: rgba(0,0,0,.1);
+}
+
+g.context g.axis path {
+	stroke-opacity: 0;
+}
+
+g.context g.axis line {
+	stroke-opacity: .1;
+}
+
+g.france path.chart {
+	fill: rgba(127,201,127,0.5);
+}
+
+g.germany path.chart {
+	fill: rgba(127,201,174,0.5);
+}
+
+g.japan path.chart {
+	fill: rgba(127,183,201,0.5);
+}
+
+g.uk path.chart {
+	fill: rgba(127,130,201,0.5);
+}
+
+g.usa path.chart {
+	fill: rgba(171,127,201,0.5);
+}
+
+.axis path, .axis line {
+	fill: none;
+	stroke: #aaa;
+	shape-rendering: crispEdges;
+}
+
+.brush .extent {
+	stroke: #f09f8c;
+	fill-opacity: .125;
+	shape-rendering: crispEdges;
+}
+
+g.context rect.background{
+	fill: rgb(200,200,255);
+	visibility: visible !important;
+}​
+
+.node circle {
+	fill: #fff;
+	stroke: steelblue;
+	stroke-width: 1.5px;
+}
+
+.node {
+	font: 10px sans-serif;
+	color: blue;
+}
+
+.node text{
+	fill: #666;
+	font-family: Helvetica
+}
+
+.link {
+	fill: none;
+	/* stroke: black; */
+	stroke-width: 3.5px;
+}
+
+line {
+	stroke: black;
+	opacity: 0.35;
+	stroke-width: 3px;
+}
+
+/* SLIDER */
+input[type=range] {
+  -webkit-appearance: none;
+  width: 96%;
+  margin: 2% 2%;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 9.5px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #ebebeb;
+  border-radius: 10.6px;
+  border: 0.2px solid #010101;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 1.2px 1.2px 1px #000000, 0px 0px 1.2px #0d0d0d;
+  border: 0.5px solid rgba(0, 0, 0, 0.42);
+  height: 16px;
+  width: 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -3.45px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #fdfdfd;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 9.5px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #ebebeb;
+  border-radius: 10.6px;
+  border: 0.2px solid #010101;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1.2px 1.2px 1px #000000, 0px 0px 1.2px #0d0d0d;
+  border: 0.5px solid rgba(0, 0, 0, 0.42);
+  height: 16px;
+  width: 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 9.5px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #d9d9d9;
+  border: 0.2px solid #010101;
+  border-radius: 21.2px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+  background: #ebebeb;
+  border: 0.2px solid #010101;
+  border-radius: 21.2px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+  box-shadow: 1.2px 1.2px 1px #000000, 0px 0px 1.2px #0d0d0d;
+  border: 0.5px solid rgba(0, 0, 0, 0.42);
+  height: 16px;
+  width: 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  cursor: pointer;
+  height: 9.5px;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #ebebeb;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #fdfdfd;
+}
+
+/* HEATMAP */
+
+rect.bordered {
+	stroke: #E6E6E6;
+	stroke-width:0.1px;
+}
+
+text.mono {
+	font-size: 15pt;
+	font-family: Consolas, courier;
+	fill: #aaa;
+}
+
+text.axis-heatmap {
+	font-size: 15pt;
+	font-family: Consolas, courier;
+	fill: #000;
+}
+
+text.axis-worktime {
+	fill: #000;
+}
+
+
+/* CHECKBOX */
+/* .ratio-wrapper{
+  margin:25px ;
+} */
+
+.container-ratio {
+  display: inline-block;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 12px;
+	margin-left: 80px;
+  cursor: pointer;
+  font-size: 12pt;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.container-ratio input {
+  position: relative;
+  opacity: 0;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.container-ratio:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.container-ratio input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: relative;
+  display: block;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container-ratio input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container-ratio .checkmark:after {
+  top: 9px;
+  left: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+
+.logo-wrapper {
+	max-width:100%;
+	max-height:100%;
+
+}
+
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;			
+    width: auto;					
+    height: auto;					
+    padding: 8px;				
+    font: 12px sans-serif;
+    color: black;
+    background: white;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;
+    border-color: #cccccc;
+    border-width: 1px;
+    border-style: solid;
+}
+
+body {
+    overflow: hidden;
+}
+
+
+/* .custom-file {
+	position: relative;
+	display: inline-block;
+	max-width: 100%;
+	height: 2.5rem;
+	cursor: pointer;
+}
+
+.custom-file-input {
+	min-width: 14rem;
+	max-width: 100%;
+	margin: 0;
+	filter: alpha(opacity=0);
+	opacity: 0;
+}
+
+.custom-file-control {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 5;
+	height: 2.5rem;
+	padding: .5rem 1rem;
+	line-height: 1.5;
+	color: #555;
+	user-select: none;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: .25rem;
+} */
+
+/* .custom-file-control:lang(en)::after {
+  content: "Choose file...";
+}
+
+.custom-file-control:lang(en)::before {
+  content: "Browse";
+} */

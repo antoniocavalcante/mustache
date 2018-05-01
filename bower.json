@@ -1,0 +1,25 @@
+{
+  "name": "keen-dashboards",
+  "homepage": "https://keenlabs.github.io/dashboards/",
+  "authors": [
+    "Dustin Larimer <dustin@keen.io>",
+    "Taylor Barnett <taylor@keen.io>"
+  ],
+  "keywords": [
+    "keen io",
+    "dashboards",
+    "dataviz",
+    "visualization"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "assets/img",
+    "assets/js",
+    "assets/css/keen-static.css"
+  ]
+}
