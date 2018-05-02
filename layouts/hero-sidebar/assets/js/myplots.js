@@ -150,7 +150,7 @@ function dendrogram() {
         height = 450;
 
     var colorScale = d3.scaleSequential(d3.interpolatePlasma)
-        .domain([1, 3]);
+        .domain([1, 6]);
 
     var svg = d3.select("#chart-dendrogram").append("svg")
         .attr("width", width)
@@ -176,8 +176,10 @@ function dendrogram() {
     /*var partitioning = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 5, 5, 5, 5, 5, 5, 0]*/
 
     var partitioning = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5]
-    
+
     /*var partitioning = [0]*/
+
+    var clusters = {}
 
 
     function setColor(d) {
@@ -221,8 +223,6 @@ function dendrogram() {
             if (d.data.y < ymin)
                 ymin = d.data.y;
         });
-
-        console.log(ymax, ymin);
 
         setColor(root);
 
@@ -269,6 +269,7 @@ function dendrogram() {
             return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
         }
 
+
         var drag = d3.drag()
             .on('drag', function (d) {
                 // move circle
@@ -276,33 +277,61 @@ function dendrogram() {
                 var y1New = parseFloat(d3.select(this).attr('y1')) + dy;
                 var y2New = parseFloat(d3.select(this).attr('y2')) + dy;
                 d3.select(this)
-                    .attr("y1", function(){
-                    if(y1New < -5){
-                        return -5;
-                    } else if (y1New > height - 60){
-                        return height - 60;
-                    } else {
-                        return y1New
-                    }
-                })
-                    .attr("y2", function() {
-                    if(y2New < -5){
-                        return -5;
-                    } else if (y2New > height - 60){
-                        return height - 60;
-                    } else {
-                        return y2New
-                    }
-                });
-                console.log(d3.event.y);
-                var currentValue = map(y1New, height-60, 0, ymin, ymax);
+                    .attr("y1", function () {
+                        if (y1New < -5) {
+                            return -5;
+                        } else if (y1New > height - 60) {
+                            return height - 60;
+                        } else {
+                            return y1New
+                        }
+                    })
+                    .attr("y2", function () {
+                        if (y2New < -5) {
+                            return -5;
+                        } else if (y2New > height - 60) {
+                            return height - 60;
+                        } else {
+                            return y2New
+                        }
+                    });
+
+                var currentValue = map(y1New, height - 60, 0, ymin, ymax);
                 link.attr("stroke", function (d, i) {
+
                     if (d.parent.data.y < currentValue) {
                         return colorScale(d.color);
                     } else {
                         return "grey";
                     }
                 });
+
+                node.attr("fill", function (d, i) {
+
+                    var c = d.count();
+
+                    if (d.data.y < currentValue) {
+                        if (d.parent.data.y > currentValue && d.children != null) {
+                            clusters.push(d)
+                            return "red";
+                        }
+                    } else {
+                        return "black";
+                    }
+
+                });
+
+                console.log(clusters.length);
+
+                var str = ""
+                for (i = 0; i < clusters.length; i++) {
+                    str = str + clusters[i].data.name + ", "
+                }
+                console.log(str);
+
+                clusters = []
+
+
             })
             .on('end', function () {
 
@@ -320,28 +349,57 @@ function dendrogram() {
             .attr("y2", yScaleInverted(hardcodeline))
             .call(drag);
 
-/*        d3.select("#slider")
+        d3.select("#slider")
             .attr("min", ymin)
             .attr("max", ymax)
             .attr("step", (ymax - ymin) / 1000)
             .attr("value", hardcodeline)
             .text(this.value);
 
+        colouring = {}
+
         // Link the threshold bar to the slider.
         d3.select("#slider").on("input", function () {
             var currentValue = this.value;
+            var counter = 1;
             thresholdBar.select("line").attr("y1", y1 => yScaleInverted(currentValue))
             thresholdBar.select("line").attr("y2", y2 => yScaleInverted(currentValue))
+
+            node.attr("fill", function (d, i) {
+
+                if (d.data.y < currentValue) {
+                    if (d.parent.data.y > currentValue && d.children != null) {
+                        colouring[d.data.name] = counter;
+                        var childs = d.descendants();
+                        for(x = 0; x < childs.length; x++){
+                            colouring[childs[x].data.name] = counter;
+                        }
+                        counter = counter + 2;
+                        return "black";
+                    }
+                } else {
+                    return "black";
+                }
+
+            });
+
+            colorScale = d3.scaleSequential(d3.interpolatePlasma)
+                .domain([1, counter]);
+
             link.attr("stroke", function (d, i) {
-                console.log(currentValue);
                 if (d.parent.data.y < currentValue) {
-                    return colorScale(d.color);
+                    var val = colouring[d.data.name];
+                    return colorScale(val);
                 } else {
                     return "grey";
                 }
+
+
             });
 
-        });*/
+        });
+
+
 
         var yAxis = d3.axisLeft().scale(this.yScaleInverted).ticks(5);
 
