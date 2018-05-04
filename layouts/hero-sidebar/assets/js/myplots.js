@@ -5,8 +5,8 @@ function MultiReachabilityPlots() {
             bottom: 100,
             left: 60
         },
-        height = 925 - margin.top - margin.bottom,
-        width = parseInt(d3.select('#chart-container').style('width'), 10) - margin.left - margin.right;
+    height = 925 - margin.top - margin.bottom,
+    width = parseInt(d3.select('#chart-container').style('width'), 10) - margin.left - margin.right;
 
     charts = []
     mpts = [9, 27, 35, 46]
@@ -138,6 +138,7 @@ function MultiReachabilityPlots() {
 
 
 function dendrogram() {
+        
     var margin = {
         top: 10,
         right: 0,
@@ -152,9 +153,15 @@ function dendrogram() {
     var colorScale = d3.scaleSequential(d3.interpolatePlasma)
         .domain([1, 6]);
 
+    var h = parseFloat(d3.select("#main-container").style('height'));
+    var newH = ((height/h)*100);
+    
+    d3.select(".svg-container").style("padding-bottom", newH + "%");
+
     var svg = d3.select("#chart-dendrogram").append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + width + " " + height * newH)
+        .classed("svg-content", true)
         .append("g")
         .attr("transform", "translate(60,30)");
 
@@ -190,7 +197,13 @@ function dendrogram() {
         yScale = d3.scaleLinear().domain([ymin, ymax]).range([0, height - 60]);
         yScaleInverted = d3.scaleLinear().domain([ymax, ymin]).range([0, height - 60]);
 
-        var hardcodeline = ymax / 2
+        var loadLine = d3.select("#slider").property("value")
+        if(typeof(loadLine) == 'float'){
+            hardcodeline = loadLine
+        } else {
+            var hardcodeline = (loadLine/100) * ymax;
+        }
+        
 
         var link = svg.selectAll(".link")
             .data(nodes.slice(1))
@@ -251,7 +264,9 @@ function dendrogram() {
             colorScale = d3.scaleSequential(d3.interpolatePlasma)
                 .domain([1, counter + 1]);
 
-            link.attr("stroke", function (d, i) {
+            link.transition()
+                .duration(25)
+                .attr("stroke", function (d, i) {
                 if (d.parent.data.y < currentValue) {
                     var val = colouring[d.data.name];
                     return colorScale(val);
@@ -265,7 +280,9 @@ function dendrogram() {
                 return 0.3;
             });
 
-            node.attr("fill", function (d, i) {
+            node.transition()
+                .duration(25)
+                .attr("fill", function (d, i) {
                 var val = colouring[d.data.name];
                 if (val != null) {
                     return colorScale(val);
@@ -378,10 +395,16 @@ function dendrogram2() {
 
     var colorScale = d3.scaleSequential(d3.interpolatePlasma)
         .domain([1, 6]);
+    
+    var h = parseFloat(d3.select("#main-container").style('height'));
+    var newH = ((height/h)*100);
+    
+    d3.select(".svg-container").style("padding-bottom", newH + "%");
 
     var svg = d3.select("#chart-dendrogram").append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + width + " " + height * newH)
+        .classed("svg-content", true)
         .append("g")
         .attr("transform", "translate(60,30)");
 
@@ -496,6 +519,14 @@ function dendrogram2() {
                 if(d.children == null){
                     return;
                 }
+            
+                if(clusters[d.data.name]){
+                    childs = d.descendants();
+                    delete clusters[d.data.name];
+                    for (x = 0; x < childs.length; x++) {
+                        delete colouring[childs[x].data.name];
+                    }
+                } else {
 
                 selected = d;
                 children = d.descendants();
@@ -519,6 +550,8 @@ function dendrogram2() {
 
                 // add selection to selected clusters
                 clusters[d.data.name] = d;
+                    
+                }
 
                 // label nodes with the color colors
                 counter = 1;
@@ -529,13 +562,17 @@ function dendrogram2() {
                     }
                     counter++;
                 });
+            
+                console.log(clusters);
 
                 // adjust color scale to match number of selection
                 colorScale = d3.scaleSequential(d3.interpolatePlasma)
                     .domain([1, Object.keys(clusters).length + 1]);
 
                 // fill node circles with color
-                node.attr("fill", function (d, i) {
+                node.transition()
+                    .duration(200)
+                    .attr("fill", function (d, i) {
                     val = colouring[d.data.name];
                     return colorScale(val);
                 }).style("opacity", function (d, i) {
@@ -547,7 +584,9 @@ function dendrogram2() {
                 });
 
                 // change node link colors
-                link.attr("stroke", function (d, i) {
+                link.transition()
+                    .duration(200)
+                    .attr("stroke", function (d, i) {
                     val = colouring[d.data.name];
                     if (val) {
                         return colorScale(val);
@@ -876,18 +915,42 @@ function ReachabilityPlot() {
     }
 }
 
+// select which dendogram to draw based on option selected
+function dendoSelect(a){
+    if(a.checked){
+        option = a.value;
+        if(option == 'bar'){
+            dendrogram();
+        } else if (option == 'manual') {
+            dendrogram2();
+        } else if (option == 'fosc') {
+            dendrogram();
+        }
+    }
+}
 
 
+// set dendogram initially 
+d3.selectAll("input").each(function(d, i){
+    dendoSelect(this)
+})
 
-
+// set dendogram when radio buttons changed
+d3.selectAll("input[name='radio']").on("change", function(d, i){
+    d3.select("#chart-dendrogram").select("svg").remove();
+    dendoSelect(this)
+})
 
 
 HAIPlot()
 MultiReachabilityPlots()
-//dendrogram()
-dendrogram2()
 ReachabilityPlot()
 
-d3.select(window).on('resize', function () {
-    console.log("resized!");
-})
+
+
+
+
+
+
+
+
