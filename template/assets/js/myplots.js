@@ -179,7 +179,7 @@ function dendrogram() {
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-    var data = d3.json("data/readme4.json", function (json) {
+    var data = d3.json("data/readme3.json", function (json) {
         var root = d3.hierarchy(json);
 
         clusterLayout(root);
@@ -692,7 +692,7 @@ function HAIPlot() {
 
                 var svg = d3.select("#hai-plot").append("svg")
                     .attr("preserveAspectRatio", "xMinYMin meet")
-                    .attr("viewBox", "0 0 " + (width+20) + " " + height+100)
+                    .attr("viewBox", "0 0 " + (width+20) + " " + (height+20))
                     .classed("svg-content", true)
                     .append("g")
                     .attr("transform", "translate(" + 35 + "," + 30 + ")");
@@ -739,10 +739,10 @@ function HAIPlot() {
                 cards.append("title");
 
                 cards.enter().append("rect")
-                    .attr("x", function (d) {
+                    .attr("x", function (d, i) {
                         return (d.hour - 1) * gridSize;
                     })
-                    .attr("y", function (d) {
+                    .attr("y", function (d, i) {
                         return (d.day - 1) * gridSize;
                     })
                     .attr("width", gridSize)
@@ -797,7 +797,7 @@ function HAIPlot() {
                     countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
                 }
             
-                svg = d3.select("#hai-plot.svg-container");
+//                svg = d3.select("#hai-plot.svg-container");
 
                 // Create the gradient
                 svg.append("defs")
