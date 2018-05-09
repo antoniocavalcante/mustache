@@ -363,6 +363,14 @@ function dendrogram() {
             clusters = clusterThresholdExtraction(currentValue);
 
         });
+        
+        d3.select("#slider").on("change", function(){
+            displayText = "";
+            Object.keys(clusters).forEach(function (key) {
+                displayText = displayText + clusters[key].data.name + ", ";
+            });
+            d3.select("#medoids").select('span').html(displayText);
+        })
 
         var yAxis = d3.axisLeft().scale(this.yScaleInverted).ticks(5);
 
@@ -600,7 +608,11 @@ function dendrogram2() {
                     return 0.3
                 });
 
-                console.log(clusters);
+                displayText = "";
+                Object.keys(clusters).forEach(function (key) {
+                    displayText = displayText + clusters[key].data.name + ", ";
+                });
+                d3.select("#medoids").select('span').html(displayText);
             });
 
 
