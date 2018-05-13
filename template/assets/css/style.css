@@ -165,3 +165,45 @@ div.tooltip {
     transform: rotate(270deg);
 }
 
+body {
+    overflow:hidden;
+}
+
+.nopadding {
+   padding: 0;
+   margin: 0;
+}
+
+.pad-l {
+    padding-left: 10px;
+}
+
+.pad-r {
+    padding-right: 10px;
+}
+
+.pad-t {
+    padding-top: 10px;
+}
+
+
+@media screen and (max-width: 767px){
+    
+}
+
+.side-logo {
+    width:80%;
+    margin: 0 10%;
+    filter: grayscale(100%) invert(100%);
+    opacity: 0.5;
+    mix-blend-mode: screen;
+    
+}
+
+.branding {
+    font-family: 'Roboto Condensed', sans-serif;
+    float:left; 
+}
+
+
+

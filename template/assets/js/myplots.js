@@ -1,12 +1,12 @@
 function MultiReachabilityPlots() {
     var margin = {
             top: 10,
-            right: 25,
+            right: 0,
             bottom: 100,
-            left: 60
+            left: 50
         },
-        height = 925 - margin.top - margin.bottom,
-        width = parseInt(d3.select('#chart-container').style('width'), 10) - margin.left - margin.right;
+        width = parseInt(d3.select('#reach-plot').style('width'), 10) - margin.left - margin.right,
+        height = 500;
 
     charts = []
     mpts = [9, 27, 35, 46]
@@ -14,11 +14,7 @@ function MultiReachabilityPlots() {
     var colorScale = d3.scaleSequential(d3.interpolatePlasma)
         .domain([0, 3]);
 
-    var svg = d3.select("#chart-container").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", (height + margin.top + margin.bottom));
-
-    d3.text('../../data/data3.csv', createChart);
+    d3.text('data/data3.csv', createChart);
 
     function createChart(data) {
 
@@ -38,9 +34,8 @@ function MultiReachabilityPlots() {
                 }),
                 id: i,
                 name: "UK",
-                width: width,
-                height: height * (1 / rows.length),
-                svg: svg,
+                width: (width+175) * (1 / rows.length),
+                height: 200,
                 margin: margin,
                 showBottomAxis: (i == rows.length - 1),
                 m: mpts[i]
@@ -59,71 +54,81 @@ function MultiReachabilityPlots() {
         this.margin = options.margin;
         this.showBottomAxis = options.showBottomAxis;
         this.mpts = options.m;
-
-        /* XScale is based on the number of points to be plotted */
-        this.xScale = d3.scaleLinear()
-            .range([0, this.width])
-            .domain([0, this.chartData.length - 1]);
-
-
-        /* YScale is linear based on the maxData Point we found earlier */
-        this.yScale = d3.scaleLinear()
-            .range([this.height, 0])
-            .domain([0, d3.max(this.chartData)]);
-
-        var xS = this.xScale;
-        var yS = this.yScale;
-
-        /*
-          This is what creates the chart.
-          There are a number of interpolation options.
-          'basis' smooths it the most, however, when working with a lot of data, this will slow it down
-        */
-        this.area = d3.area()
-            .curve(d3.curveBasis) // .interpolate("curveStep")
-            .x(function (d, i) {
-                return xS(i);
-            })
-            .y0(this.height)
-            .y1(function (d) {
-                return yS(d);
-            });
-
-        /*
-          This isn't required - it simply creates a mask. If this wasn't here,
-          when we zoom/panned, we'd see the chart go off to the left under the y-axis
-        */
-        this.svg.append("defs").append("clipPath")
-            .attr("id", "clip-" + this.id)
-            .append("rect")
-            .attr("width", this.width)
-            .attr("height", this.height);
-        /*
-          Assign it a class so we can assign a fill color
-          And position it on the page
-        */
-        this.chartContainer = svg.append("g")
-            .attr('class', this.name.toLowerCase())
-            .attr("transform", "translate(" + this.margin.left + "," + (this.margin.top + (this.height * this.id) + (20 * this.id)) + ")");
-
-        this.chartContainer.append("path")
-            .data([this.chartData])
-            .attr("class", "chart")
-            .attr("clip-path", "url(#clip-" + this.id + ")")
-            .attr("d", this.area)
-            .style("fill", colorScale(this.id));
-
-        this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
-
-        this.chartContainer.append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(-15,0)")
-            .call(this.yAxis);
-
-        this.chartContainer.append("text")
-            .attr("class", "country-title")
-            .attr("transform", "translate(300,10)")
-            .text("mpts: " + this.mpts);
+        
+//        d3.select("#reach-plot.svg-container").style("padding-bottom", 50 + "%");
+//        
+//                
+//        var svg = d3.select("#reach-plot").append("svg")
+//        .attr("id", "chart"+this.id)
+//        .attr("preserveAspectRatio", "xMinYMin meet")
+//        .attr("viewBox", "0 0 " + this.width + " " + height)
+//        .classed("svg-content", true)
+//        .classed("col-md-4", true);
+//
+//        /* XScale is based on the number of points to be plotted */
+//        this.xScale = d3.scaleLinear()
+//            .range([0, this.width])
+//            .domain([0, this.chartData.length - 1]);
+//
+//
+//        /* YScale is linear based on the maxData Point we found earlier */
+//        this.yScale = d3.scaleLinear()
+//            .range([this.height, 0])
+//            .domain([0, d3.max(this.chartData)]);
+//
+//        var xS = this.xScale;
+//        var yS = this.yScale;
+//
+//        /*
+//          This is what creates the chart.
+//          There are a number of interpolation options.
+//          'basis' smooths it the most, however, when working with a lot of data, this will slow it down
+//        */
+//        this.area = d3.area()
+//            .curve(d3.curveBasis) // .interpolate("curveStep")
+//            .x(function (d, i) {
+//                return xS(i);
+//            })
+//            .y0(this.height)
+//            .y1(function (d) {
+//                return yS(d);
+//            });
+//
+//        /*
+//          This isn't required - it simply creates a mask. If this wasn't here,
+//          when we zoom/panned, we'd see the chart go off to the left under the y-axis
+//        */
+//        svg.append("defs").append("clipPath")
+//            .attr("id", "clip-" + this.id)
+//            .append("rect")
+//            .attr("width", this.width)
+//            .attr("height", this.height);
+//        /*
+//          Assign it a class so we can assign a fill color
+//          And position it on the page
+//        */
+//        
+//        this.chartContainer = svg.append("g")
+//            .attr("transform", "translate(" + this.margin.left + "," + (this.margin.top + (this.height * this.id) + (20 * this.id)) + ")");
+//
+//        this.chartContainer.append("path")
+//            .data([this.chartData])
+//            .attr("class", "chart")
+//            .attr("clip-path", "url(#clip-" + this.id + ")")
+//            .attr("d", this.area)
+//            .style("fill", colorScale(this.id));
+//
+//        this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
+//
+//        this.chartContainer.append("g")
+//            .attr("class", "y axis")
+//            .attr("transform", "translate(-15,0)")
+//            .call(this.yAxis);
+//
+//        this.chartContainer.append("text")
+//            .attr("class", "country-title")
+//            .attr("transform", "translate(300,10)")
+//            .text("mpts: " + this.mpts);
 
     }
 
@@ -160,7 +165,7 @@ function dendrogram() {
     var colorScale = d3.scaleSequential(d3.interpolatePlasma)
 
     var svg = d3.select("#chart-dendrogram").append("svg")
-        .attr("preserveAspectRatio", "xMinYMin meet")
+//        .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + (width - 70) + " " + height * newH)
         .classed("svg-content", true)
         .append("g")
@@ -653,11 +658,31 @@ function dendrogram2() {
 
 function HAIPlot() {
 
-    var width = parseInt(d3.select('#hai-plot').style('width'), 10),
+    var width = parseInt(d3.select('#hai-panel').node().getBoundingClientRect().width),
+        width = (screen.width - (30+35)) / 4,
+        height = parseInt(d3.select(".panel-body").style("height")),
         height = width,
-        gridSize = Math.floor(width / 50),
+        gridSize = width / 47,
+        gridSizeY = height / 47,
         haiRange = 0,
-        datasets = ["data/matrix_sim.csv", "data/data.tsv"];
+        padding = height * 0.05,
+        datasets = ["data/matrix_sim.csv", "data/data.tsv"];    
+    
+    console.log(width + " " + height + " :::: " + gridSize + " " + padding);
+    
+    var panel2 = d3.select("#hai-panel"),
+        header2 = panel2.select(".panel-heading"),
+        body2 = panel2.select(".panel-body"),
+        footer2 = panel2.select(".panel-footer")
+    
+    var panel = $("#hai-panel"),
+        header = panel.find(".panel-heading").outerHeight(),
+        body = panel.find(".panel-body").outerHeight(),
+        footer = panel.find(".panel-footer").outerHeight();
+    
+    console.log(header, body, footer);
+    
+    body2.style("height", (width-header-footer)+"px");
 
     var heatmapChart = function (tsvFile) {
         d3.tsv(tsvFile,
@@ -686,99 +711,10 @@ function HAIPlot() {
                 for (var i = 0; i < (haiRange + 1); i++) {
                     labels.push(i);
                 }
-
-                d3.select("#hai-plot.svg-container").style("padding-bottom", 100 + "%");
-                var height = d3.select("#hai-plot.svg-container").node().getBoundingClientRect().height;
-
-                var svg = d3.select("#hai-plot").append("svg")
-                    .attr("preserveAspectRatio", "xMinYMin meet")
-                    .attr("viewBox", "0 0 " + (width+20) + " " + (height+20))
-                    .classed("svg-content", true)
-                    .append("g")
-                    .attr("transform", "translate(" + 35 + "," + 30 + ")");
-
-                var HeatMapxScale = d3.scaleLinear()
-                    .range([gridSize / 2, (haiRange + 0.5) * gridSize])
-                    .domain([d3.min(labels), d3.max(labels)]);
-
-                // Define x-axis
-                var HeatMapxAxisLeft = d3.axisLeft()
-                    .ticks(10)
-                    .scale(HeatMapxScale);
-
-                var HeatMapxAxisTop = d3.axisTop()
-                    .ticks(10)
-                    .scale(HeatMapxScale);
-
-                // Set up X axis Left
-                svg.append("g")
-                    .attr("class", "axis-heatmap")
-                    .attr("transform", "translate(" + -10 + "," + -gridSize + ")")
-                    .call(HeatMapxAxisLeft);
-
-                // Set up X axis Top
-                svg.append("g")
-                    .attr("class", "axis-heatmap")
-                    .attr("transform", "translate(" + -gridSize + "," + -10 + ")")
-                    .call(HeatMapxAxisTop);
-
-                // Define the div for the tooltip
-                var div = d3.select("body").append("div")
-                    .attr("class", "tooltip")
-                    .style("opacity", 0);
-
-
-                var colorScale = d3.scaleSequential(d3.interpolateViridis)
+            
+                var colorScale = d3.scaleSequential(d3.interpolatePlasma)
                     .domain([minValue, maxValue]);
-
-                var cards = svg.selectAll(".hour")
-                    .data(data, function (d) {
-                        return d.day + ':' + d.hour;
-                    });
-
-                cards.append("title");
-
-                cards.enter().append("rect")
-                    .attr("x", function (d, i) {
-                        return (d.hour - 1) * gridSize;
-                    })
-                    .attr("y", function (d, i) {
-                        return (d.day - 1) * gridSize;
-                    })
-                    .attr("width", gridSize)
-                    .attr("height", gridSize)
-                    .style("fill", function (d) {
-                        return colorScale(d.value);
-                    })
-                    .on("mouseover", function (d) {
-                        d3.select(this).style("fill", "#ffffff");
-                        div.transition()
-                            .duration(200)
-                            .style("opacity", 1.0);
-                        div.html(d.hour + " " + d.day + "  <br> " + d.value)
-                            .style("left", (d3.event.pageX + 10) + "px")
-                            .style("top", (d3.event.pageY) + "px");
-                    })
-                    .on("mouseout", function (d) {
-                        d3.select(this).style("fill", function (d) {
-                            return colorScale(d.value);
-                        });
-                        div.transition()
-                            .duration(500)
-                            .style("opacity", 0);
-                    });
-
-                cards.transition().duration(1000)
-                    .style("fill", function (d) {
-                        return colorScale(d.value);
-                    });
-
-                cards.select("title").text(function (d) {
-                    return d.value;
-                });
-
-                cards.exit().remove();
-
+            
                 // ------------------------------------------------------------------------------
 
                 // Scale for workingtime
@@ -797,10 +733,12 @@ function HAIPlot() {
                     countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
                 }
             
-//                svg = d3.select("#hai-plot.svg-container");
-
+                var legend = d3.select("#hai-legend").append("svg")
+                    .attr("preserveAspectRatio", "xMinYMin Slice")
+                    .attr("viewBox", Math.floor(width/2) + " 0 " + width + " " + 10);
+            
                 // Create the gradient
-                svg.append("defs")
+                legend.append("defs")
                     .append("linearGradient")
                     .attr("id", "legend-traffic")
                     .attr("x1", "0%").attr("y1", "0%")
@@ -816,11 +754,9 @@ function HAIPlot() {
                     });
 
                 var legendWidth = Math.min(width * 0.8, 400);
-
-                // Color Legend container
-                var legendsvg = svg.append("g")
+            
+                var legendsvg = legend.append("g")
                     .attr("class", "legendWrapper")
-                    .attr("transform", "translate(" + width * 0.405 + "," + (height + 20) + ")");
 
                 // Append title
                 legendsvg.append("text")
@@ -852,8 +788,102 @@ function HAIPlot() {
                 // Set up X axis
                 legendsvg.append("g")
                     .attr("class", "axis")
-                    .attr("transform", "translate(0," + 0 + ")")
+                    .attr("transform", "translate(0," + 55 + ")")
                     .call(xAxis);
+            
+            // ------------------------------------------------------------------------------
+            
+                
+                height = $("#hai-panel").find(".panel-body").outerHeight();
+                
+                var svg = d3.select("#hai-plot").append("svg")
+                    .attr("prevW", width)
+                    .attr("prevH", height)
+                    .attr("preserveAspectRatio", "xMinYMax Slice")
+                    .attr("viewBox", "-35 -30 " + (width+60) + " " + (height+30))
+            
+                var HeatMapxScale = d3.scaleLinear()
+                    .range([gridSize / 2, (haiRange + 0.5) * gridSize])
+                    .domain([d3.min(labels), d3.max(labels)]);
+            
+                var HeatMapxScaleY = d3.scaleLinear()
+                    .range([gridSizeY / 2, (haiRange + 0.5) * gridSizeY])
+                    .domain([d3.min(labels), d3.max(labels)]);
+
+                // Define x-axis
+                var HeatMapxAxisLeft = d3.axisLeft()
+                    .ticks(10)
+                    .scale(HeatMapxScaleY);
+
+                var HeatMapxAxisTop = d3.axisTop()
+                    .ticks(10)
+                    .scale(HeatMapxScale);
+
+                // Set up X axis Left
+                svg.append("g")
+                    .attr("class", "axis-heatmap")
+                    .attr("transform", "translate(" + -10 + "," + -gridSize + ")")
+                    .call(HeatMapxAxisLeft);
+
+                // Set up X axis Top
+                svg.append("g")
+                    .attr("class", "axis-heatmap")
+                    .attr("transform", "translate(" + -gridSize + "," + -10 + ")")
+                    .call(HeatMapxAxisTop);
+
+                // Define the div for the tooltip
+                var div = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);
+
+                var cards = svg.selectAll(".hour")
+                    .data(data, function (d) {
+                        return d.day + ':' + d.hour;
+                    });
+            
+                cards.append("title");
+
+                cards.enter().append("rect")
+                    .attr("x", function (d, i) {
+                        return (d.hour - 1 ) * (gridSize);
+                    })
+                    .attr("y", function (d, i) {
+                        return (d.day - 1 ) * gridSizeY;
+                    })
+                    .attr("width", gridSize)
+                    .attr("height", gridSizeY)
+                    .style("fill", function (d) {
+                        return colorScale(d.value);
+                    })
+                    .on("mouseover", function (d) {
+                        d3.select(this).style("fill", "#ffffff");
+                        div.transition()
+                            .duration(200)
+                            .style("opacity", 1.0);
+                        div.html(d.hour + " " + d.day + "  <br> " + d.value)
+                            .style("left", (d3.event.pageX + 10) + "px")
+                            .style("top", (d3.event.pageY) + "px");
+                    })
+                    .on("mouseout", function (d) {
+                        d3.select(this).style("fill", function (d) {
+                            return colorScale(d.value);
+                        });
+                        div.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+
+                cards.transition().duration(50)
+                    .style("fill", function (d) {
+                        return colorScale(d.value);
+                    });
+
+                cards.select("title").text(function (d) {
+                    return d.value;
+                });
+
+                cards.exit().remove();
+            
 
             });
 
@@ -975,6 +1005,47 @@ d3.selectAll("input[name='radio']").on("change", function (d, i) {
 })
 
 
-HAIPlot()
+
+
+HAIPlot();
 //MultiReachabilityPlots()
 //ReachabilityPlot()
+
+//var resizeTimer;
+//
+//$(window).on('resize', function(e) {
+//
+//  clearTimeout(resizeTimer);
+//  resizeTimer = setTimeout(function() {
+//      
+//      update();
+//      update();
+//            
+//  }, 250);
+//
+//});
+
+//$(window).resize(update);
+//
+//
+//function update(){
+//    
+//    var width = parseInt(d3.select('#hai-panel').node().getBoundingClientRect().width),
+//        height = parseInt(d3.select(".panel-body").style("height"))
+//    
+//    svg = d3.select("#hai-plot").select("svg");
+//    
+//    
+//    var pW = parseFloat(svg.attr("prevW")) + 60,
+//        pH = parseFloat(svg.attr("prevH"));
+//    
+////    svg.transition()
+////        .duration(150)
+////            .attr("viewBox", "-35 -35 " + pW + " " + (width+30));
+//    
+//    
+//
+//}
+
+
+
