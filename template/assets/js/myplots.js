@@ -1,3 +1,51 @@
+function panelSize(){
+    
+    var navBarH = $(".navbar").height(),
+        navBarW = $(".navbar").width(),
+        mainHeight = $(".main").height();
+    
+    var globalWidth = window.innerWidth,
+        globalHeight = window.innerHeight,
+        globalMainHeight = globalHeight - navBarH,
+        padding = 10
+    
+    panelH = (globalMainHeight - (padding*2) - (padding*1.5)) / 2;
+    
+    console.log("panel size is: "+ panelH);
+    
+    return panelH;
+    
+}
+
+
+panelH = panelSize();
+
+var panels = $(".panel");
+for(i = 0; i < panels.length; i++){
+    panel = panels[i];
+    height = setWindow(panel);
+    
+}
+
+function setWindow(container){
+    var panel = $(container),
+        footer = panel.find(".panel-footer"),
+        header = panel.find(".panel-heading"),
+        body = panel.find(".panel-body");
+    
+    footerH = footer.outerHeight(true);
+    headerH = header.outerHeight(true);
+    bodyH = body.outerHeight(true);
+    panelW = panel.outerWidth(true);
+    
+    newH = (panelH - bodyH - footerH - headerH);
+    console.log(newH, panelW);
+    body.attr("width",panelW);
+    body.attr("height", newH);
+}
+
+
+
 function MultiReachabilityPlots() {
     var margin = {
             top: 10,
@@ -141,7 +189,6 @@ function MultiReachabilityPlots() {
 
 }
 
-
 function dendrogram() {
 
     var margin = {
@@ -150,26 +197,16 @@ function dendrogram() {
         bottom: 10,
         left: 0
     };
-
-    // Size of the plot
-    var width = parseInt(d3.select('#chart-dendrogram').style('width'), 10),
-        height = 450;
-
-    var h = parseFloat(d3.select(".main-content").style('height'));
-    var newH = ((height / h) * 100);
-
-    d3.select(".svg-container").style("padding-bottom", 25 + "%");
-    var height = d3.select(".svg-container").node().getBoundingClientRect().height;
-
+    
+    var width = $("#dendogram-panel").find(".panel-body").attr("width"),
+        height = $("#dendogram-panel").find(".panel-body").attr("height");
+    
 
     var colorScale = d3.scaleSequential(d3.interpolatePlasma)
 
     var svg = d3.select("#chart-dendrogram").append("svg")
-//        .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 " + (width - 70) + " " + height * newH)
-        .classed("svg-content", true)
-        .append("g")
-        .attr("transform", "translate(35,10)");
+        .attr("preserveAspectRatio", "xMidYMid Slice")
+        .attr("viewBox", "-50 -15 " + (width-25) + " " + (height-15));
 
     // Variable to hold the root of the hierarchy.
     var clusterLayout = d3.cluster()
@@ -421,23 +458,18 @@ function dendrogram2() {
     };
 
     // Size of the plot
-    var width = parseInt(d3.select('#chart-dendrogram').style('width'), 10) - margin.left - margin.right,
-        height = 450;
+//    var width = parseInt(d3.select('#chart-dendrogram').style('width'), 10) - margin.left - margin.right,
+//        height = 450;
+
+    var width = $("#dendogram-panel").find(".panel-body").attr("width"),
+        height = $("#dendogram-panel").find(".panel-body").attr("height");
+    
 
     var colorScale = d3.scaleSequential(d3.interpolatePlasma)
-        .domain([1, 6]);
-
-    var h = parseFloat(d3.select("#panel1").style('height'));
-    var newH = ((height / h) * 100);
-
-    d3.select(".svg-container").style("padding-bottom", newH + "%");
 
     var svg = d3.select("#chart-dendrogram").append("svg")
-        .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 " + width + " " + height * newH)
-        .classed("svg-content", true)
-        .append("g")
-        .attr("transform", "translate(60,30)");
+        .attr("preserveAspectRatio", "xMidYMid Slice")
+        .attr("viewBox", "-60 -15 " + (width) + " " + (height));
 
     // Variable to hold the root of the hierarchy.
     var clusterLayout = d3.cluster()
@@ -656,34 +688,27 @@ function dendrogram2() {
 
 }
 
-function HAIPlot() {
+function haiPlot() {
+    
+    var width = parseInt((screen.width - (30+35)) / 4);
+    var height = parseInt($("#hai-panel").find(".panel-body").attr("height"));
+    
+    console.log(width, height);
+    
+    if(width > height){
+        width = height;
+    } else if( height > width){
+        height = width;
+    }
+    
+    console.log(width, height);
 
-    var width = parseInt(d3.select('#hai-panel').node().getBoundingClientRect().width),
-        width = (screen.width - (30+35)) / 4,
-        height = parseInt(d3.select(".panel-body").style("height")),
-        height = width,
-        gridSize = width / 47,
+    var gridSize = width / 47,
         gridSizeY = height / 47,
         haiRange = 0,
         padding = height * 0.05,
         datasets = ["data/matrix_sim.csv", "data/data.tsv"];    
-    
-    console.log(width + " " + height + " :::: " + gridSize + " " + padding);
-    
-    var panel2 = d3.select("#hai-panel"),
-        header2 = panel2.select(".panel-heading"),
-        body2 = panel2.select(".panel-body"),
-        footer2 = panel2.select(".panel-footer")
-    
-    var panel = $("#hai-panel"),
-        header = panel.find(".panel-heading").outerHeight(),
-        body = panel.find(".panel-body").outerHeight(),
-        footer = panel.find(".panel-footer").outerHeight();
-    
-    console.log(header, body, footer);
-    
-    body2.style("height", (width-header-footer)+"px");
-
+        
     var heatmapChart = function (tsvFile) {
         d3.tsv(tsvFile,
             function (d) {
@@ -715,92 +740,94 @@ function HAIPlot() {
                 var colorScale = d3.scaleSequential(d3.interpolatePlasma)
                     .domain([minValue, maxValue]);
             
-                // ------------------------------------------------------------------------------
-
-                // Scale for workingtime
-                var countScale = d3.scaleLinear()
-                    .domain([minValue, maxValue])
-                    .range([0, width]);
-
-                // Calculate variables for the temp gradient
-                var numStops = 10;
-                var countRange = countScale.domain();
-                // index 2 is the substraction between max and min
-                countRange[2] = countRange[1] - countRange[0];
-                var countPoint = [];
-
-                for (var i = 0; i < numStops; i++) {
-                    countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
-                }
-            
-                var legend = d3.select("#hai-legend").append("svg")
-                    .attr("preserveAspectRatio", "xMinYMin Slice")
-                    .attr("viewBox", Math.floor(width/2) + " 0 " + width + " " + 10);
-            
-                // Create the gradient
-                legend.append("defs")
-                    .append("linearGradient")
-                    .attr("id", "legend-traffic")
-                    .attr("x1", "0%").attr("y1", "0%")
-                    .attr("x2", "100%").attr("y2", "0%")
-                    .selectAll("stop")
-                    .data(d3.range(numStops))
-                    .enter().append("stop")
-                    .attr("offset", function (d, i) {
-                        return countScale(countPoint[i]) / width;
-                    })
-                    .attr("stop-color", function (d, i) {
-                        return colorScale(countPoint[i]);
-                    });
-
-                var legendWidth = Math.min(width * 0.8, 400);
-            
-                var legendsvg = legend.append("g")
-                    .attr("class", "legendWrapper")
-
-                // Append title
-                legendsvg.append("text")
-                    .attr("class", "legendTitle")
-                    .attr("x", 0)
-                    .attr("y", 30)
-                    .style("text-anchor", "middle");
-                // .text("Number of times I started to work");
-
-                // Draw the Rectangle
-                legendsvg.append("rect")
-                    .attr("class", "legendRect")
-                    .attr("x", -legendWidth / 2)
-                    .attr("y", 50)
-                    .attr("width", legendWidth)
-                    .attr("height", 10)
-                    .style("fill", "url(#legend-traffic)");
-
-                // Set scale for x-axis
-                var xScale = d3.scaleLinear()
-                    .range([-legendWidth / 2, legendWidth / 2])
-                    .domain([minValue, maxValue]);
-
-                // Define x-axis
-                var xAxis = d3.axisBottom()
-                    .ticks(5)
-                    .scale(xScale);
-
-                // Set up X axis
-                legendsvg.append("g")
-                    .attr("class", "axis")
-                    .attr("transform", "translate(0," + 55 + ")")
-                    .call(xAxis);
-            
-            // ------------------------------------------------------------------------------
-            
-                
-                height = $("#hai-panel").find(".panel-body").outerHeight();
+//                // ------------------------------------------------------------------------------
+//
+//                // Scale for workingtime
+//                var countScale = d3.scaleLinear()
+//                    .domain([minValue, maxValue])
+//                    .range([0, width]);
+//
+//                // Calculate variables for the temp gradient
+//                var numStops = 10;
+//                var countRange = countScale.domain();
+//                // index 2 is the substraction between max and min
+//                countRange[2] = countRange[1] - countRange[0];
+//                var countPoint = [];
+//
+//                for (var i = 0; i < numStops; i++) {
+//                    countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
+//                }
+//            
+//                var legend = d3.select("#hai-legend").append("svg")
+//                    .attr("preserveAspectRatio", "xMinYMin Slice")
+//                    .attr("viewBox", height + " 0 " + width + " " + 10);
+//            
+//                // Create the gradient
+//                legend.append("defs")
+//                    .append("linearGradient")
+//                    .attr("id", "legend-traffic")
+//                    .attr("x1", "0%").attr("y1", "0%")
+//                    .attr("x2", "100%").attr("y2", "0%")
+//                    .selectAll("stop")
+//                    .data(d3.range(numStops))
+//                    .enter().append("stop")
+//                    .attr("offset", function (d, i) {
+//                        return countScale(countPoint[i]) / width;
+//                    })
+//                    .attr("stop-color", function (d, i) {
+//                        return colorScale(countPoint[i]);
+//                    });
+//
+//                var legendWidth = Math.min(width * 0.8, 400);
+//            
+//                var legendsvg = legend.append("g")
+//                    .attr("class", "legendWrapper")
+//
+//                // Append title
+//                legendsvg.append("text")
+//                    .attr("class", "legendTitle")
+//                    .attr("x", 0)
+//                    .attr("y", 30)
+//                    .style("text-anchor", "middle");
+//                // .text("Number of times I started to work");
+//
+//                // Draw the Rectangle
+//                legendsvg.append("rect")
+//                    .attr("class", "legendRect")
+//                    .attr("x", -legendWidth / 2)
+//                    .attr("y", 50)
+//                    .attr("width", legendWidth)
+//                    .attr("height", 10)
+//                    .style("fill", "url(#legend-traffic)");
+//
+//                // Set scale for x-axis
+//                var xScale = d3.scaleLinear()
+//                    .range([-legendWidth / 2, legendWidth / 2])
+//                    .domain([minValue, maxValue]);
+//
+//                // Define x-axis
+//                var xAxis = d3.axisBottom()
+//                    .ticks(5)
+//                    .scale(xScale);
+//
+//                // Set up X axis
+//                legendsvg.append("g")
+//                    .attr("class", "axis")
+//                    .attr("transform", "translate(0," + 55 + ")")
+//                    .call(xAxis);
+//            
+//            // ------------------------------------------------------------------------------
+//            
+//                
                 
                 var svg = d3.select("#hai-plot").append("svg")
-                    .attr("prevW", width)
-                    .attr("prevH", height)
-                    .attr("preserveAspectRatio", "xMinYMax Slice")
-                    .attr("viewBox", "-35 -30 " + (width+60) + " " + (height+30))
+//                    .attr("preserveAspectRatio", "xMidYMid meet")
+//                    .attr("viewBox", "-35 -30 " + (width+60) + " " + (height+35))
+//                    .attr("viewBox", "-35 -30 " + width + " " + height)
+                    .attr("width",width)
+                    .attr("height",height)
+                    .style("display","block")
+                    .style("margin","auto");
             
                 var HeatMapxScale = d3.scaleLinear()
                     .range([gridSize / 2, (haiRange + 0.5) * gridSize])
@@ -1007,7 +1034,7 @@ d3.selectAll("input[name='radio']").on("change", function (d, i) {
 
 
 
-HAIPlot();
+haiPlot("#hai-plot");
 //MultiReachabilityPlots()
 //ReachabilityPlot()
 

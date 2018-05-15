@@ -90,24 +90,32 @@
        
                     <div class="row">
                         <!-- START DENDOGRAM -->
-                        <div class="col-md-12 nopadding">
+                        <div class="col-xs-12 nopadding">
                             <div class="panel nopadding">
-                                <div class="panel-heading hidden">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">Dendogram</h1>
                                     <div class="right">
-                                        <button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
-                                        <button type="button" class="btn-remove"><i class="lnr lnr-cross"></i></button>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-cog"></i></a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Basic Use</a></li>
+                                                <li><a href="#">Working With Data</a></li>
+                                                <li><a href="#">Security</a></li>
+                                                <li><a href="#">Troubleshooting</a></li>
+                                            </ul>
+                                        </li>
                                     </div>
                                 </div>
                                 <div class="row">
                                 <div class="panel-body" id="panel1">
-                                        <div class="chart-wrapper" id="dendogram">
+                                        <div class="row">
                                             <input id="slider" type="range" value="50" orient="vertical" style="display:none;">
-                                            <div id="chart-dendrogram" class="svg-container">
+                                            <div id="chart-dendrogram">
                                             </div>
                                         </div>
                                 </div>
                                 </div>
-                                <div class="panel-footer hidden">
+                                <div class="panel-footer">
                                     <div class="row ratio-wrapper">
                                         <div class="col-sm-4">
                                             <label class="container-ratio">FOSC
@@ -138,13 +146,13 @@
                     
                     <div class="row pad-t">
                         <!-- START HAI-->
-                        <div class="col-md-3 nopadding">
+                        <div class="col-xs-3 nopadding">
                             <div class="panel" id="hai-panel">
                                 <div class="panel-heading">
                                     <h1 class="panel-title">Hai Plot</h1>
                                     <div class="right">
                                         <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-chevron-down"></i></a>
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-cog"></i></a>
                                             <ul class="dropdown-menu">
                                                 <li><a href="#">Basic Use</a></li>
                                                 <li><a href="#">Working With Data</a></li>
@@ -156,7 +164,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="row">
-                                    <div id="hai-plot" class="svg-container">
+                                    <div id="hai-plot">
                                         </div>
                                     </div>
                                 </div>
@@ -168,7 +176,7 @@
                         <!-- END HAI -->
                         
                         <!-- START REACHABILLITY -->
-                        <div class="col-md-9 nopadding pad-l">
+                        <div class="col-xs-9 nopadding pad-l">
                             <div class="panel nopadding">
                                 <div class="panel-body">
                                     <div id="reach-plot" class="svg-container row">
