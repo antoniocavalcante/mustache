@@ -77,8 +77,8 @@
                 </nav>
             </div>
             <div style="position: absolute; bottom:0;">
-                <a href=""><img src="assets/img/JCU-Logo.jpg" class="side-logo"></a>
-                <a href=""><img src="assets/img/UA-EAC-COLOUR.jpg" class="side-logo"></a>
+                <a href=""><img src="assets/img/UA-COLOUR-REVERSE.eps" class="side-logo-uofa"></a>
+                <a href=""><img src="assets/img/jcu-logo.png" class="side-logo-jcu"></a>
             </div>
         </div>
         <!-- END LEFT SIDEBAR -->
@@ -91,7 +91,7 @@
                     <div class="row">
                         <!-- START DENDOGRAM -->
                         <div class="col-xs-12 nopadding">
-                            <div class="panel nopadding">
+                            <div class="panel nopadding" id="dendogram-panel">
                                 <div class="panel-heading">
                                     <h1 class="panel-title">Dendogram</h1>
                                     <div class="right">
@@ -177,10 +177,28 @@
                         
                         <!-- START REACHABILLITY -->
                         <div class="col-xs-9 nopadding pad-l">
-                            <div class="panel nopadding">
-                                <div class="panel-body">
-                                    <div id="reach-plot" class="svg-container row">
+                            <div class="panel nopadding" id="reach-panel">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">Reachabillity Plots</h1>
+                                    <div class="right">
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-cog"></i></a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Basic Use</a></li>
+                                                <li><a href="#">Working With Data</a></li>
+                                                <li><a href="#">Security</a></li>
+                                                <li><a href="#">Troubleshooting</a></li>
+                                            </ul>
+                                        </li>
                                     </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div id="reach-plot">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer hidden">
                                 </div>
                             </div>
                         </div>

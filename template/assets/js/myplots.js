@@ -48,13 +48,14 @@ function setWindow(container){
 
 function MultiReachabilityPlots() {
     var margin = {
-            top: 10,
+            top: 0,
             right: 0,
-            bottom: 100,
-            left: 50
+            bottom: 0,
+            left: 0
         },
-        width = parseInt(d3.select('#reach-plot').style('width'), 10) - margin.left - margin.right,
-        height = 500;
+        
+        width = $("#reach-panel").find(".panel-body").attr("width"),
+        height = $("#reach-panel").find(".panel-body").attr("height");
 
     charts = []
     mpts = [9, 27, 35, 46]
@@ -70,8 +71,6 @@ function MultiReachabilityPlots() {
 
         var charts = [];
 
-        // var startYear = data[0].Year;
-        // var endYear = data[data.length - 1].Year;
         var chartHeight = height * (1 / rows.length);
 
         for (var i = 0; i < rows.length; i++) {
@@ -82,11 +81,12 @@ function MultiReachabilityPlots() {
                 }),
                 id: i,
                 name: "UK",
-                width: (width+175) * (1 / rows.length),
-                height: 200,
+                width: width,
+                height: height,
                 margin: margin,
                 showBottomAxis: (i == rows.length - 1),
-                m: mpts[i]
+                m: mpts[i],
+                rows: rows.length
             }));
 
         }
@@ -102,77 +102,80 @@ function MultiReachabilityPlots() {
         this.margin = options.margin;
         this.showBottomAxis = options.showBottomAxis;
         this.mpts = options.m;
+        this.rows = options.rows;
         
-//        d3.select("#reach-plot.svg-container").style("padding-bottom", 50 + "%");
-//        
-//                
-//        var svg = d3.select("#reach-plot").append("svg")
+        
+        var svgCont = d3.select("#reach-plot").append("div").classed("col-xs-4","true");
+                
+        var svg = svgCont.append("svg")
 //        .attr("id", "chart"+this.id)
 //        .attr("preserveAspectRatio", "xMinYMin meet")
-//        .attr("viewBox", "0 0 " + this.width + " " + height)
-//        .classed("svg-content", true)
-//        .classed("col-md-4", true);
-//
-//        /* XScale is based on the number of points to be plotted */
-//        this.xScale = d3.scaleLinear()
-//            .range([0, this.width])
-//            .domain([0, this.chartData.length - 1]);
-//
-//
-//        /* YScale is linear based on the maxData Point we found earlier */
-//        this.yScale = d3.scaleLinear()
-//            .range([this.height, 0])
-//            .domain([0, d3.max(this.chartData)]);
-//
-//        var xS = this.xScale;
-//        var yS = this.yScale;
-//
-//        /*
-//          This is what creates the chart.
-//          There are a number of interpolation options.
-//          'basis' smooths it the most, however, when working with a lot of data, this will slow it down
-//        */
-//        this.area = d3.area()
-//            .curve(d3.curveBasis) // .interpolate("curveStep")
-//            .x(function (d, i) {
-//                return xS(i);
-//            })
-//            .y0(this.height)
-//            .y1(function (d) {
-//                return yS(d);
-//            });
-//
-//        /*
-//          This isn't required - it simply creates a mask. If this wasn't here,
-//          when we zoom/panned, we'd see the chart go off to the left under the y-axis
-//        */
-//        svg.append("defs").append("clipPath")
-//            .attr("id", "clip-" + this.id)
-//            .append("rect")
-//            .attr("width", this.width)
-//            .attr("height", this.height);
-//        /*
-//          Assign it a class so we can assign a fill color
-//          And position it on the page
-//        */
-//        
-//        this.chartContainer = svg.append("g")
-//            .attr("transform", "translate(" + this.margin.left + "," + (this.margin.top + (this.height * this.id) + (20 * this.id)) + ")");
-//
-//        this.chartContainer.append("path")
-//            .data([this.chartData])
-//            .attr("class", "chart")
-//            .attr("clip-path", "url(#clip-" + this.id + ")")
-//            .attr("d", this.area)
-//            .style("fill", colorScale(this.id));
-//
-//        this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
-//
-//        this.chartContainer.append("g")
-//            .attr("class", "y axis")
-//            .attr("transform", "translate(-15,0)")
-//            .call(this.yAxis);
-//
+//        .attr("viewBox", "0 0 " + (this.width*3)+ " " + height)
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "-40 0 " + width/3 + " " + (height));
+        
+        var chartXScale = this.width / this.rows;
+
+        /* XScale is based on the number of points to be plotted */
+        this.xScale = d3.scaleLinear()
+            .range([0, chartXScale])
+            .domain([0, this.chartData.length - 1]);
+
+
+        /* YScale is linear based on the maxData Point we found earlier */
+        this.yScale = d3.scaleLinear()
+            .range([this.height, 0])
+            .domain([0, d3.max(this.chartData)]);
+
+        var xS = this.xScale;
+        var yS = this.yScale;
+
+        /*
+          This is what creates the chart.
+          There are a number of interpolation options.
+          'basis' smooths it the most, however, when working with a lot of data, this will slow it down
+        */
+        this.area = d3.area()
+            .curve(d3.curveBasis) // .interpolate("curveStep")
+            .x(function (d, i) {
+                return xS(i);
+            })
+            .y0(this.height)
+            .y1(function (d) {
+                return yS(d);
+            });
+
+        /*
+          This isn't required - it simply creates a mask. If this wasn't here,
+          when we zoom/panned, we'd see the chart go off to the left under the y-axis
+        */
+        svg.append("defs").append("clipPath")
+            .attr("id", "clip-" + this.id)
+            .append("rect")
+            .attr("width", this.width)
+            .attr("height", this.height);
+        /*
+          Assign it a class so we can assign a fill color
+          And position it on the page
+        */
+        
+        this.chartContainer = svg.append("g")
+            .attr("transform", "translate(" + this.margin.left + "," + (this.margin.top + (this.height * this.id) + (20 * this.id)) + ")");
+
+        this.chartContainer.append("path")
+            .data([this.chartData])
+            .attr("class", "chart")
+            .attr("clip-path", "url(#clip-" + this.id + ")")
+            .attr("d", this.area)
+            .style("fill", colorScale(this.id));
+
+        this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
+
+        this.chartContainer.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(-15,0)")
+            .call(this.yAxis);
+
 //        this.chartContainer.append("text")
 //            .attr("class", "country-title")
 //            .attr("transform", "translate(300,10)")
@@ -469,7 +472,7 @@ function dendrogram2() {
 
     var svg = d3.select("#chart-dendrogram").append("svg")
         .attr("preserveAspectRatio", "xMidYMid Slice")
-        .attr("viewBox", "-60 -15 " + (width) + " " + (height));
+        .attr("viewBox", "-50 -15 " + (width-25) + " " + (height-15));
 
     // Variable to hold the root of the hierarchy.
     var clusterLayout = d3.cluster()
@@ -691,6 +694,7 @@ function dendrogram2() {
 function haiPlot() {
     
     var width = parseInt((screen.width - (30+35)) / 4);
+    var width = parseInt($("#hai-panel").find(".panel-body").attr("width"));
     var height = parseInt($("#hai-panel").find(".panel-body").attr("height"));
     
     console.log(width, height);
@@ -703,8 +707,8 @@ function haiPlot() {
     
     console.log(width, height);
 
-    var gridSize = width / 47,
-        gridSizeY = height / 47,
+    var gridSize = (width-(30*2)) / 47,
+        gridSizeY = (height-(30*2)) / 47,
         haiRange = 0,
         padding = height * 0.05,
         datasets = ["data/matrix_sim.csv", "data/data.tsv"];    
@@ -821,9 +825,9 @@ function haiPlot() {
 //                
                 
                 var svg = d3.select("#hai-plot").append("svg")
-//                    .attr("preserveAspectRatio", "xMidYMid meet")
+                    .attr("preserveAspectRatio", "xMidYMid meet")
 //                    .attr("viewBox", "-35 -30 " + (width+60) + " " + (height+35))
-//                    .attr("viewBox", "-35 -30 " + width + " " + height)
+                    .attr("viewBox", "-30 -30 " + width + " " + height)
                     .attr("width",width)
                     .attr("height",height)
                     .style("display","block")
@@ -1035,7 +1039,7 @@ d3.selectAll("input[name='radio']").on("change", function (d, i) {
 
 
 haiPlot("#hai-plot");
-//MultiReachabilityPlots()
+MultiReachabilityPlots()
 //ReachabilityPlot()
 
 //var resizeTimer;
