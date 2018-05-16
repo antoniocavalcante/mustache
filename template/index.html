@@ -13,6 +13,7 @@
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/loader.css"/>
     <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:700" rel="stylesheet"> 
@@ -24,8 +25,23 @@
 
 <body class="layout-fullwidth">
     
+    <div id="loading">
+        <div class="sk-cube-grid">
+          <div class="sk-cube sk-cube1"></div>
+          <div class="sk-cube sk-cube2"></div>
+          <div class="sk-cube sk-cube3"></div>
+          <div class="sk-cube sk-cube4"></div>
+          <div class="sk-cube sk-cube5"></div>
+          <div class="sk-cube sk-cube6"></div>
+          <div class="sk-cube sk-cube7"></div>
+          <div class="sk-cube sk-cube8"></div>
+          <div class="sk-cube sk-cube9"></div>
+        </div>
+    </div>
+    
     <!-- WRAPPER -->
     <div id="wrapper">
+
         <!-- NAVBAR -->
         <nav class="navbar navbar-default navbar-fixed-top">
 
@@ -147,7 +163,7 @@
                     <div class="row pad-t">
                         <!-- START HAI-->
                         <div class="col-xs-3 nopadding">
-                            <div class="panel" id="hai-panel">
+                            <div class="panel nopadding" id="hai-panel">
                                 <div class="panel-heading">
                                     <h1 class="panel-title">Hai Plot</h1>
                                     <div class="right">
@@ -163,7 +179,7 @@
                                     </div>
                                 </div>
                                 <div class="panel-body">
-                                    <div class="row">
+                                    <div class="row nopadding">
                                     <div id="hai-plot">
                                         </div>
                                     </div>
@@ -193,13 +209,12 @@
                                     </div>
                                 </div>
                                 <div class="panel-body">
-                                    <div class="row">
+                                    <div class="row nopadding">
                                         <div id="reach-plot">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-footer hidden">
-                                </div>
+                                
                             </div>
                         </div>
                         <!-- END REACHABILLITY -->

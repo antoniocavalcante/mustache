@@ -38,10 +38,14 @@ function setWindow(container){
     bodyH = body.outerHeight(true);
     panelW = panel.outerWidth(true);
     
-    newH = (panelH - bodyH - footerH - headerH);
+    newH = parseInt(panelH - bodyH - footerH - headerH);
     console.log(newH, panelW);
     body.attr("width",panelW);
     body.attr("height", newH);
+    
+    var per = newH/$(window).height();
+    
+//    body.css("height", newH);
 }
 
 
@@ -50,7 +54,7 @@ function MultiReachabilityPlots() {
     var margin = {
             top: 0,
             right: 0,
-            bottom: 0,
+            bottom: 10,
             left: 0
         },
         
@@ -105,16 +109,19 @@ function MultiReachabilityPlots() {
         this.rows = options.rows;
         
         
-        var svgCont = d3.select("#reach-plot").append("div").classed("col-xs-4","true");
+        var svgCont = d3.select("#reach-plot").append("div")
+            .classed("col-md-4","true")
+            .classed("nopadding","true");
+        
+        var chartXScale = (this.width / this.rows) - (this.margin.right+this.margin.left+40),
+            chartYScale = this.height - (this.margin.top+this.margin.bottom);
                 
         var svg = svgCont.append("svg")
-//        .attr("id", "chart"+this.id)
-//        .attr("preserveAspectRatio", "xMinYMin meet")
-//        .attr("viewBox", "0 0 " + (this.width*3)+ " " + height)
+        .attr("id", "chart"+this.id)
         .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "-40 0 " + width/3 + " " + (height));
+        .attr("viewBox", "-40 "+(-(this.margin.top+this.margin.bottom)/2)+" " + options.width/this.rows + " " + (options.height));
         
-        var chartXScale = this.width / this.rows;
+        
 
         /* XScale is based on the number of points to be plotted */
         this.xScale = d3.scaleLinear()
@@ -124,7 +131,7 @@ function MultiReachabilityPlots() {
 
         /* YScale is linear based on the maxData Point we found earlier */
         this.yScale = d3.scaleLinear()
-            .range([this.height, 0])
+            .range([chartYScale, 0])
             .domain([0, d3.max(this.chartData)]);
 
         var xS = this.xScale;
@@ -135,8 +142,13 @@ function MultiReachabilityPlots() {
           There are a number of interpolation options.
           'basis' smooths it the most, however, when working with a lot of data, this will slow it down
         */
+        
+
+        this.height = chartYScale;
+        this.width = chartXScale;
+        
         this.area = d3.area()
-            .curve(d3.curveBasis) // .interpolate("curveStep")
+            .curve(d3.curveBasis) 
             .x(function (d, i) {
                 return xS(i);
             })
@@ -154,31 +166,43 @@ function MultiReachabilityPlots() {
             .append("rect")
             .attr("width", this.width)
             .attr("height", this.height);
-        /*
-          Assign it a class so we can assign a fill color
-          And position it on the page
-        */
+        
+        svg.select("defs")
+            .append("linearGradient")
+            .attr("id", "grad-" + this.id)
+            .attr("x1", "0%").attr("y1", "0%")
+            .attr("x2", "0%").attr("y2", "100%")
+        
+        d3.select("#grad-" + this.id).append("stop").attr("offset","0%").style("stop-color",d3.color(colorScale(this.id)).brighter(0.75))
+        d3.select("#grad-" + this.id).append("stop").attr("offset","100%").style("stop-color",colorScale(this.id));
+        
+        
+                
+//        (this.margin.top + (this.height * this.id) + (20 * this.id)
         
         this.chartContainer = svg.append("g")
-            .attr("transform", "translate(" + this.margin.left + "," + (this.margin.top + (this.height * this.id) + (20 * this.id)) + ")");
+            .attr("transform", "translate(" + this.margin.left + "," + "0" + ")");
 
         this.chartContainer.append("path")
             .data([this.chartData])
             .attr("class", "chart")
             .attr("clip-path", "url(#clip-" + this.id + ")")
-            .attr("d", this.area)
-            .style("fill", colorScale(this.id));
+            .style("fill", "url(#grad-" + this.id + ")")
+            .attr("d", this.area);
+            
+        
+//        .style("fill", colorScale(this.id))
 
         this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
 
         this.chartContainer.append("g")
             .attr("class", "y axis")
-            .attr("transform", "translate(-15,0)")
+            .attr("transform", "translate(-10,0)")
             .call(this.yAxis);
 
 //        this.chartContainer.append("text")
 //            .attr("class", "country-title")
-//            .attr("transform", "translate(300,10)")
+//            .attr("transform", "translate(" + (chartXScale-150) + ",20)")
 //            .text("mpts: " + this.mpts);
 
     }
@@ -827,7 +851,7 @@ function haiPlot() {
                 var svg = d3.select("#hai-plot").append("svg")
                     .attr("preserveAspectRatio", "xMidYMid meet")
 //                    .attr("viewBox", "-35 -30 " + (width+60) + " " + (height+35))
-                    .attr("viewBox", "-30 -30 " + width + " " + height)
+                    .attr("viewBox", "-35 -30 " + width + " " + height)
                     .attr("width",width)
                     .attr("height",height)
                     .style("display","block")
@@ -1040,6 +1064,7 @@ d3.selectAll("input[name='radio']").on("change", function (d, i) {
 
 haiPlot("#hai-plot");
 MultiReachabilityPlots()
+$('#loading').delay(1000).fadeOut(1000);
 //ReachabilityPlot()
 
 //var resizeTimer;
