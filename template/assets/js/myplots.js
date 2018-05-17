@@ -109,8 +109,12 @@ function MultiReachabilityPlots() {
         this.rows = options.rows;
         
         
-        var svgCont = d3.select("#reach-plot").append("div")
-            .classed("col-md-4","true")
+        var svgCont = d3.select("#reach-plot").append("a")
+            .attr("data-toggle","modal")
+            .attr("data-target","#exampleModalCenter")
+            .attr("href","#")
+            .append("div")
+            .classed("col-xs-4","true")
             .classed("nopadding","true");
         
         var chartXScale = (this.width / this.rows) - (this.margin.right+this.margin.left+40),
@@ -173,13 +177,9 @@ function MultiReachabilityPlots() {
             .attr("x1", "0%").attr("y1", "0%")
             .attr("x2", "0%").attr("y2", "100%")
         
-        d3.select("#grad-" + this.id).append("stop").attr("offset","0%").style("stop-color",d3.color(colorScale(this.id)).brighter(0.75))
-        d3.select("#grad-" + this.id).append("stop").attr("offset","100%").style("stop-color",colorScale(this.id));
-        
-        
+        d3.select("#grad-" + this.id).append("stop").attr("offset","0%").style("stop-color",d3.color(colorScale(this.id)).brighter(1)).style("stop-opacity","1.0")
+        d3.select("#grad-" + this.id).append("stop").attr("offset","100%").style("stop-color",colorScale(this.id)).style("stop-opacity","1.0");
                 
-//        (this.margin.top + (this.height * this.id) + (20 * this.id)
-        
         this.chartContainer = svg.append("g")
             .attr("transform", "translate(" + this.margin.left + "," + "0" + ")");
 
@@ -188,6 +188,8 @@ function MultiReachabilityPlots() {
             .attr("class", "chart")
             .attr("clip-path", "url(#clip-" + this.id + ")")
             .style("fill", "url(#grad-" + this.id + ")")
+//            .style("stroke",colorScale(this.id))
+//            .style("stroke-width","3px")
             .attr("d", this.area);
             
         
@@ -233,7 +235,7 @@ function dendrogram() {
 
     var svg = d3.select("#chart-dendrogram").append("svg")
         .attr("preserveAspectRatio", "xMidYMid Slice")
-        .attr("viewBox", "-50 -15 " + (width-25) + " " + (height-15));
+        .attr("viewBox", "-40 -15 " + (width-60) + " " + (height-15));
 
     // Variable to hold the root of the hierarchy.
     var clusterLayout = d3.cluster()
@@ -440,6 +442,8 @@ function dendrogram() {
                 clusterThresholdExtraction(this.value);
                 return this.value;
             });
+        
+        $("#slider").css("width", height-60);
 
         // Link the threshold bar to the slider.
         d3.select("#slider").on("input", function () {
@@ -496,7 +500,7 @@ function dendrogram2() {
 
     var svg = d3.select("#chart-dendrogram").append("svg")
         .attr("preserveAspectRatio", "xMidYMid Slice")
-        .attr("viewBox", "-50 -15 " + (width-25) + " " + (height-15));
+        .attr("viewBox", "-40 -15 " + (width-60) + " " + (height-15));
 
     // Variable to hold the root of the hierarchy.
     var clusterLayout = d3.cluster()

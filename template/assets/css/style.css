@@ -81,13 +81,13 @@ g.context rect.background{
 .link {
 	fill: none;
 	/* stroke: black; */
-	stroke-width: 2px;
+	stroke-width: 1.5px;
 }
 
 line {
 	stroke: black;
 	opacity: 0.35;
-	stroke-width: 3px;
+	stroke-width: 2px;
     cursor: row-resize;
 }
 
@@ -162,7 +162,14 @@ div.tooltip {
 }
 
 #slider {
-    transform: rotate(270deg);
+    float: right;
+    height: 0px;
+    transform: rotate(-90deg);
+    display: inline;
+}
+
+#chart-dendogram {
+    display: inline;
 }
 
 body {
@@ -172,6 +179,14 @@ body {
 .nopadding {
    padding: 0;
    margin: 0 !important;
+}
+
+.nopadding-v {
+   padding-top: 0;
+   padding-bottom: 0;
+   margin-top: 0;
+   margin-bottom: 0;
+
 }
 
 .pad-l {
