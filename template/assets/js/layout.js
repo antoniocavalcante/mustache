@@ -13,25 +13,31 @@ function panelSize(){
     
     console.log("panel size is: "+ panelH);
     
-//    d3.selectAll(".panel-body").style("height", panelH+"px");
-//    
-//    var panel2 = d3.select("#hai-panel"),
-//        header2 = panel2.select(".panel-heading"),
-//        body2 = panel2.select(".panel-body"),
-//        footer2 = panel2.select(".panel-footer")
-//    
-//    var panel = $("#hai-panel"),
-//        header = panel.find(".panel-heading").outerHeight(),
-//        body = panel.find(".panel-body").outerHeight(),
-//        footer = panel.find(".panel-footer").outerHeight();
-//    
-//    console.log(header, body, footer);
-//    
-//    body2.style("height", (body-footer-header)+"px");
+    return panelH;
     
     
 }
 
-panelSize();
 
-//d3.select(window).on("resize", panelSize);
+function svg2img(selection){
+  var html = d3.select(selection)
+        .attr("version", 1.1)
+        .attr("xmlns", "http://www.w3.org/2000/svg")
+        .node().parentNode.innerHTML;
+
+  var imgsrc = 'data:image/svg+xml;base64,'+ btoa(html);
+
+//  var canvas = document.querySelector("canvas")
+
+  var image = new Image;
+  image.src = imgsrc;
+  image.onload = function() {
+
+	  var a = document.createElement("a");
+	  a.download = "sample.svg";
+	  a.href = imgsrc;
+	  a.click();
+  };
+
+}
+

@@ -233,4 +233,37 @@ body {
 }
 
 
+.grouper > .row {
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+.chart-scroller {
+  display: inline-block;
+  float: none;
+}
+
+::-webkit-scrollbar
+{   
+    background-color: rgba(64,64,64,0.1);
+    border-radius: 3px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background:#cccc;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background:#ccc;
+    border-radius: 3px;
+}
+
+
+::-webkit-scrollbar-track-piece
+{
+    background-color: transparent;
+    border-radius: 3px;
+}
 

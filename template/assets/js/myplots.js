@@ -42,10 +42,7 @@ function setWindow(container){
     console.log(newH, panelW);
     body.attr("width",panelW);
     body.attr("height", newH);
-    
-    var per = newH/$(window).height();
-    
-//    body.css("height", newH);
+
 }
 
 
@@ -54,12 +51,12 @@ function MultiReachabilityPlots() {
     var margin = {
             top: 0,
             right: 0,
-            bottom: 10,
+            bottom: 20,
             left: 0
         },
         
         width = $("#reach-panel").find(".panel-body").attr("width"),
-        height = $("#reach-panel").find(".panel-body").attr("height");
+        height = $("#reach-panel").find(".panel-body").attr("height")-10;
 
     charts = []
     mpts = [9, 27, 35, 46]
@@ -108,13 +105,20 @@ function MultiReachabilityPlots() {
         this.mpts = options.m;
         this.rows = options.rows;
         
+        this.rows = 2;
         
-        var svgCont = d3.select("#reach-plot").append("a")
-            .attr("data-toggle","modal")
-            .attr("data-target","#exampleModalCenter")
-            .attr("href","#")
+        colW = parseInt(12 / this.rows);
+        
+//        .append("a")
+//            .attr("data-toggle","modal")
+//            .attr("data-target","#exampleModalCenter")
+//            .attr("href","#")
+        
+        
+        var svgCont = d3.select("#reach-plot")
             .append("div")
-            .classed("col-xs-4","true")
+            .classed("col-xs-"+colW,"true")
+            .classed("chart-scroller","true")
             .classed("nopadding","true");
         
         var chartXScale = (this.width / this.rows) - (this.margin.right+this.margin.left+40),
@@ -1065,10 +1069,16 @@ d3.selectAll("input[name='radio']").on("change", function (d, i) {
 
 
 
-
 haiPlot("#hai-plot");
 MultiReachabilityPlots()
 $('#loading').delay(1000).fadeOut(1000);
+
+
+
+d3.select("#downloader").on("click", function(){
+    svg2img("svg");
+});
+
 //ReachabilityPlot()
 
 //var resizeTimer;
