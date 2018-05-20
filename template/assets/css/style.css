@@ -13,37 +13,6 @@ text.instructions {
 	font-size: 16px;
 }
 
-g.context g.brush rect.background {
-	fill: rgba(0,0,0,.1);
-}
-
-g.context g.axis path {
-	stroke-opacity: 0;
-}
-
-g.context g.axis line {
-	stroke-opacity: .1;
-}
-
-g.france path.chart {
-	fill: rgba(127,201,127,0.5);
-}
-
-g.germany path.chart {
-	fill: rgba(127,201,174,0.5);
-}
-
-g.japan path.chart {
-	fill: rgba(127,183,201,0.5);
-}
-
-g.uk path.chart {
-	fill: rgba(127,130,201,0.5);
-}
-
-g.usa path.chart {
-	fill: rgba(171,127,201,0.5);
-}
 
 .axis path, .axis line {
 	fill: none;
@@ -81,7 +50,7 @@ g.context rect.background{
 .link {
 	fill: none;
 	/* stroke: black; */
-	stroke-width: 1.5px;
+	stroke-width: 1px;
 }
 
 line {
@@ -202,9 +171,11 @@ body {
 }
 
 
+/*
 @media screen and (max-width: 767px){
     
 }
+*/
 
 .side-logo {
     width:80%;
@@ -265,5 +236,38 @@ body {
 {
     background-color: transparent;
     border-radius: 3px;
+}
+
+
+/*
+.panel-options > .dropdown-menu {
+    background:rgba(255,255,255,0.8);
+}
+*/
+
+/*.panel-options > .dropdown-menu > li > a:hover {
+    background:rgba(70,180,200,0.3);
+}
+*/
+
+.options-value{
+    width: 80%;
+    margin: 0 auto;
+}
+
+.options-value > p {
+    display: inline-block;
+    padding: 0 8px 0 0;
+}
+
+.options-value > input[type=number] {
+    display: inline-block;
+    width: 100%;
+    display: none;
+}
+
+.panel-options > .dropdown-menu > li > input {
+    padding:10px;
+    width: 5px;
 }
 
