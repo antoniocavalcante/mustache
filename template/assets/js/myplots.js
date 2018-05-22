@@ -73,6 +73,8 @@ function MultiReachabilityPlots() {
         var charts = [];
 
         var chartHeight = height * (1 / rows.length);
+        
+        colorScale.domain([0, rows.length]);
 
         for (var i = 0; i < rows.length; i++) {
 
@@ -755,6 +757,9 @@ function dendrogram3() {
         .separation(function separation(a, b) {
             return a.parent == b.parent ? 2 : 2;
         });
+    
+    var clusters = {},
+        changedClusters = null;
 
     // Maximum values for the Y axis
     var ymax = Number.MIN_VALUE;
@@ -819,6 +824,12 @@ function dendrogram3() {
             .text(function (d) {
                 return d.children ? "" : d.data.label;
             });
+        
+        // Define the div for the tooltip
+        var div = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+        
 
         var transitionTime = 75;
 
@@ -948,7 +959,75 @@ function dendrogram3() {
             .on("end", function () {
                 d3.select("body")
                     .style("cursor", "auto");
+            });
+        
+        function manualExtract(bool){
+            if(bool){
+                node.on("mouseover", function (d) {
+                d3.select(this).attr("stroke", "red")
+                div.transition()
+                    .duration(200)
+                    .style("opacity", 1.0);
+
+                if (d.data.name) {
+                    displayText = d.data.name;
+                } else {
+                    displayText = d.label;
+                }
+
+                div.html(displayText)
+                    .style("left", (d3.event.pageX + 10) + "px")
+                    .style("top", (d3.event.pageY) + "px");
             })
+            .on("mouseout", function (d) {
+                d3.select(this).attr("stroke","none");
+                div.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+
+            }).on("click", function (d) {
+                if (d.children == null) {
+                    return;
+                }
+
+                if (clusters[d.data.name]) {
+                    delete clusters[d.data.name];
+                    
+                } else {
+
+                    children = d.descendants();
+                    parents = d.ancestors();
+
+                    // removes parents from colouring
+                    for (x = 0; x < parents.length; x++) {
+                        if (clusters[parents[x].data.name]) {
+                            delete clusters[parents[x].data.name];
+                        }
+                    }
+
+                    // removes children nodes from the selected clusters
+                    for (x = 0; x < children.length; x++) {
+                        if (clusters[children[x].data.name]) {
+                            delete clusters[children[x].data.name];
+                        }
+                    }
+
+                    // add selection to selected clusters
+                    clusters[d.data.name] = d;
+
+                }
+
+                shading(clusters);
+
+            });
+            } else {
+                node.on("click", null);
+                node.on("mouseover",null);
+                node.on("mouseout",null);
+            }
+        }
+        
+        
 
 
         // Threshold Bar
@@ -990,7 +1069,39 @@ function dendrogram3() {
             .attr("class", "y axis")
             .attr("transform", "translate(0,0)")
             .call(yAxis);
+        
+        function dendoSelect(a) {
+            if (a.checked) {
+                option = a.value;
+                if (option == 'bar') {
+                    thresholdBar.classed("hidden", false);
+                    manualExtract(false);
 
+                        d3.select("#slider").text(function(){
+                            clusters = clusterThresholdExtraction(this.value);
+                            shading(clusters)
+                        });
+
+                } else if (option == 'manual') {
+                    thresholdBar.classed("hidden", true);
+                    manualExtract(true);
+                    shading(clusters);
+                } 
+            }
+            changedClusters = clusters;
+        }
+
+        // set dendogram initially 
+        d3.selectAll("input").each(function (d, i) {
+            dendoSelect(this)
+        })
+
+        // set dendogram when radio buttons changed
+        d3.selectAll("input[name='radio']").on("change", function () {
+            dendoSelect(this)
+            console.log(clusters, changedClusters);
+        })
+        
     });
 
     // Transform this into a path
@@ -998,6 +1109,12 @@ function dendrogram3() {
         return "M" + d.parent.x + "," + yScaleInverted(d.parent.data.y) +
             "H" + d.x + "V" + yScaleInverted(d.data.y);
     }
+    
+    function jsonEqual(a,b){
+        return JSON.stringify(a) == JSON.stringify(b);
+    }
+    
+    
 
 }
 
@@ -1322,32 +1439,32 @@ function ReachabilityPlot() {
 }
 
 // select which dendogram to draw based on option selected
-function dendoSelect(a) {
-    if (a.checked) {
-        option = a.value;
-        if (option == 'bar') {
-            dendrogram3();
-        } else if (option == 'manual') {
-            dendrogram2();
-        } else if (option == 'fosc') {
-            dendrogram();
-        }
-    }
-}
+//function dendoSelect(a) {
+//    if (a.checked) {
+//        option = a.value;
+//        if (option == 'bar') {
+//            dendrogram3();
+//        } else if (option == 'manual') {
+//            dendrogram2();
+//        } else if (option == 'fosc') {
+//            dendrogram();
+//        }
+//    }
+//}
+//
+//// set dendogram initially 
+//d3.selectAll("input").each(function (d, i) {
+//    dendoSelect(this)
+//})
+//
+//// set dendogram when radio buttons changed
+//d3.selectAll("input[name='radio']").on("change", function () {
+//    d3.select("#chart-dendrogram").select("svg").remove();
+//    dendoSelect(this)
+//})
 
-// set dendogram initially 
-d3.selectAll("input").each(function (d, i) {
-    dendoSelect(this)
-})
 
-// set dendogram when radio buttons changed
-d3.selectAll("input[name='radio']").on("change", function () {
-    d3.select("#chart-dendrogram").select("svg").remove();
-    dendoSelect(this)
-})
-
-
-
+dendrogram3();
 haiPlot("#hai-plot");
 MultiReachabilityPlots()
 $('#loading').delay(1000).fadeOut(1000);
