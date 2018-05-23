@@ -1,3 +1,7 @@
+
+var globalColor = d3.interpolateViridis;
+
+
 function panelSize(){
     
     var navBarH = $(".navbar").height(),
@@ -61,10 +65,10 @@ function MultiReachabilityPlots() {
     charts = []
     mpts = [9, 27, 35, 46]
 
-    var colorScale = d3.scaleSequential(d3.interpolatePlasma)
+    var colorScale = d3.scaleSequential(globalColor)
         .domain([0, 3]);
 
-    d3.text('data/data3.csv', createChart);
+    d3.text('data/anuran.csv', createChart);
 
     function createChart(data) {
 
@@ -107,7 +111,7 @@ function MultiReachabilityPlots() {
         this.mpts = options.m;
         this.rows = options.rows;
         
-        this.rows = 2;
+        this.rows = 6;
         
         colW = parseInt(12 / this.rows);
         
@@ -224,6 +228,7 @@ function MultiReachabilityPlots() {
 
 }
 
+
 function dendrogram() {
 
     var margin = {
@@ -237,515 +242,7 @@ function dendrogram() {
         height = $("#dendogram-panel").find(".panel-body").attr("height");
     
 
-    var colorScale = d3.scaleSequential(d3.interpolatePlasma)
-
-    var svg = d3.select("#chart-dendrogram").append("svg")
-        .attr("preserveAspectRatio", "xMidYMid Slice")
-        .attr("viewBox", "-40 -15 " + (width-60) + " " + (height-15));
-
-    // Variable to hold the root of the hierarchy.
-    var clusterLayout = d3.cluster()
-        .size([width - 100, height])
-        .separation(function separation(a, b) {
-            return a.parent == b.parent ? 2 : 2;
-        });
-
-    // Maximum values for the Y axis
-    var ymax = Number.MIN_VALUE;
-    var ymin = Number.MAX_VALUE;
-
-    var color = d3.scaleOrdinal(d3.schemeCategory10);
-
-    var data = d3.json("data/readme3.json", function (json) {
-        var root = d3.hierarchy(json);
-
-        clusterLayout(root);
-
-        var nodes = root.descendants()
-
-        // Finds the maximum and minimum density values.
-        nodes.forEach(function (d) {
-            if (d.data.y > ymax)
-                ymax = d.data.y;
-            if (d.data.y < ymin)
-                ymin = d.data.y;
-        });
-
-        var exp = 1.0
-
-        yScale = d3.scalePow().domain([ymin, ymax]).range([0, height - 60]).exponent(exp).clamp(true);
-        yScaleInverted = d3.scalePow().domain([ymax, ymin]).range([0, height - 60]).exponent(exp).clamp(true);
-
-        var loadLine = d3.select("#slider").property("value")
-        if (typeof (loadLine) == 'float') {
-            hardcodeline = loadLine
-        } else {
-            var hardcodeline = (loadLine / 100) * ymax;
-        }
-
-
-        var link = svg.selectAll(".link")
-            .data(nodes.slice(1))
-            .enter().append("path")
-            .attr("class", "link")
-            .attr("d", elbow);
-
-        var node = svg.selectAll(".node")
-            .data(nodes)
-            .enter().append("g")
-            .attr("class", "node")
-            .attr("transform", function (d) {
-                return "translate(" + d.x + "," + yScaleInverted(d.data.y) + ")";
-            });
-
-        // Adds the shape of the nodes in the dendrogram.
-        node.append("circle")
-            .attr("r", 3)
-            .style
-
-        node.append("text")
-            .attr("x", 0)
-            .attr("y", 20)
-            .style("text-anchor", "middle")
-            .text(function (d) {
-                return d.children ? "" : d.data.label;
-            });
-
-        var transitionTime = 75;
-
-        // colour and extract clusters from dendogram based on threshold bar current value. 
-        function clusterThresholdExtraction(currentValue) {
-            var counter = 1;
-            var colouring = {};
-            var clusters = {}
-            
-            
-
-            function traverse(d, i) {
-                
-                console.log(d.data.y);
-                console.log("line val " + currentValue);
-
-                if (d.data.y <= currentValue) {
-                    if (d.parent != null && d.parent.data.y > currentValue && d.children != null) {
-                        clusters[d.data.name] = d;
-                        colouring[d.data.name] = counter;
-                        var childs = d.descendants();
-                        for (x = 0; x < childs.length; x++) {
-                            colouring[childs[x].data.name] = counter;
-                        }
-                        counter = counter + 2;
-                    }
-                } else if (d.data.y == currentValue && d.parent == null){
-                    console.log("max");
-                    clusters[d.data.name] = d;
-                    colouring[d.data.name] = counter;
-                    var childs = d.descendants();
-                    for (x = 0; x < childs.length; x++) {
-                        colouring[childs[x].data.name] = counter;
-                    }
-                    counter = counter + 2;
-                    
-                }
-
-            };
-
-            node.each(traverse);
-
-            colorScale.domain([0, counter]);
-
-            link.transition()
-                .duration(transitionTime)
-                .attr("stroke", function (d, i) {
-                    if (d.parent.data.y < currentValue ) {
-                        var val = colouring[d.data.name];
-                        return colorScale(val);
-                    }
-                    return "grey";
-                }).style("opacity", function (d, i) {
-                    if (d.parent.data.y < currentValue ) {
-                        var val = colouring[d.data.name];
-                        return 1;
-                    }
-                    return 0.3;
-                });
-
-            node.transition()
-                .duration(transitionTime)
-                .attr("fill", function (d, i) {
-                    var val = colouring[d.data.name];
-                    if (val != null) {
-                        return colorScale(val);
-                    }
-                    return "grey";
-                }).style("opacity", function (d, i) {
-                    var val = colouring[d.data.name];
-                    if (val != null) {
-                        return 1
-                    }
-                    return 0.3;
-                });
-
-            return clusters;
-
-        }
-
-        var drag = d3.drag()
-            .on('drag', function (d) {
-                d3.select("body")
-                    .style("cursor", "row-resize");
-                var dy = d3.event.dy;
-                var y1New = parseFloat(d3.select(this).attr('y1')) + dy;
-                var y2New = parseFloat(d3.select(this).attr('y2')) + dy;
-                d3.select(this)
-                    .attr("y1", function () {
-                        if (y1New < 0) {
-                            return 0;
-                        } else if (y1New > height - 60) {
-                            return height - 60;
-                        } else {
-                            return y1New
-                        }
-                    })
-                    .attr("y2", function () {
-                        if (y2New < 0) {
-                            return 0;
-                        } else if (y2New > height - 60) {
-                            return height - 60;
-                        } else {
-                            return y2New
-                        }
-                    });
-
-                var lineScale = d3.scalePow().domain([height - 60, 0]).range([ymin, ymax]).exponent(exp).clamp(true);
-                var currentValue = lineScale(y1New);
-                d3.select("#slider").property("value", function () {
-                    return currentValue;
-                });
-                clusters = clusterThresholdExtraction(currentValue);
-            })
-            .on("end", function () {
-                d3.select("body")
-                    .style("cursor", "auto");
-            })
-
-
-        // Threshold Bar
-        var thresholdBar = svg.append("g");
-
-        thresholdBar.append("line")
-            .attr("x1", 0)
-            .attr("y1", yScaleInverted(hardcodeline))
-            .attr("x2", width - margin.left - margin.right - 100) // Dynamic size of the bar
-            .attr("y2", yScaleInverted(hardcodeline))
-            .call(drag)
-            .on("mousedown", function () {
-                d3.select("body")
-                    .style("cursor", "row-resize");
-            })
-            .on("mouseup", function () {
-                d3.select("body")
-                    .style("cursor", "auto");
-            });
-
-        d3.select("#slider")
-            .property("min", ymin)
-            .property("max", ymax)
-            .attr("step", (ymax - ymin) / 1000)
-            .property("value", hardcodeline)
-            .text(function () {
-                clusterThresholdExtraction(this.value);
-                return this.value;
-            });
-        
-        $("#slider").css("width", height-60);
-
-        // Link the threshold bar to the slider.
-        d3.select("#slider").on("input", function () {
-            var currentValue = this.value;
-            thresholdBar.select("line").attr("y1", y1 => yScaleInverted(currentValue))
-            thresholdBar.select("line").attr("y2", y2 => yScaleInverted(currentValue))
-            clusters = clusterThresholdExtraction(currentValue);
-
-        });
-
-        d3.select("#slider").on("change", function () {
-            displayText = "";
-            Object.keys(clusters).forEach(function (key) {
-                displayText = displayText + clusters[key].data.name + ", ";
-            });
-            d3.select("#medoids").select('span').html(displayText);
-        })
-
-        var yAxis = d3.axisLeft().scale(this.yScaleInverted).ticks(5);
-
-        svg.append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(0,0)")
-            .call(yAxis);
-
-    });
-
-    // Transform this into a path
-    function elbow(d, i) {
-        return "M" + d.parent.x + "," + yScaleInverted(d.parent.data.y) +
-            "H" + d.x + "V" + yScaleInverted(d.data.y);
-    }
-
-}
-
-function dendrogram2() {
-    var margin = {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0
-    };
-
-    var width = $("#dendogram-panel").find(".panel-body").attr("width"),
-        height = $("#dendogram-panel").find(".panel-body").attr("height");
-    
-
-    var colorScale = d3.scaleSequential(d3.interpolatePlasma)
-
-    var svg = d3.select("#chart-dendrogram").append("svg")
-        .attr("preserveAspectRatio", "xMidYMid Slice")
-        .attr("viewBox", "-40 -15 " + (width-60) + " " + (height-15));
-
-    // Variable to hold the root of the hierarchy.
-    var clusterLayout = d3.cluster()
-        .size([width - 100, height])
-        .separation(function separation(a, b) {
-            return a.parent == b.parent ? 2 : 2;
-        });
-
-    // Maximum values for the Y axis
-    var ymax = Number.MIN_VALUE;
-    var ymin = Number.MAX_VALUE;
-
-    var color = d3.scaleOrdinal(d3.schemeCategory10);
-
-    var data = d3.json("data/readme3.json", function (json) {
-        var root = d3.hierarchy(json);
-
-        clusterLayout(root);
-
-        var nodes = root.descendants()
-
-        // Finds the maximum and minimum density values.
-        nodes.forEach(function (d) {
-            if (d.data.y > ymax)
-                ymax = d.data.y;
-            if (d.data.y < ymin)
-                ymin = d.data.y;
-        });
-
-        // Creates the scale of the Dendrogram. Use yScaleInverted(x) for inverted.
-        yScale = d3.scaleLinear().domain([ymin, ymax]).range([0, height - 60]);
-        yScaleInverted = d3.scaleLinear().domain([ymax, ymin]).range([0, height - 60]);
-
-        var hardcodeline = ymax / 2
-
-        var link = svg.selectAll(".link")
-            .data(nodes.slice(1))
-            .enter().append("path")
-            .attr("class", "link")
-            .attr("d", elbow)
-            .attr("stroke", "grey")
-            .style("opacity", 0.3);
-
-        var node = svg.selectAll(".node")
-            .data(nodes)
-            .enter().append("g")
-            .attr("class", "node")
-            .attr("fill", "grey")
-            .style("opacity", 0.3)
-            .attr("transform", function (d) {
-                return "translate(" + d.x + "," + yScaleInverted(d.data.y) + ")";
-            });
-
-        // Adds the shape of the nodes in the dendrogram.
-        node.append("circle")
-            .attr("r", 3.5)
-
-
-        node.append("text")
-            .attr("x", 0)
-            .attr("y", 20)
-            .style("text-anchor", "middle")
-            .text(function (d) {
-                return d.children ? "" : d.data.label;
-            });
-
-
-        // Define the div for the tooltip
-        var div = d3.select("body").append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
-        
-        transitionTime = 75;
-        
-        
-        function shading(clusters){
-            
-            var colouring = {};
-            
-            // label nodes with the color colors
-                counter = 1;
-                Object.keys(clusters).forEach(function (key) {
-                    childs = clusters[key].descendants();
-                    for (y = 0; y < childs.length; y++) {
-                        colouring[childs[y].data.name] = counter;
-                    }
-                    counter++;
-                });
-
-                // adjust color scale to match number of selection
-                colorScale = d3.scaleSequential(d3.interpolatePlasma)
-                    .domain([1, Object.keys(clusters).length + 1]);
-
-                // fill node circles with color
-                node.transition()
-                    .duration(transitionTime)
-                    .attr("fill", function (d, i) {
-                        val = colouring[d.data.name];
-                        
-                        if (val) {
-                            return colorScale(val);
-                        }
-                        return "grey"
-                        
-                    }).style("opacity", function (d, i) {
-                        val = colouring[d.data.name];
-                        if (val) {
-                            return 1;
-                        }
-                        return 0.3
-                    });
-
-                // change node link colors
-                link.transition()
-                    .duration(transitionTime)
-                    .attr("stroke", function (d, i) {
-                        
-                        if(clusters[d.data.name]){
-                            return "grey";
-                        }
-                    
-                        val = colouring[d.data.name];
-                        if (val) {
-                            return colorScale(val);
-                        }
-                        return "grey";
-                    }).style("opacity", function (d, i) {
-                        
-                        if(clusters[d.data.name]){
-                            return 0.3;
-                        }
-                    
-                        val = colouring[d.data.name];
-                        if (val) {
-                            return 1;
-                        }
-                        return 0.3
-                    });
-            
-        }
-        
-
-
-        clusters = {}
-
-        node.on("mouseover", function (d) {
-                d3.select(this).attr("stroke", "red")
-                div.transition()
-                    .duration(200)
-                    .style("opacity", 1.0);
-
-                if (d.data.name) {
-                    displayText = d.data.name;
-                } else {
-                    displayText = d.label;
-                }
-
-                div.html(displayText)
-                    .style("left", (d3.event.pageX + 10) + "px")
-                    .style("top", (d3.event.pageY) + "px");
-            })
-            .on("mouseout", function (d) {
-                d3.select(this).attr("stroke","none");
-                div.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-
-            }).on("click", function (d) {
-                if (d.children == null) {
-                    return;
-                }
-
-                if (clusters[d.data.name]) {
-                    delete clusters[d.data.name];
-                    
-                } else {
-
-                    children = d.descendants();
-                    parents = d.ancestors();
-
-                    // removes parents from colouring
-                    for (x = 0; x < parents.length; x++) {
-                        if (clusters[parents[x].data.name]) {
-                            delete clusters[parents[x].data.name];
-                        }
-                    }
-
-                    // removes children nodes from the selected clusters
-                    for (x = 0; x < children.length; x++) {
-                        if (clusters[children[x].data.name]) {
-                            delete clusters[children[x].data.name];
-                        }
-                    }
-
-                    // add selection to selected clusters
-                    clusters[d.data.name] = d;
-
-                }
-
-                shading(clusters);
-
-            });
-
-
-        var yAxis = d3.axisLeft().scale(this.yScaleInverted).ticks(5);
-
-        svg.append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(0,0)")
-            .call(yAxis);
-
-    });
-
-    // Transform this into a path
-    function elbow(d, i) {
-        return "M" + d.parent.x + "," + yScaleInverted(d.parent.data.y) +
-            "H" + d.x + "V" + yScaleInverted(d.data.y);
-    }
-
-}
-
-function dendrogram3() {
-
-    var margin = {
-        top: 10,
-        right: 0,
-        bottom: 10,
-        left: 0
-    };
-    
-    var width = $("#dendogram-panel").find(".panel-body").attr("width"),
-        height = $("#dendogram-panel").find(".panel-body").attr("height");
-    
-
-    var colorScale = d3.scaleSequential(d3.interpolatePlasma)
+    var colorScale = d3.scaleSequential(globalColor);
 
     var svg = d3.select("#chart-dendrogram").append("svg")
         .attr("preserveAspectRatio", "xMidYMid Slice")
@@ -759,7 +256,7 @@ function dendrogram3() {
         });
     
     var clusters = {},
-        changedClusters = null;
+        changedClusters = false;
 
     // Maximum values for the Y axis
     var ymax = Number.MIN_VALUE;
@@ -767,7 +264,7 @@ function dendrogram3() {
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-    var data = d3.json("data/readme3.json", function (json) {
+    var data = d3.json("data/readme4.json", function (json) {
         var root = d3.hierarchy(json);
 
         clusterLayout(root);
@@ -870,8 +367,7 @@ function dendrogram3() {
                 });
 
                 // adjust color scale to match number of selection
-                colorScale = d3.scaleSequential(d3.interpolatePlasma)
-                    .domain([1, Object.keys(clusters).length + 1]);
+                colorScale.domain([1, Object.keys(clusters).length + 1]);
 
                 // fill node circles with color
                 node.transition()
@@ -1070,25 +566,48 @@ function dendrogram3() {
             .attr("transform", "translate(0,0)")
             .call(yAxis);
         
+        // dendogram node selection method switcher
+        var a1, b1;
         function dendoSelect(a) {
+                    
             if (a.checked) {
+                
+               a1 = Object.keys(clusters);
+                       
                 option = a.value;
+                
                 if (option == 'bar') {
+                    
                     thresholdBar.classed("hidden", false);
                     manualExtract(false);
-
+                    
+                    if(b1 == undefined){
+                        b1 = a1;
+                    }
+                    
+                    var isEqual = (JSON.stringify(a1.sort()) === JSON.stringify(b1.sort()));
+                    
+                    if(!isEqual){
+                        
                         d3.select("#slider").text(function(){
                             clusters = clusterThresholdExtraction(this.value);
                             shading(clusters)
-                        });
-
+                        }); 
+    
+                    }
+                    
                 } else if (option == 'manual') {
+                    
                     thresholdBar.classed("hidden", true);
                     manualExtract(true);
                     shading(clusters);
-                } 
+                    
+                }
+                
+                b1 = Object.keys(clusters);
+
             }
-            changedClusters = clusters;
+            
         }
 
         // set dendogram initially 
@@ -1099,7 +618,6 @@ function dendrogram3() {
         // set dendogram when radio buttons changed
         d3.selectAll("input[name='radio']").on("change", function () {
             dendoSelect(this)
-            console.log(clusters, changedClusters);
         })
         
     });
@@ -1109,12 +627,8 @@ function dendrogram3() {
         return "M" + d.parent.x + "," + yScaleInverted(d.parent.data.y) +
             "H" + d.x + "V" + yScaleInverted(d.data.y);
     }
-    
-    function jsonEqual(a,b){
-        return JSON.stringify(a) == JSON.stringify(b);
-    }
-    
-    
+        
+
 
 }
 
@@ -1169,7 +683,7 @@ function haiPlot() {
                     labels.push(i);
                 }
             
-                var colorScale = d3.scaleSequential(d3.interpolatePlasma)
+                var colorScale = d3.scaleSequential(d3.interpolateViridis)
                     .domain([minValue, maxValue]);
             
 //                // ------------------------------------------------------------------------------
@@ -1438,33 +952,8 @@ function ReachabilityPlot() {
     }
 }
 
-// select which dendogram to draw based on option selected
-//function dendoSelect(a) {
-//    if (a.checked) {
-//        option = a.value;
-//        if (option == 'bar') {
-//            dendrogram3();
-//        } else if (option == 'manual') {
-//            dendrogram2();
-//        } else if (option == 'fosc') {
-//            dendrogram();
-//        }
-//    }
-//}
-//
-//// set dendogram initially 
-//d3.selectAll("input").each(function (d, i) {
-//    dendoSelect(this)
-//})
-//
-//// set dendogram when radio buttons changed
-//d3.selectAll("input[name='radio']").on("change", function () {
-//    d3.select("#chart-dendrogram").select("svg").remove();
-//    dendoSelect(this)
-//})
 
-
-dendrogram3();
+dendrogram();
 haiPlot("#hai-plot");
 MultiReachabilityPlots()
 $('#loading').delay(1000).fadeOut(1000);
@@ -1477,13 +966,13 @@ d3.select("#line-width").on("change", function(){
 
 
 
-$("#downloader").on("click",function(){
-    var elemr = $("#chart1").parent();
-        
-        elemr.hide("fast", function(){
-           elemr.remove(); 
-        });
-});
+//$("#downloader").on("click",function(){
+//    var elemr = $("#chart1").parent();
+//        
+//        elemr.hide("fast", function(){
+//           elemr.remove(); 
+//        });
+//});
 
 
 //ReachabilityPlot()

@@ -137,10 +137,10 @@
                                         <li class="dropdown panel-options">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-cog"></i></a>
                                             <ul class="dropdown-menu dropdown-menu-right">
-                                                <li><a href="#">Basic Use</a></li>
-                                                <li><a href="#">Working With Data</a></li>
-                                                <li><a href="#">Security</a></li>
-                                                <li><a href="#">Troubleshooting</a></li>
+                                                <li><a href="#">Node Size</a></li>
+                                                <li><a href="#">Line Width</a></li>
+                                                <li><a href="#">Axes Scaling</a></li>
+                                                <li><a href="#">Reset</a></li>
                                             </ul>
                                         </li>
                                     </div>
@@ -158,15 +158,22 @@
                                 </div>
                                 <div class="panel-footer">
                                     <div class="row">
-                                        <div class="col-sm-4">
-                                                <div class="switch-field">
-                                                  <input type="radio" id="switch_3_left" name="radio" value="fosc" disabled/>
-                                                  <label for="switch_3_left">FOSC</label>
-                                                  <input type="radio" id="switch_3_center" name="radio" value="bar" checked/>
-                                                  <label for="switch_3_center">Threshold</label>
-                                                  <input type="radio" id="switch_3_right" name="radio" value="manual"/>
-                                                  <label for="switch_3_right">Manual</label>
-                                                </div>
+                                        <div class="col-sm-4 text-center">
+                                            <p>FOSC
+                                            <input type="radio" name="radio" value="fosc" disabled>
+                                            </p>
+                                        </div>
+
+                                        <div class="col-sm-4 text-center">
+                                            <p>Threshold Bar
+                                            <input type="radio" name="radio" value="bar" checked>
+                                          </p>
+                                        </div>
+
+                                        <div class="col-sm-4 text-center">
+                                            <p>Manual Selection
+                                            <input type="radio" name="radio" value="manual">
+                                          </p>
                                         </div>
                                     </div>
                                 </div>
@@ -255,12 +262,14 @@
     </div>
     <!-- END WRAPPER -->
     <!-- Javascript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script>
     <script src="assets/vendor/jquery/jquery.min.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/d3-drag.v1.min.js"></script>
     <script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
     <script src="assets/scripts/klorofil-common.js"></script>
+    <script src="assets/js/difference.js"></script>
     <script src="assets/js/layout.js"></script>
     <script type="text/javascript" src="assets/js/myplots.js"></script>
 
