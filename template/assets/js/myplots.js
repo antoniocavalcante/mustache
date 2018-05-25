@@ -1,68 +1,36 @@
 var globalColor = d3.interpolateViridis,
-    clusters = {};
+    clusters = {},
+    charts = [];
 
 
-function update(data) {
-
-    var roots = {}
-
-    Object.keys(data).forEach(function (key) {
-        var leafs = data[key].leaves();
-        var newarr = [];
-        for (i = 0; i < leafs.length; i++) {
-            newarr.push(leafs[i].data.label);
-        }
-
-        roots[key] = newarr.map(function(a){return a-2;});
-    });
-
-
-    d3.text("data/data4.csv", getMed)
-
-    function getMed(vals) {
-
-        var rows = d3.csvParseRows(vals);
-        var medoids = [];
-            
-        Object.keys(roots).forEach(function (key) {
-            var leafs = roots[key];
-
-//            console.log(leafs);
-            
-            var temp = [],
-                start = leafs[0],
-                end = leafs[leafs.length-1];
-            
-            leafs.forEach(function(i){
-                slice = rows[i].slice(start, end);
-                sm = d3.sum(slice.map(function(d,i){
-                    return 1.0-d;
-                }));
-                temp.push(sm);
-            })
-            
-//            console.log(temp);
-            
-            medoids.push(leafs[temp.indexOf(d3.min(temp))]+2);
-        });
-        
-        var u = d3.select('#meds')
-            .selectAll('div')
-            .data(medoids);
-
-        u.enter()
-            .append('div')
-            .merge(u)
-            .text(function (d, i) {
-                return d;
-            });
-
-        u.exit().remove();
-
-        }
-
-}
-
+//function update(data) {
+//    
+//        var medoids = [];
+//    
+//        Object.keys(data).forEach(function(key){
+//            var pair = [data[key].data.medoid,data[key].data.color];
+//            medoids.push(pair);
+//        })
+//        
+//        charts = medoids.length;
+//       
+//        var u = d3.select('#reach-plot')
+//            .data(medoids);
+//
+//        var v = u.enter().merge(u)
+//    
+//        v.each(function(d,i){
+//            console.log(d,i);
+//        })
+//        
+//        u.exit().remove();
+//    
+//    
+//        function dostuff(dater){
+//            return dater[0];
+//        }
+//
+//}
 
 function panelSize() {
 
@@ -110,6 +78,193 @@ function setWindow(container) {
     body.attr("height", newH);
 
 }
+
+
+function update(clust) {
+    
+        var medoids = [];
+    
+        Object.keys(clust).forEach(function(key){
+            var pair = [clust[key].data.medoid, clust[key].data.color];
+            medoids.push(pair);
+        })
+        
+        console.log(medoids.length);
+    
+        var margin = {
+            top: 0,
+            right: 0,
+            bottom: 20,
+            left: 0
+        },
+
+        width = $("#reach-panel").find(".panel-body").attr("width"),
+        height = $("#reach-panel").find(".panel-body").attr("height") - 10;
+
+        var colorScale = d3.scaleSequential(globalColor)
+            .domain([0, medoids.length]);
+    
+        var u = d3.select('#reach-plot').selectAll(".chart-scroller")
+            .data(medoids)
+                .remove();
+
+
+        var v = u.enter().merge(u)
+
+        v.each(function(d,i){
+
+            d3.text("data/rpts/reach_"+d[0], function(d2){
+                createChart(d2, u, i, d[1], d[0])
+            });
+
+        });
+    
+        u.exit().remove();
+                    
+            function createChart(data, cont, i, fill, id) {
+                                
+                var rows = d3.csvParseRows(data);
+
+                new Chart({
+                    data: rows[0].map(function (d) {
+                        return +d;
+                    }),
+                    id: id,
+                    index: i,
+                    width: width,
+                    height: height,
+                    margin: margin,
+                    rows: rows.length,
+                    container: cont,
+                    color: fill
+                });
+
+                }
+
+
+            function Chart(options) {
+                            
+                this.chartData = options.data;
+                this.width = options.width;
+                this.height = options.height;
+                this.svg = options.svg;
+                this.id = options.id;
+                this.name = options.name;
+                this.margin = options.margin;
+                this.showBottomAxis = true;
+                this.mpts = [];
+                this.rows = options.rows;
+                this.container = options.container;
+                this.fill = options.color;
+                this.index = options.index
+
+                this.rows = 3;
+
+                colW = parseInt(12 / this.rows);
+
+                //        .append("a")
+                //            .attr("data-toggle","modal")
+                //            .attr("data-target","#exampleModalCenter")
+                //            .attr("href","#")
+
+
+                var svgCont = d3.select("#reach-plot")
+                    .append("div")
+                    .classed("col-xs-" + colW, "true")
+                    .classed("chart-scroller", "true")
+                    .classed("nopadding", "true");
+                
+//                var svgCont = d3.select("#reach-plot").select(".chart-scroller");
+                
+                var chartXScale = (this.width / this.rows) - (this.margin.right + this.margin.left + 40),
+                    chartYScale = this.height - (this.margin.top + this.margin.bottom);
+
+                var svg = svgCont.append("svg")
+                    .attr("id", "chart" + this.id)
+                    .attr("preserveAspectRatio", "xMinYMin meet")
+                    .attr("viewBox", "-40 " + (-(this.margin.top + this.margin.bottom) / 2) + " " + options.width / this.rows + " " + (options.height));
+
+
+
+                /* XScale is based on the number of points to be plotted */
+                this.xScale = d3.scaleLinear()
+                    .range([0, chartXScale])
+                    .domain([0, this.chartData.length - 1]);
+
+
+                /* YScale is linear based on the maxData Point we found earlier */
+                this.yScale = d3.scaleLinear()
+                    .range([chartYScale, 0])
+                    .domain([0, d3.max(this.chartData)]);
+
+                var xS = this.xScale;
+                var yS = this.yScale;
+
+                /*
+                  This is what creates the chart.
+                  There are a number of interpolation options.
+                  'basis' smooths it the most, however, when working with a lot of data, this will slow it down
+                */
+
+
+                this.height = chartYScale;
+                this.width = chartXScale;
+
+                this.area = d3.area()
+                    .curve(d3.curveBasis)
+                    .x(function (d, i) {
+                        return xS(i);
+                    })
+                    .y0(this.height)
+                    .y1(function (d) {
+                        return yS(d);
+                    });
+
+                /*
+                  This isn't required - it simply creates a mask. If this wasn't here,
+                  when we zoom/panned, we'd see the chart go off to the left under the y-axis
+                */
+                svg.append("defs").append("clipPath")
+                    .attr("id", "clip-" + this.id)
+                    .append("rect")
+                    .attr("width", this.width)
+                    .attr("height", this.height);
+
+                svg.select("defs")
+                    .append("linearGradient")
+                    .attr("id", "grad-" + this.id)
+                    .attr("x1", "0%").attr("y1", "0%")
+                    .attr("x2", "0%").attr("y2", "100%")
+
+                d3.select("#grad-" + this.id).append("stop").attr("offset", "0%").style("stop-color", d3.color(colorScale(this.index)).brighter(1)).style("stop-opacity", "1.0")
+                d3.select("#grad-" + this.id).append("stop").attr("offset", "100%").style("stop-color", colorScale(this.index)).style("stop-opacity", "1.0");
+
+                this.chartContainer = svg.append("g")
+                    .attr("transform", "translate(" + this.margin.left + "," + "0" + ")");
+
+                this.chartContainer.append("path")
+                    .data([this.chartData])
+                    .attr("class", "chart")
+                    .attr("clip-path", "url(#clip-" + this.id + ")")
+                    .style("fill", "url(#grad-" + this.id + ")")
+                    .attr("d", this.area);
+
+                this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
+
+                this.chartContainer.append("g")
+                    .attr("class", "y axis")
+                    .attr("transform", "translate(-10,0)")
+                    .call(this.yAxis);
+
+                this.chartContainer.append("text")
+                    .attr("class", "country-title")
+                    .attr("transform", "translate(" + (chartXScale-150) + ",20)")
+                    .text("mpts: " + this.id);
+
+            }
+
+}
+
 
 
 
@@ -325,7 +480,7 @@ function dendrogram() {
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-    var data = d3.json("data/readme4.json", function (json) {
+    var data = d3.json("data/anuran2.json", function (json) {
         var root = d3.hierarchy(json);
 
         clusterLayout(root);
@@ -424,6 +579,7 @@ function dendrogram() {
                 for (y = 0; y < childs.length; y++) {
                     colouring[childs[y].data.name] = counter;
                 }
+                clusters[key].data['color']=counter;
                 counter++;
             });
 
@@ -1022,7 +1178,7 @@ function ReachabilityPlot() {
 
 dendrogram();
 haiPlot("#hai-plot");
-MultiReachabilityPlots()
+//MultiReachabilityPlots();
 $('#loading').delay(1000).fadeOut(1000);
 
 
