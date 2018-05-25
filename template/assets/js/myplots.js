@@ -1,50 +1,112 @@
+var globalColor = d3.interpolateViridis,
+    clusters = {};
 
-var globalColor = d3.interpolateViridis;
+
+function update(data) {
+
+    var roots = {}
+
+    Object.keys(data).forEach(function (key) {
+        var leafs = data[key].leaves();
+        var newarr = [];
+        for (i = 0; i < leafs.length; i++) {
+            newarr.push(leafs[i].data.label);
+        }
+
+        roots[key] = newarr.map(function(a){return a-2;});
+    });
 
 
-function panelSize(){
-    
+    d3.text("data/data4.csv", getMed)
+
+    function getMed(vals) {
+
+        var rows = d3.csvParseRows(vals);
+        var medoids = [];
+            
+        Object.keys(roots).forEach(function (key) {
+            var leafs = roots[key];
+
+//            console.log(leafs);
+            
+            var temp = [],
+                start = leafs[0],
+                end = leafs[leafs.length-1];
+            
+            leafs.forEach(function(i){
+                slice = rows[i].slice(start, end);
+                sm = d3.sum(slice.map(function(d,i){
+                    return 1.0-d;
+                }));
+                temp.push(sm);
+            })
+            
+//            console.log(temp);
+            
+            medoids.push(leafs[temp.indexOf(d3.min(temp))]+2);
+        });
+        
+        var u = d3.select('#meds')
+            .selectAll('div')
+            .data(medoids);
+
+        u.enter()
+            .append('div')
+            .merge(u)
+            .text(function (d, i) {
+                return d;
+            });
+
+        u.exit().remove();
+
+        }
+
+}
+
+
+function panelSize() {
+
     var navBarH = $(".navbar").height(),
         navBarW = $(".navbar").width(),
         mainHeight = $(".main").height();
-    
+
     var globalWidth = window.innerWidth,
         globalHeight = window.innerHeight,
         globalMainHeight = globalHeight - navBarH,
         padding = 10
-    
-    panelH = (globalMainHeight - (padding*2) - (padding*1.5)) / 2;
-    
-    console.log("panel size is: "+ panelH);
-    
+
+    panelH = (globalMainHeight - (padding * 2) - (padding * 1.5)) / 2;
+
+    console.log("panel size is: " + panelH);
+
     return panelH;
-    
+
 }
 
 
 panelH = panelSize();
 
 var panels = $(".panel");
-for(i = 0; i < panels.length; i++){
+for (i = 0; i < panels.length; i++) {
     panel = panels[i];
     height = setWindow(panel);
-    
+
 }
 
-function setWindow(container){
+function setWindow(container) {
     var panel = $(container),
         footer = panel.find(".panel-footer"),
         header = panel.find(".panel-heading"),
         body = panel.find(".panel-body");
-    
+
     footerH = footer.outerHeight(true);
     headerH = header.outerHeight(true);
     bodyH = body.outerHeight(true);
     panelW = panel.outerWidth(true);
-    
+
     newH = parseInt(panelH - bodyH - footerH - headerH);
     console.log(newH, panelW);
-    body.attr("width",panelW);
+    body.attr("width", panelW);
     body.attr("height", newH);
 
 }
@@ -58,9 +120,9 @@ function MultiReachabilityPlots() {
             bottom: 20,
             left: 0
         },
-        
+
         width = $("#reach-panel").find(".panel-body").attr("width"),
-        height = $("#reach-panel").find(".panel-body").attr("height")-10;
+        height = $("#reach-panel").find(".panel-body").attr("height") - 10;
 
     charts = []
     mpts = [9, 27, 35, 46]
@@ -68,7 +130,7 @@ function MultiReachabilityPlots() {
     var colorScale = d3.scaleSequential(globalColor)
         .domain([0, 3]);
 
-    d3.text('data/anuran.csv', createChart);
+    d3.text('data/data3.csv', createChart);
 
     function createChart(data) {
 
@@ -77,7 +139,7 @@ function MultiReachabilityPlots() {
         var charts = [];
 
         var chartHeight = height * (1 / rows.length);
-        
+
         colorScale.domain([0, rows.length]);
 
         for (var i = 0; i < rows.length; i++) {
@@ -110,32 +172,32 @@ function MultiReachabilityPlots() {
         this.showBottomAxis = options.showBottomAxis;
         this.mpts = options.m;
         this.rows = options.rows;
-        
+
         this.rows = 6;
-        
+
         colW = parseInt(12 / this.rows);
-        
-//        .append("a")
-//            .attr("data-toggle","modal")
-//            .attr("data-target","#exampleModalCenter")
-//            .attr("href","#")
-        
-        
+
+        //        .append("a")
+        //            .attr("data-toggle","modal")
+        //            .attr("data-target","#exampleModalCenter")
+        //            .attr("href","#")
+
+
         var svgCont = d3.select("#reach-plot")
             .append("div")
-            .classed("col-xs-"+colW,"true")
-            .classed("chart-scroller","true")
-            .classed("nopadding","true");
-        
-        var chartXScale = (this.width / this.rows) - (this.margin.right+this.margin.left+40),
-            chartYScale = this.height - (this.margin.top+this.margin.bottom);
-                
+            .classed("col-xs-" + colW, "true")
+            .classed("chart-scroller", "true")
+            .classed("nopadding", "true");
+
+        var chartXScale = (this.width / this.rows) - (this.margin.right + this.margin.left + 40),
+            chartYScale = this.height - (this.margin.top + this.margin.bottom);
+
         var svg = svgCont.append("svg")
-        .attr("id", "chart"+this.id)
-        .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "-40 "+(-(this.margin.top+this.margin.bottom)/2)+" " + options.width/this.rows + " " + (options.height));
-        
-        
+            .attr("id", "chart" + this.id)
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "-40 " + (-(this.margin.top + this.margin.bottom) / 2) + " " + options.width / this.rows + " " + (options.height));
+
+
 
         /* XScale is based on the number of points to be plotted */
         this.xScale = d3.scaleLinear()
@@ -156,13 +218,13 @@ function MultiReachabilityPlots() {
           There are a number of interpolation options.
           'basis' smooths it the most, however, when working with a lot of data, this will slow it down
         */
-        
+
 
         this.height = chartYScale;
         this.width = chartXScale;
-        
+
         this.area = d3.area()
-            .curve(d3.curveBasis) 
+            .curve(d3.curveBasis)
             .x(function (d, i) {
                 return xS(i);
             })
@@ -180,16 +242,16 @@ function MultiReachabilityPlots() {
             .append("rect")
             .attr("width", this.width)
             .attr("height", this.height);
-        
+
         svg.select("defs")
             .append("linearGradient")
             .attr("id", "grad-" + this.id)
             .attr("x1", "0%").attr("y1", "0%")
             .attr("x2", "0%").attr("y2", "100%")
-        
-        d3.select("#grad-" + this.id).append("stop").attr("offset","0%").style("stop-color",d3.color(colorScale(this.id)).brighter(1)).style("stop-opacity","1.0")
-        d3.select("#grad-" + this.id).append("stop").attr("offset","100%").style("stop-color",colorScale(this.id)).style("stop-opacity","1.0");
-                
+
+        d3.select("#grad-" + this.id).append("stop").attr("offset", "0%").style("stop-color", d3.color(colorScale(this.id)).brighter(1)).style("stop-opacity", "1.0")
+        d3.select("#grad-" + this.id).append("stop").attr("offset", "100%").style("stop-color", colorScale(this.id)).style("stop-opacity", "1.0");
+
         this.chartContainer = svg.append("g")
             .attr("transform", "translate(" + this.margin.left + "," + "0" + ")");
 
@@ -198,12 +260,12 @@ function MultiReachabilityPlots() {
             .attr("class", "chart")
             .attr("clip-path", "url(#clip-" + this.id + ")")
             .style("fill", "url(#grad-" + this.id + ")")
-//            .style("stroke",colorScale(this.id))
-//            .style("stroke-width","3px")
+            //            .style("stroke",colorScale(this.id))
+            //            .style("stroke-width","3px")
             .attr("d", this.area);
-            
-        
-//        .style("fill", colorScale(this.id))
+
+
+        //        .style("fill", colorScale(this.id))
 
         this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
 
@@ -212,10 +274,10 @@ function MultiReachabilityPlots() {
             .attr("transform", "translate(-10,0)")
             .call(this.yAxis);
 
-//        this.chartContainer.append("text")
-//            .attr("class", "country-title")
-//            .attr("transform", "translate(" + (chartXScale-150) + ",20)")
-//            .text("mpts: " + this.mpts);
+        //        this.chartContainer.append("text")
+        //            .attr("class", "country-title")
+        //            .attr("transform", "translate(" + (chartXScale-150) + ",20)")
+        //            .text("mpts: " + this.mpts);
 
     }
 
@@ -237,16 +299,16 @@ function dendrogram() {
         bottom: 10,
         left: 0
     };
-    
+
     var width = $("#dendogram-panel").find(".panel-body").attr("width"),
         height = $("#dendogram-panel").find(".panel-body").attr("height");
-    
+
 
     var colorScale = d3.scaleSequential(globalColor);
 
     var svg = d3.select("#chart-dendrogram").append("svg")
         .attr("preserveAspectRatio", "xMidYMid Slice")
-        .attr("viewBox", "-40 -15 " + (width-60) + " " + (height-15));
+        .attr("viewBox", "-40 -15 " + (width - 60) + " " + (height - 15));
 
     // Variable to hold the root of the hierarchy.
     var clusterLayout = d3.cluster()
@@ -254,9 +316,8 @@ function dendrogram() {
         .separation(function separation(a, b) {
             return a.parent == b.parent ? 2 : 2;
         });
-    
-    var clusters = {},
-        changedClusters = false;
+
+    var changedClusters = false;
 
     // Maximum values for the Y axis
     var ymax = Number.MIN_VALUE;
@@ -321,26 +382,26 @@ function dendrogram() {
             .text(function (d) {
                 return d.children ? "" : d.data.label;
             });
-        
+
         // Define the div for the tooltip
         var div = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
-        
+
 
         var transitionTime = 75;
 
         // colour and extract clusters from dendogram based on threshold bar current value. 
         function clusterThresholdExtraction(currentValue) {
             var clusters = {}
-        
+
             function traverse(d, i) {
 
                 if (d.data.y <= currentValue) {
                     if (d.parent != null && d.parent.data.y > currentValue && d.children != null) {
                         clusters[d.data.name] = d;
                     }
-                } else if (d.data.y == currentValue || currentValue == ymax){
+                } else if (d.data.y == currentValue || currentValue == ymax) {
                     clusters[root.data.name] = root;
                 }
 
@@ -351,72 +412,72 @@ function dendrogram() {
             return clusters;
 
         }
-        
-        function shading(clusters){
-            
+
+        function shading(clusters) {
+
             var colouring = {};
-            
+
             // label nodes with the color colors
-                counter = 1;
-                Object.keys(clusters).forEach(function (key) {
-                    childs = clusters[key].descendants();
-                    for (y = 0; y < childs.length; y++) {
-                        colouring[childs[y].data.name] = counter;
+            counter = 1;
+            Object.keys(clusters).forEach(function (key) {
+                childs = clusters[key].descendants();
+                for (y = 0; y < childs.length; y++) {
+                    colouring[childs[y].data.name] = counter;
+                }
+                counter++;
+            });
+
+            // adjust color scale to match number of selection
+            colorScale.domain([1, Object.keys(clusters).length + 1]);
+
+            // fill node circles with color
+            node.transition()
+                .duration(transitionTime)
+                .attr("fill", function (d, i) {
+                    val = colouring[d.data.name];
+
+                    if (val) {
+                        return colorScale(val);
                     }
-                    counter++;
+                    return "grey"
+
+                }).style("opacity", function (d, i) {
+                    val = colouring[d.data.name];
+                    if (val) {
+                        return 1;
+                    }
+                    return 0.3
                 });
 
-                // adjust color scale to match number of selection
-                colorScale.domain([1, Object.keys(clusters).length + 1]);
+            // change node link colors
+            link.transition()
+                .duration(transitionTime)
+                .attr("stroke", function (d, i) {
 
-                // fill node circles with color
-                node.transition()
-                    .duration(transitionTime)
-                    .attr("fill", function (d, i) {
-                        val = colouring[d.data.name];
-                        
-                        if (val) {
-                            return colorScale(val);
-                        }
-                        return "grey"
-                        
-                    }).style("opacity", function (d, i) {
-                        val = colouring[d.data.name];
-                        if (val) {
-                            return 1;
-                        }
-                        return 0.3
-                    });
-
-                // change node link colors
-                link.transition()
-                    .duration(transitionTime)
-                    .attr("stroke", function (d, i) {
-                        
-                        if(clusters[d.data.name]){
-                            return "grey";
-                        }
-                    
-                        val = colouring[d.data.name];
-                        if (val) {
-                            return colorScale(val);
-                        }
+                    if (clusters[d.data.name]) {
                         return "grey";
-                    }).style("opacity", function (d, i) {
-                        
-                        if(clusters[d.data.name]){
-                            return 0.3;
-                        }
-                    
-                        val = colouring[d.data.name];
-                        if (val) {
-                            return 1;
-                        }
-                        return 0.3
-                    });
-            
+                    }
+
+                    val = colouring[d.data.name];
+                    if (val) {
+                        return colorScale(val);
+                    }
+                    return "grey";
+                }).style("opacity", function (d, i) {
+
+                    if (clusters[d.data.name]) {
+                        return 0.3;
+                    }
+
+                    val = colouring[d.data.name];
+                    if (val) {
+                        return 1;
+                    }
+                    return 0.3
+                });
+
         }
-        
+
 
         var drag = d3.drag()
             .on('drag', function (d) {
@@ -455,75 +516,77 @@ function dendrogram() {
             .on("end", function () {
                 d3.select("body")
                     .style("cursor", "auto");
+                update(clusters);
             });
-        
-        function manualExtract(bool){
-            if(bool){
+
+        function manualExtract(bool) {
+            if (bool) {
                 node.on("mouseover", function (d) {
-                d3.select(this).attr("stroke", "red")
-                div.transition()
-                    .duration(200)
-                    .style("opacity", 1.0);
+                        d3.select(this).attr("stroke", "red")
+                        div.transition()
+                            .duration(200)
+                            .style("opacity", 1.0);
 
-                if (d.data.name) {
-                    displayText = d.data.name;
-                } else {
-                    displayText = d.label;
-                }
-
-                div.html(displayText)
-                    .style("left", (d3.event.pageX + 10) + "px")
-                    .style("top", (d3.event.pageY) + "px");
-            })
-            .on("mouseout", function (d) {
-                d3.select(this).attr("stroke","none");
-                div.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-
-            }).on("click", function (d) {
-                if (d.children == null) {
-                    return;
-                }
-
-                if (clusters[d.data.name]) {
-                    delete clusters[d.data.name];
-                    
-                } else {
-
-                    children = d.descendants();
-                    parents = d.ancestors();
-
-                    // removes parents from colouring
-                    for (x = 0; x < parents.length; x++) {
-                        if (clusters[parents[x].data.name]) {
-                            delete clusters[parents[x].data.name];
+                        if (d.data.name) {
+                            displayText = d.data.name;
+                        } else {
+                            displayText = d.label;
                         }
-                    }
 
-                    // removes children nodes from the selected clusters
-                    for (x = 0; x < children.length; x++) {
-                        if (clusters[children[x].data.name]) {
-                            delete clusters[children[x].data.name];
+                        div.html(displayText)
+                            .style("left", (d3.event.pageX + 10) + "px")
+                            .style("top", (d3.event.pageY) + "px");
+                    })
+                    .on("mouseout", function (d) {
+                        d3.select(this).attr("stroke", "none");
+                        div.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+
+                    }).on("click", function (d) {
+                        if (d.children == null) {
+                            return;
                         }
-                    }
 
-                    // add selection to selected clusters
-                    clusters[d.data.name] = d;
+                        if (clusters[d.data.name]) {
+                            delete clusters[d.data.name];
 
-                }
+                        } else {
 
-                shading(clusters);
+                            children = d.descendants();
+                            parents = d.ancestors();
 
-            });
+                            // removes parents from colouring
+                            for (x = 0; x < parents.length; x++) {
+                                if (clusters[parents[x].data.name]) {
+                                    delete clusters[parents[x].data.name];
+                                }
+                            }
+
+                            // removes children nodes from the selected clusters
+                            for (x = 0; x < children.length; x++) {
+                                if (clusters[children[x].data.name]) {
+                                    delete clusters[children[x].data.name];
+                                }
+                            }
+
+                            // add selection to selected clusters
+                            clusters[d.data.name] = d;
+
+                        }
+
+                        shading(clusters);
+                        update(clusters);
+
+                    });
             } else {
                 node.on("click", null);
-                node.on("mouseover",null);
-                node.on("mouseout",null);
+                node.on("mouseover", null);
+                node.on("mouseout", null);
             }
         }
-        
-        
+
+
 
 
         // Threshold Bar
@@ -545,8 +608,8 @@ function dendrogram() {
                 clusters = clusterThresholdExtraction(this.value);
                 shading(clusters)
             });
-        
-        $("#slider").css("width", height-60);
+
+        $("#slider").css("width", height - 60);
 
         // Link the threshold bar to the slider.
         d3.select("#slider").on("input", function () {
@@ -565,49 +628,50 @@ function dendrogram() {
             .attr("class", "y axis")
             .attr("transform", "translate(0,0)")
             .call(yAxis);
-        
+
         // dendogram node selection method switcher
         var a1, b1;
+
         function dendoSelect(a) {
-                    
+
             if (a.checked) {
-                
-               a1 = Object.keys(clusters);
-                       
+
+                a1 = Object.keys(clusters);
+
                 option = a.value;
-                
+
                 if (option == 'bar') {
-                    
+
                     thresholdBar.classed("hidden", false);
                     manualExtract(false);
-                    
-                    if(b1 == undefined){
+
+                    if (b1 == undefined) {
                         b1 = a1;
                     }
-                    
+
                     var isEqual = (JSON.stringify(a1.sort()) === JSON.stringify(b1.sort()));
-                    
-                    if(!isEqual){
-                        
-                        d3.select("#slider").text(function(){
+
+                    if (!isEqual) {
+
+                        d3.select("#slider").text(function () {
                             clusters = clusterThresholdExtraction(this.value);
                             shading(clusters)
-                        }); 
-    
+                        });
+
                     }
-                    
+
                 } else if (option == 'manual') {
-                    
+
                     thresholdBar.classed("hidden", true);
                     manualExtract(true);
                     shading(clusters);
-                    
+
                 }
-                
+
                 b1 = Object.keys(clusters);
 
             }
-            
+
         }
 
         // set dendogram initially 
@@ -619,7 +683,10 @@ function dendrogram() {
         d3.selectAll("input[name='radio']").on("change", function () {
             dendoSelect(this)
         })
-        
+
+        update(clusters);
+
+
     });
 
     // Transform this into a path
@@ -627,34 +694,34 @@ function dendrogram() {
         return "M" + d.parent.x + "," + yScaleInverted(d.parent.data.y) +
             "H" + d.x + "V" + yScaleInverted(d.data.y);
     }
-        
+
 
 
 }
 
 
 function haiPlot() {
-    
-    var width = parseInt((screen.width - (30+35)) / 4);
+
+    var width = parseInt((screen.width - (30 + 35)) / 4);
     var width = parseInt($("#hai-panel").find(".panel-body").attr("width"));
     var height = parseInt($("#hai-panel").find(".panel-body").attr("height"));
-    
-    console.log(width, height);
-    
-    if(width > height){
-        width = height;
-    } else if( height > width){
-        height = width;
-    }
-    
+
     console.log(width, height);
 
-    var gridSize = (width-(30*2)) / 47,
-        gridSizeY = (height-(30*2)) / 47,
+    if (width > height) {
+        width = height;
+    } else if (height > width) {
+        height = width;
+    }
+
+    console.log(width, height);
+
+    var gridSize = (width - (30 * 2)) / 47,
+        gridSizeY = (height - (30 * 2)) / 47,
         haiRange = 0,
         padding = height * 0.05,
-        datasets = ["data/matrix_sim.csv", "data/data.tsv"];    
-        
+        datasets = ["data/matrix_sim.csv", "data/data.tsv"];
+
     var heatmapChart = function (tsvFile) {
         d3.tsv(tsvFile,
             function (d) {
@@ -667,118 +734,118 @@ function haiPlot() {
             function (error, data) {
 
                 var minValue = d3.min(data, function (d) {
-                    return d.value;
+                    return +d.value;
                 });
 
                 var maxValue = d3.max(data, function (d) {
-                    return d.value;
+                    return +d.value;
                 });
 
                 var haiRange = d3.max(data, function (d) {
-                    return d.hour;
+                    return +d.hour;
                 });
 
                 labels = [];
                 for (var i = 0; i < (haiRange + 1); i++) {
                     labels.push(i);
                 }
-            
-                var colorScale = d3.scaleSequential(d3.interpolateViridis)
-                    .domain([minValue, maxValue]);
-            
-//                // ------------------------------------------------------------------------------
-//
-//                // Scale for workingtime
-//                var countScale = d3.scaleLinear()
-//                    .domain([minValue, maxValue])
-//                    .range([0, width]);
-//
-//                // Calculate variables for the temp gradient
-//                var numStops = 10;
-//                var countRange = countScale.domain();
-//                // index 2 is the substraction between max and min
-//                countRange[2] = countRange[1] - countRange[0];
-//                var countPoint = [];
-//
-//                for (var i = 0; i < numStops; i++) {
-//                    countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
-//                }
-//            
-//                var legend = d3.select("#hai-legend").append("svg")
-//                    .attr("preserveAspectRatio", "xMinYMin Slice")
-//                    .attr("viewBox", height + " 0 " + width + " " + 10);
-//            
-//                // Create the gradient
-//                legend.append("defs")
-//                    .append("linearGradient")
-//                    .attr("id", "legend-traffic")
-//                    .attr("x1", "0%").attr("y1", "0%")
-//                    .attr("x2", "100%").attr("y2", "0%")
-//                    .selectAll("stop")
-//                    .data(d3.range(numStops))
-//                    .enter().append("stop")
-//                    .attr("offset", function (d, i) {
-//                        return countScale(countPoint[i]) / width;
-//                    })
-//                    .attr("stop-color", function (d, i) {
-//                        return colorScale(countPoint[i]);
-//                    });
-//
-//                var legendWidth = Math.min(width * 0.8, 400);
-//            
-//                var legendsvg = legend.append("g")
-//                    .attr("class", "legendWrapper")
-//
-//                // Append title
-//                legendsvg.append("text")
-//                    .attr("class", "legendTitle")
-//                    .attr("x", 0)
-//                    .attr("y", 30)
-//                    .style("text-anchor", "middle");
-//                // .text("Number of times I started to work");
-//
-//                // Draw the Rectangle
-//                legendsvg.append("rect")
-//                    .attr("class", "legendRect")
-//                    .attr("x", -legendWidth / 2)
-//                    .attr("y", 50)
-//                    .attr("width", legendWidth)
-//                    .attr("height", 10)
-//                    .style("fill", "url(#legend-traffic)");
-//
-//                // Set scale for x-axis
-//                var xScale = d3.scaleLinear()
-//                    .range([-legendWidth / 2, legendWidth / 2])
-//                    .domain([minValue, maxValue]);
-//
-//                // Define x-axis
-//                var xAxis = d3.axisBottom()
-//                    .ticks(5)
-//                    .scale(xScale);
-//
-//                // Set up X axis
-//                legendsvg.append("g")
-//                    .attr("class", "axis")
-//                    .attr("transform", "translate(0," + 55 + ")")
-//                    .call(xAxis);
-//            
-//            // ------------------------------------------------------------------------------
-//            
-//                
-                
+
+                var colorScale = d3.scaleSequential(d3.interpolateBuPu)
+                    .domain([maxValue, minValue]);
+
+                //                // ------------------------------------------------------------------------------
+                //
+                //                // Scale for workingtime
+                //                var countScale = d3.scaleLinear()
+                //                    .domain([minValue, maxValue])
+                //                    .range([0, width]);
+                //
+                //                // Calculate variables for the temp gradient
+                //                var numStops = 10;
+                //                var countRange = countScale.domain();
+                //                // index 2 is the substraction between max and min
+                //                countRange[2] = countRange[1] - countRange[0];
+                //                var countPoint = [];
+                //
+                //                for (var i = 0; i < numStops; i++) {
+                //                    countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
+                //                }
+                //            
+                //                var legend = d3.select("#hai-legend").append("svg")
+                //                    .attr("preserveAspectRatio", "xMinYMin Slice")
+                //                    .attr("viewBox", height + " 0 " + width + " " + 10);
+                //            
+                //                // Create the gradient
+                //                legend.append("defs")
+                //                    .append("linearGradient")
+                //                    .attr("id", "legend-traffic")
+                //                    .attr("x1", "0%").attr("y1", "0%")
+                //                    .attr("x2", "100%").attr("y2", "0%")
+                //                    .selectAll("stop")
+                //                    .data(d3.range(numStops))
+                //                    .enter().append("stop")
+                //                    .attr("offset", function (d, i) {
+                //                        return countScale(countPoint[i]) / width;
+                //                    })
+                //                    .attr("stop-color", function (d, i) {
+                //                        return colorScale(countPoint[i]);
+                //                    });
+                //
+                //                var legendWidth = Math.min(width * 0.8, 400);
+                //            
+                //                var legendsvg = legend.append("g")
+                //                    .attr("class", "legendWrapper")
+                //
+                //                // Append title
+                //                legendsvg.append("text")
+                //                    .attr("class", "legendTitle")
+                //                    .attr("x", 0)
+                //                    .attr("y", 30)
+                //                    .style("text-anchor", "middle");
+                //                // .text("Number of times I started to work");
+                //
+                //                // Draw the Rectangle
+                //                legendsvg.append("rect")
+                //                    .attr("class", "legendRect")
+                //                    .attr("x", -legendWidth / 2)
+                //                    .attr("y", 50)
+                //                    .attr("width", legendWidth)
+                //                    .attr("height", 10)
+                //                    .style("fill", "url(#legend-traffic)");
+                //
+                //                // Set scale for x-axis
+                //                var xScale = d3.scaleLinear()
+                //                    .range([-legendWidth / 2, legendWidth / 2])
+                //                    .domain([minValue, maxValue]);
+                //
+                //                // Define x-axis
+                //                var xAxis = d3.axisBottom()
+                //                    .ticks(5)
+                //                    .scale(xScale);
+                //
+                //                // Set up X axis
+                //                legendsvg.append("g")
+                //                    .attr("class", "axis")
+                //                    .attr("transform", "translate(0," + 55 + ")")
+                //                    .call(xAxis);
+                //            
+                //            // ------------------------------------------------------------------------------
+                //            
+                //                
+
                 var svg = d3.select("#hai-plot").append("svg")
                     .attr("preserveAspectRatio", "xMidYMid meet")
-//                    .attr("viewBox", "-35 -30 " + (width+60) + " " + (height+35))
+                    //                    .attr("viewBox", "-35 -30 " + (width+60) + " " + (height+35))
                     .attr("viewBox", "-35 -30 " + width + " " + height)
-                    .attr("width",width)
-                    .attr("height",height)
-                    .style("display","block")
-                    .style("margin","auto");
-            
+                    .attr("width", width)
+                    .attr("height", height)
+                    .style("display", "block")
+                    .style("margin", "auto");
+
                 var HeatMapxScale = d3.scaleLinear()
                     .range([gridSize / 2, (haiRange + 0.5) * gridSize])
                     .domain([d3.min(labels), d3.max(labels)]);
-            
+
                 var HeatMapxScaleY = d3.scaleLinear()
                     .range([gridSizeY / 2, (haiRange + 0.5) * gridSizeY])
                     .domain([d3.min(labels), d3.max(labels)]);
@@ -813,19 +880,19 @@ function haiPlot() {
                     .data(data, function (d) {
                         return d.day + ':' + d.hour;
                     });
-            
+
                 cards.append("title");
 
                 cards.enter().append("rect")
                     .attr("x", function (d, i) {
-                        return (d.hour - 1 ) * (gridSize);
+                        return (d.hour - 1) * (gridSize);
                     })
                     .attr("y", function (d, i) {
-                        return (d.day - 1 ) * gridSizeY;
+                        return (d.day - 1) * gridSizeY;
                     })
                     .attr("width", gridSize)
                     .attr("height", gridSizeY)
-                    .style("fill", function (d) {
+                    .style("fill", function (d, i) {
                         return colorScale(d.value);
                     })
                     .on("mouseover", function (d) {
@@ -838,7 +905,7 @@ function haiPlot() {
                             .style("top", (d3.event.pageY) + "px");
                     })
                     .on("mouseout", function (d) {
-                        d3.select(this).style("fill", function (d) {
+                        d3.select(this).style("fill", function (d, i) {
                             return colorScale(d.value);
                         });
                         div.transition()
@@ -847,7 +914,7 @@ function haiPlot() {
                     });
 
                 cards.transition().duration(50)
-                    .style("fill", function (d) {
+                    .style("fill", function (d, i) {
                         return colorScale(d.value);
                     });
 
@@ -856,7 +923,7 @@ function haiPlot() {
                 });
 
                 cards.exit().remove();
-            
+
 
             });
 
@@ -960,58 +1027,6 @@ $('#loading').delay(1000).fadeOut(1000);
 
 
 
-d3.select("#line-width").on("change", function(){
+d3.select("#line-width").on("change", function () {
     var val = this.value;
 });
-
-
-
-//$("#downloader").on("click",function(){
-//    var elemr = $("#chart1").parent();
-//        
-//        elemr.hide("fast", function(){
-//           elemr.remove(); 
-//        });
-//});
-
-
-//ReachabilityPlot()
-
-//var resizeTimer;
-//
-//$(window).on('resize', function(e) {
-//
-//  clearTimeout(resizeTimer);
-//  resizeTimer = setTimeout(function() {
-//      
-//      update();
-//      update();
-//            
-//  }, 250);
-//
-//});
-
-//$(window).resize(update);
-//
-//
-//function update(){
-//    
-//    var width = parseInt(d3.select('#hai-panel').node().getBoundingClientRect().width),
-//        height = parseInt(d3.select(".panel-body").style("height"))
-//    
-//    svg = d3.select("#hai-plot").select("svg");
-//    
-//    
-//    var pW = parseFloat(svg.attr("prevW")) + 60,
-//        pH = parseFloat(svg.attr("prevH"));
-//    
-////    svg.transition()
-////        .duration(150)
-////            .attr("viewBox", "-35 -35 " + pW + " " + (width+30));
-//    
-//    
-//
-//}
-
-
-
