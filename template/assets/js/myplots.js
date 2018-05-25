@@ -309,7 +309,6 @@ function MultiReachabilityPlots() {
                 height: height,
                 margin: margin,
                 showBottomAxis: (i == rows.length - 1),
-                m: mpts[i],
                 rows: rows.length
             }));
 
@@ -495,7 +494,7 @@ function dendrogram() {
                 ymin = d.data.y;
         });
 
-        var exp = 1.0
+        var exp = 1.0;
 
         yScale = d3.scalePow().domain([ymin, ymax]).range([0, height - 60]).exponent(exp).clamp(true);
         yScaleInverted = d3.scalePow().domain([ymax, ymin]).range([0, height - 60]).exponent(exp).clamp(true);
@@ -811,7 +810,8 @@ function dendrogram() {
 
                         d3.select("#slider").text(function () {
                             clusters = clusterThresholdExtraction(this.value);
-                            shading(clusters)
+                            shading(clusters);
+                            update(clusters);
                         });
 
                     }
