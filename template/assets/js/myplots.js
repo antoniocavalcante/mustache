@@ -3,35 +3,6 @@ var globalColor = d3.interpolateViridis,
     charts = [];
 
 
-//function update(data) {
-//    
-//        var medoids = [];
-//    
-//        Object.keys(data).forEach(function(key){
-//            var pair = [data[key].data.medoid,data[key].data.color];
-//            medoids.push(pair);
-//        })
-//        
-//        charts = medoids.length;
-//       
-//        var u = d3.select('#reach-plot')
-//            .data(medoids);
-//
-//        var v = u.enter().merge(u)
-//    
-//        v.each(function(d,i){
-//            console.log(d,i);
-//        })
-//        
-//        u.exit().remove();
-//    
-//    
-//        function dostuff(dater){
-//            return dater[0];
-//        }
-//
-//}
-
 function panelSize() {
 
     var navBarH = $(".navbar").height(),
@@ -80,17 +51,19 @@ function setWindow(container) {
 }
 
 
-function update(clust) {
+function update(clus) {
     
-        var medoids = [];
-    
-        Object.keys(clust).forEach(function(key){
-            var pair = [clust[key].data.medoid, clust[key].data.color];
-            medoids.push(pair);
+        var medoids = {};
+        
+        Object.keys(clusters).forEach(function(key){
+//            var pair = [clusters[key].data.medoid, clusters[key].data.color];
+//            medoids.push(pair);
+//            medoids.push(parseInt(clusters[key].data.medoid));
+              medoids[clusters[key].data.medoid] = clusters[key].data.color-1;
         })
         
-        console.log(medoids.length);
-    
+        var v = Object.keys(medoids);
+                
         var margin = {
             top: 0,
             right: 0,
@@ -102,26 +75,43 @@ function update(clust) {
         height = $("#reach-panel").find(".panel-body").attr("height") - 10;
 
         var colorScale = d3.scaleSequential(globalColor)
-            .domain([0, medoids.length]);
+            .domain([0, v.length]);
     
-        var u = d3.select('#reach-plot').selectAll(".chart-scroller")
-            .data(medoids)
-                .remove();
-
-
-        var v = u.enter().merge(u)
-
-        v.each(function(d,i){
-
-            d3.text("data/rpts/reach_"+d[0], function(d2){
-                createChart(d2, u, i, d[1], d[0])
-            });
-
-        });
+        var t = d3.transition()
+            .duration(750);
     
+        // new data join to dom
+        var u = d3.select('#reach-plot')
+            .selectAll(".chart-scroller")
+            .data(v, function(d){ return d;});
+        
+//        u.exit().each(function(d){
+//            var $sel = $(this);
+//            $sel.hide('slow', function(){ $sel.remove(); })
+//        })
+    
+        // remove old data 
         u.exit().remove();
-                    
-            function createChart(data, cont, i, fill, id) {
+        
+        // update existing
+        u.each(function(d){
+            var chart = d3.select(this);
+            chart.select("path")
+                .transition(t)
+                .attr("fill", colorScale(medoids[d]));
+        })
+          
+        // add new 
+        u.enter()
+            .append("div").classed("chart-scroller", "true").property("id",function(d){
+            return "chart_"+d;})
+            .text(function(d,i){
+                d3.text("data/rpts/reach_"+d, function(d2){
+                createChart(d2, u, i, d)
+                });            
+            });
+                
+            function createChart(data, cont, i, id) {
                                 
                 var rows = d3.csvParseRows(data);
 
@@ -136,7 +126,7 @@ function update(clust) {
                     margin: margin,
                     rows: rows.length,
                     container: cont,
-                    color: fill
+                    color: 1
                 });
 
                 }
@@ -157,25 +147,24 @@ function update(clust) {
                 this.container = options.container;
                 this.fill = options.color;
                 this.index = options.index
+                
+                this.fill = v.indexOf(this.id);
 
-                this.rows = 3;
+                this.rows = 2;
 
                 colW = parseInt(12 / this.rows);
 
-                //        .append("a")
-                //            .attr("data-toggle","modal")
-                //            .attr("data-target","#exampleModalCenter")
-                //            .attr("href","#")
+//                        .append("a")
+//                            .attr("data-toggle","modal")
+//                            .attr("data-target","#exampleModalCenter")
+//                            .attr("href","#")
 
-
-                var svgCont = d3.select("#reach-plot")
-                    .append("div")
+                
+                var svgCont = d3.select("#reach-plot").select("#chart_"+this.id)
                     .classed("col-xs-" + colW, "true")
                     .classed("chart-scroller", "true")
-                    .classed("nopadding", "true");
-                
-//                var svgCont = d3.select("#reach-plot").select(".chart-scroller");
-                
+                    .classed("nopadding", "true")
+                                
                 var chartXScale = (this.width / this.rows) - (this.margin.right + this.margin.left + 40),
                     chartYScale = this.height - (this.margin.top + this.margin.bottom);
 
@@ -236,8 +225,8 @@ function update(clust) {
                     .attr("x1", "0%").attr("y1", "0%")
                     .attr("x2", "0%").attr("y2", "100%")
 
-                d3.select("#grad-" + this.id).append("stop").attr("offset", "0%").style("stop-color", d3.color(colorScale(this.index)).brighter(1)).style("stop-opacity", "1.0")
-                d3.select("#grad-" + this.id).append("stop").attr("offset", "100%").style("stop-color", colorScale(this.index)).style("stop-opacity", "1.0");
+                d3.select("#grad-" + this.id).append("stop").attr("offset", "0%").style("stop-color", d3.color(colorScale(medoids[this.id])).brighter(1)).style("stop-opacity", "1.0")
+                d3.select("#grad-" + this.id).append("stop").attr("offset", "100%").style("stop-color", colorScale(medoids[this.id])).style("stop-opacity", "1.0");
 
                 this.chartContainer = svg.append("g")
                     .attr("transform", "translate(" + this.margin.left + "," + "0" + ")");
@@ -246,7 +235,8 @@ function update(clust) {
                     .data([this.chartData])
                     .attr("class", "chart")
                     .attr("clip-path", "url(#clip-" + this.id + ")")
-                    .style("fill", "url(#grad-" + this.id + ")")
+//                    .style("fill", "url(#grad-" + this.id + ")")
+                    .attr("fill", colorScale(medoids[this.id]))
                     .attr("d", this.area);
 
                 this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
@@ -259,188 +249,9 @@ function update(clust) {
                 this.chartContainer.append("text")
                     .attr("class", "country-title")
                     .attr("transform", "translate(" + (chartXScale-150) + ",20)")
-                    .text("mpts: " + this.id);
-
+                    .text("mpts: " + v[this.fill]);
+                
             }
-
-}
-
-
-
-
-function MultiReachabilityPlots() {
-    var margin = {
-            top: 0,
-            right: 0,
-            bottom: 20,
-            left: 0
-        },
-
-        width = $("#reach-panel").find(".panel-body").attr("width"),
-        height = $("#reach-panel").find(".panel-body").attr("height") - 10;
-
-    charts = []
-    mpts = [9, 27, 35, 46]
-
-    var colorScale = d3.scaleSequential(globalColor)
-        .domain([0, 3]);
-
-    d3.text('data/data3.csv', createChart);
-
-    function createChart(data) {
-
-        var rows = d3.csvParseRows(data);
-
-        var charts = [];
-
-        var chartHeight = height * (1 / rows.length);
-
-        colorScale.domain([0, rows.length]);
-
-        for (var i = 0; i < rows.length; i++) {
-
-            charts.push(new Chart({
-                data: rows[i].map(function (d) {
-                    return +d;
-                }),
-                id: i,
-                name: "UK",
-                width: width,
-                height: height,
-                margin: margin,
-                showBottomAxis: (i == rows.length - 1),
-                rows: rows.length
-            }));
-
-        }
-    }
-
-    function Chart(options) {
-        this.chartData = options.data;
-        this.width = options.width;
-        this.height = options.height;
-        this.svg = options.svg;
-        this.id = options.id;
-        this.name = options.name;
-        this.margin = options.margin;
-        this.showBottomAxis = options.showBottomAxis;
-        this.mpts = options.m;
-        this.rows = options.rows;
-
-        this.rows = 6;
-
-        colW = parseInt(12 / this.rows);
-
-        //        .append("a")
-        //            .attr("data-toggle","modal")
-        //            .attr("data-target","#exampleModalCenter")
-        //            .attr("href","#")
-
-
-        var svgCont = d3.select("#reach-plot")
-            .append("div")
-            .classed("col-xs-" + colW, "true")
-            .classed("chart-scroller", "true")
-            .classed("nopadding", "true");
-
-        var chartXScale = (this.width / this.rows) - (this.margin.right + this.margin.left + 40),
-            chartYScale = this.height - (this.margin.top + this.margin.bottom);
-
-        var svg = svgCont.append("svg")
-            .attr("id", "chart" + this.id)
-            .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "-40 " + (-(this.margin.top + this.margin.bottom) / 2) + " " + options.width / this.rows + " " + (options.height));
-
-
-
-        /* XScale is based on the number of points to be plotted */
-        this.xScale = d3.scaleLinear()
-            .range([0, chartXScale])
-            .domain([0, this.chartData.length - 1]);
-
-
-        /* YScale is linear based on the maxData Point we found earlier */
-        this.yScale = d3.scaleLinear()
-            .range([chartYScale, 0])
-            .domain([0, d3.max(this.chartData)]);
-
-        var xS = this.xScale;
-        var yS = this.yScale;
-
-        /*
-          This is what creates the chart.
-          There are a number of interpolation options.
-          'basis' smooths it the most, however, when working with a lot of data, this will slow it down
-        */
-
-
-        this.height = chartYScale;
-        this.width = chartXScale;
-
-        this.area = d3.area()
-            .curve(d3.curveBasis)
-            .x(function (d, i) {
-                return xS(i);
-            })
-            .y0(this.height)
-            .y1(function (d) {
-                return yS(d);
-            });
-
-        /*
-          This isn't required - it simply creates a mask. If this wasn't here,
-          when we zoom/panned, we'd see the chart go off to the left under the y-axis
-        */
-        svg.append("defs").append("clipPath")
-            .attr("id", "clip-" + this.id)
-            .append("rect")
-            .attr("width", this.width)
-            .attr("height", this.height);
-
-        svg.select("defs")
-            .append("linearGradient")
-            .attr("id", "grad-" + this.id)
-            .attr("x1", "0%").attr("y1", "0%")
-            .attr("x2", "0%").attr("y2", "100%")
-
-        d3.select("#grad-" + this.id).append("stop").attr("offset", "0%").style("stop-color", d3.color(colorScale(this.id)).brighter(1)).style("stop-opacity", "1.0")
-        d3.select("#grad-" + this.id).append("stop").attr("offset", "100%").style("stop-color", colorScale(this.id)).style("stop-opacity", "1.0");
-
-        this.chartContainer = svg.append("g")
-            .attr("transform", "translate(" + this.margin.left + "," + "0" + ")");
-
-        this.chartContainer.append("path")
-            .data([this.chartData])
-            .attr("class", "chart")
-            .attr("clip-path", "url(#clip-" + this.id + ")")
-            .style("fill", "url(#grad-" + this.id + ")")
-            //            .style("stroke",colorScale(this.id))
-            //            .style("stroke-width","3px")
-            .attr("d", this.area);
-
-
-        //        .style("fill", colorScale(this.id))
-
-        this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
-
-        this.chartContainer.append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(-10,0)")
-            .call(this.yAxis);
-
-        //        this.chartContainer.append("text")
-        //            .attr("class", "country-title")
-        //            .attr("transform", "translate(" + (chartXScale-150) + ",20)")
-        //            .text("mpts: " + this.mpts);
-
-    }
-
-    Chart.prototype.showOnly = function (b) {
-        this.xScale.domain(b);
-        this.chartContainer.select("path").data([this.chartData]).attr("d", this.area);
-        this.chartContainer.select(".x.axis.top").call(this.xAxisTop);
-        this.chartContainer.select(".x.axis.bottom").call(this.xAxisBottom);
-    }
 
 }
 
@@ -543,7 +354,7 @@ function dendrogram() {
             .style("opacity", 0);
 
 
-        var transitionTime = 75;
+        var transitionTime = 750;
 
         // colour and extract clusters from dendogram based on threshold bar current value. 
         function clusterThresholdExtraction(currentValue) {
