@@ -176,19 +176,9 @@ html.fullscreen-bg #wrapper {
     background-color: #f8f8f8; }
   .navbar-default .brand {
     float:left;
-    padding: 30px 39px;
+    padding: 10px 39px;
     background-color: #fff;
 }
-  @media screen and (max-width: 1024px) {
-    .navbar-default .brand {
-      padding-left: 30px;
-      padding-right: 15px; } }
-  @media screen and (max-width: 992px) {
-    .navbar-default .brand {
-      display: none; } }
-  @media screen and (max-width: 640px) {
-    .navbar-default #navbar-menu {
-      float: right; } }
 
 .navbar-btn {
   float: left;
@@ -212,21 +202,6 @@ html.fullscreen-bg #wrapper {
   border: 0; }
   .navbar-form input[type="text"] {
     min-width: 200px; }
-  @media screen and (max-width: 767px) {
-    .navbar-form {
-      float: left;
-      width: 70%;
-      margin-left: 5px;
-      margin-right: 5px;
-      padding-left: 0;
-      padding-right: 0; }
-      .navbar-form .input-group {
-        width: 70%; }
-      .navbar-form input[type="text"] {
-        min-width: 150px; } }
-  @media screen and (max-width: 640px) {
-    .navbar-form {
-      display: none; } }
 
 .navbar-nav .icon-menu {
   display: inline-block;
@@ -275,41 +250,6 @@ html.fullscreen-bg #wrapper {
   .navbar-nav .dropdown-menu > li > a span,
   .navbar-nav .dropdown-menu > li > a i {
     vertical-align: middle; }
-
-@media screen and (min-width: 768px) {
-  .navbar-nav.navbar-right {
-    margin-right: 0; } }
-
-@media screen and (max-width: 767px) {
-  .navbar-nav {
-    width: 100%;
-    margin: 0; }
-    .navbar-nav > li {
-      display: table-cell;
-      width: 1%;
-      position: inherit;
-      text-align: center; }
-    .navbar-nav > li > a {
-      padding: 15px 20px; }
-      .navbar-nav > li > a span:not(.badge),
-      .navbar-nav > li > a .icon-submenu {
-        display: none; }
-    .navbar-nav .open .dropdown-menu {
-      -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      position: absolute;
-      width: 100%;
-      margin-top: 3px;
-      background-color: #fff; }
-    .navbar-nav .open .dropdown-menu > li > a {
-      padding: 10px 15px; }
-    .navbar-nav .icon-menu {
-      padding-top: 15px;
-      padding-bottom: 15px; }
-      .navbar-nav .icon-menu .badge {
-        top: 10px;
-        right: 15px; } }
 
 .navbar-toggle {
   padding: 5px 8px;

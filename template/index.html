@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/vendor/linearicons/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/3.0.4/dc.css">
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
@@ -23,7 +24,7 @@
         
 </head>
 
-<body class="layout-fullwidth">
+<body class="layout-default">
     
     <div id="loading">
         <div id="loader">
@@ -45,17 +46,17 @@
     <div id="wrapper">
         
         <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document">
+        <div class="modal fade" id="reach-modal" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-xl" role="document">
             <div class="modal-content">
-              <div class="modal-header hidden">
-                <h5 class="modal-title" id="exampleModalLongTitle">Chart Title</h5>
+              <div class="modal-header">
+                <h5 class="modal-title" id="reach-modal-title">Chart Title</h5>
               </div>
               <div class="modal-body">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <h3>Chart goes here!</h3>
+                  <div id="container">
+                    <div id="test"></div>
+                    <div id="test-overview"></div>
+                  </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -72,8 +73,10 @@
                 <div class="navbar-btn col">
                     <button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-menu"></i></button>
                 </div>
+                
                 <div class="branding">
-                    <h1 class="text-center">M<span>usta</span>CHE</h1>
+                    <h1 class="text-center brand-block">M<span>usta</span>CHE</h1>
+                    <img src="assets/img/logo_crop.png" class="brand-logo brand-block">
                 </div>
                 <div id="navbar-menu">
                     <ul class="nav navbar-nav navbar-right">
@@ -110,8 +113,11 @@
             <div class="sidebar-scroll">
                 <nav>
                     <ul class="nav">
-                        <li><a href="index.html"><i class="lnr lnr-chart-bars"></i> <span>Datasets</span></a></li>
-                        <li><a href="index.html"><i class="lnr lnr-cog"></i> <span>Settings</span></a></li>
+                        <li><a href="#"><img src="assets/img/pie-chart-2.svg" class="side-icon"/> <span>Datasets</span></a></li>
+                        <li><a href="#"><img src="assets/img/settings.svg" class="side-icon"/> <span>Global Settings</span></a></li>
+                        <li><a href="#"><img src="assets/img/diagram.svg" class="side-icon"/><span>Dendogram</span></a></li>
+                        <li><a href="#"><img src="assets/img/grid-2.svg" class="side-icon"/><span>Hai Plot</span></a></li>
+                        <li><a href="#"><img src="assets/img/area-chart.svg" class="side-icon"/> <span>Reachabillity</span></a></li>
                     </ul>
                 </nav>
             </div>
@@ -135,6 +141,11 @@
                                     <h1 class="panel-title">Dendogram</h1>
                                     <div class="right">
                                         <li class="dropdown panel-options">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-download"></i></a>
+                                    </div>
+<!--
+                                    <div class="right">
+                                        <li class="dropdown panel-options">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-cog"></i></a>
                                             <ul class="dropdown-menu dropdown-menu-right">
                                                 <li><a href="#">Node Size</a></li>
@@ -144,6 +155,7 @@
                                             </ul>
                                         </li>
                                     </div>
+-->
                                 </div>
                                 <div class="row">
                                 <div class="panel-body" id="panel1">
@@ -190,20 +202,7 @@
                                     <h1 class="panel-title">Hai Plot</h1>
                                     <div class="right">
                                         <li class="dropdown panel-options">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-cog"></i></a>
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <l1>
-                                                    <div class="options-value">
-                                                    <span>Line Width</span><input type="number">
-                                                    <input id="line-width" type="range" min="1" max="5" step="1"/>
-                                                    </div>
-                                                </l1>
-                                                <li><a href="#" id="downloader">Screenshot</a></li>
-                                                <li><a href="#">Working With Data</a></li>
-                                                <li><a href="#">Security</a></li>
-                                                <li><a href="#">Troubleshooting</a></li>
-                                            </ul>
-                                        </li>
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-download"></i></a>
                                     </div>
                                 </div>
                                 <div class="panel-body">
@@ -226,14 +225,7 @@
                                     <h1 class="panel-title">Reachabillity Plots</h1>
                                     <div class="right">
                                         <li class="dropdown panel-options">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-cog"></i></a>
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li><a href="#" id="downloader">Screenshot</a></li>
-                                                <li><a href="#">Working With Data</a></li>
-                                                <li><a href="#">Security</a></li>
-                                                <li><a href="#">Troubleshooting</a></li>
-                                            </ul>
-                                        </li>
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-download"></i></a>
                                     </div>
                                 </div>
                                 <div class="panel-body nopadding">
@@ -267,6 +259,8 @@
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.js"></script>
     <script src="https://d3js.org/d3-drag.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/3.0.4/dc.js"></script>
     <script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
     <script src="assets/scripts/klorofil-common.js"></script>

@@ -1,7 +1,27 @@
 var globalColor = d3.interpolateViridis,
     clusters = {},
-    charts = [];
+    charts = [],
+    medoids = {};
 
+
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+function debounce(func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};
 
 function panelSize() {
 
@@ -52,19 +72,20 @@ function setWindow(container) {
 
 
 function update(clus) {
+
+    var medoids = {};
     
-        var medoids = {};
-        
-        Object.keys(clusters).forEach(function(key){
-//            var pair = [clusters[key].data.medoid, clusters[key].data.color];
-//            medoids.push(pair);
-//            medoids.push(parseInt(clusters[key].data.medoid));
-              medoids[clusters[key].data.medoid] = clusters[key].data.color-1;
-        })
-        
-        var v = Object.keys(medoids);
-                
-        var margin = {
+    Object.keys(clusters).forEach(function (key) {
+        if(!('medoid' in clusters[key].data)){
+            medoids[clusters[key].children[0].data.medoid] = 0;
+        } else {
+        medoids[clusters[key].data.medoid] = clusters[key].data.color-1;
+        }
+    })
+    
+    var v = Object.keys(medoids);
+    
+    var margin = {
             top: 0,
             right: 0,
             bottom: 20,
@@ -74,267 +95,248 @@ function update(clus) {
         width = $("#reach-panel").find(".panel-body").attr("width"),
         height = $("#reach-panel").find(".panel-body").attr("height") - 10;
 
-        var colorScale = d3.scaleSequential(globalColor)
-            .domain([0, v.length]);
-    
-        var t = d3.transition()
-            .duration(750);
-    
-        // new data join to dom
-        var u = d3.select('#reach-plot')
-            .selectAll(".chart-scroller")
-            .data(v, function(d){ return d;});
-    
-        u.exit().each(function(d){
-            var $sel = $(this);
-            $sel.hide("fast", function(){ $sel.remove(); })
+    var colorScale = d3.scaleSequential(globalColor)
+        .domain([0, v.length]);
+
+    var t = d3.transition()
+        .duration(750);
+
+    // new data join to dom
+    var u = d3.select('#reach-plot')
+        .selectAll(".chart-scroller")
+        .data(v, function (d) {
+            return d;
+        });
+
+    u.exit().each(function (d) {
+        var $sel = $(this);
+        $sel.hide("slow", function () {
+            $sel.remove();
+        });
+    })
+
+    // update existing
+    u.each(function (d) {
+        var chart = d3.select(this);
+        chart.select("path")
+            .transition(t)
+            .attr("fill", colorScale(medoids[d]));
+    })
+
+    console.log(u.enter());
+
+    // add new 
+    u.enter()
+        .append("div").classed("chart-scroller", "true").property("id", function (d) {
+            return "chart_" + d;
         })
-        
-    
-//        // remove old data 
-//        u.exit().transition().duration(250).attr("y",100).style("opacity","0.0");
-    
-//        u.exit().remove();
-        
-        // update existing
-        u.each(function(d){
-            var chart = d3.select(this);
-            chart.select("path")
-                .transition(t)
-                .attr("fill", colorScale(medoids[d]));
-        })
-          
-        // add new 
-        u.enter()
-            .append("div").classed("chart-scroller", "true").property("id",function(d){
-            return "chart_"+d;})
-            .text(function(d,i){
-                d3.text("data/rpts/reach_"+d, function(d2){
-                $('#chart_'+d).hide();
+        .text(function (d, i) {
+            d3.text("data/rpts/reach_" + d, function (d2) {
+                $('#chart_' + d).hide();
                 createChart(d2, u, i, d);
-                $('#chart_'+d).show("fast");
-                });            
+                $('#chart_' + d).show("fast");
             });
-                
-            function createChart(data, cont, i, id) {
-                                
-                var rows = d3.csvParseRows(data);
+        });
 
-                new Chart({
-                    data: rows[0].map(function (d) {
-                        return +d;
-                    }),
-                    id: id,
-                    index: i,
-                    width: width,
-                    height: height,
-                    margin: margin,
-                    rows: rows.length,
-                    container: cont,
-                    color: 1
-                });
+    function createChart(data, cont, i, id) {
 
-                }
+        var rows = d3.csvParseRows(data);
 
+        new Chart({
+            data: rows[0].map(function (d) {
+                return +d;
+            }),
+            id: id,
+            index: i,
+            width: width,
+            height: height,
+            margin: margin,
+            rows: rows.length,
+            container: cont,
+            color: 1
+        });
 
-            function Chart(options) {
-                            
-                this.chartData = options.data;
-                this.width = options.width;
-                this.height = options.height;
-                this.svg = options.svg;
-                this.id = options.id;
-                this.name = options.name;
-                this.margin = options.margin;
-                this.showBottomAxis = true;
-                this.mpts = [];
-                this.rows = options.rows;
-                this.container = options.container;
-                this.fill = options.color;
-                this.index = options.index
-                
-                this.fill = v.indexOf(this.id);
-
-                this.rows = 3;
-
-                colW = parseInt(12 / this.rows);
-
-                //.append("a")
-                //.attr("data-toggle","modal")
-                //.attr("data-target","#exampleModalCenter")
-                //.attr("href","#")
-                
-                var chr = this.chartData.map(function(d,i){
-                    return[i,d];
-                })
-                
-                var svgCont = d3.select("#reach-plot").select("#chart_"+this.id)
-                    .classed("col-xs-" + colW, "true")
-                    .classed("chart-scroller", "true")
-                    .classed("nopadding", "true")
-                                
-                var chartXScale = (this.width / this.rows) - (this.margin.right + this.margin.left + 40),
-                    chartYScale = this.height - (this.margin.top + this.margin.bottom);
-
-                var svg = svgCont.append("svg")
-                    .attr("id", "chart" + this.id)
-                    .attr("preserveAspectRatio", "xMinYMin meet")
-                    .attr("viewBox", "-40 " + (-(this.margin.top + this.margin.bottom) / 2) + " " + options.width / this.rows + " " + (options.height));
-
-                /* XScale is based on the number of points to be plotted */
-                this.xScale = d3.scaleLinear()
-                    .range([0, chartXScale])
-                    .domain([0, this.chartData.length - 1]);
+    }
 
 
-                /* YScale is linear based on the maxData Point we found earlier */
-                this.yScale = d3.scaleLinear()
-                    .range([chartYScale, 0])
-                    .domain([0, d3.max(this.chartData)]);
+    function Chart(options) {
 
-                var xS = this.xScale;
-                var yS = this.yScale;
+        this.chartData = options.data;
+        this.width = options.width;
+        this.height = options.height;
+        this.svg = options.svg;
+        this.id = options.id;
+        this.name = options.name;
+        this.margin = options.margin;
+        this.showBottomAxis = true;
+        this.mpts = [];
+        this.rows = options.rows;
+        this.container = options.container;
+        this.fill = options.color;
+        this.index = options.index
 
-                
-                var floor = Math.floor,
-                abs = Math.abs;
+        this.fill = v.indexOf(this.id);
 
-            function largestTriangleThreeBuckets(data, threshold) {
+        this.rows = 4;
 
-                var data_length = data.length;
-                if (threshold >= data_length || threshold === 0) {
-                    return data; // Nothing to do
-                }
+        colW = parseInt(12 / this.rows);
 
-                var sampled = [],
-                    sampled_index = 0;
 
-                // Bucket size. Leave room for start and end data points
-                var every = (data_length - 2) / (threshold - 2);
 
-                var a = 0,  // Initially a is the first point in the triangle
-                    max_area_point,
-                    max_area,
-                    area,
-                    next_a;
 
-                sampled[ sampled_index++ ] = data[ a ]; // Always add the first point
+        var chr = this.chartData.map(function (d, i) {
+            return [i, d];
+        })
 
-                for (var i = 0; i < threshold - 2; i++) {
+        var svgCont = d3.select("#reach-plot").select("#chart_" + this.id)
+            .classed("col-xs-" + colW, "true")
+            .classed("chart-scroller", "true")
+            .classed("nopadding", "true")
+            .append("a")
+            .attr("data-toggle", "modal")
+            .attr("data-target", "#reach-modal")
+            .attr("data-value", this.id)
+            .attr("href", "#")
 
-                    // Calculate point average for next bucket (containing c)
-                    var avg_x = 0,
-                        avg_y = 0,
-                        avg_range_start  = floor( ( i + 1 ) * every ) + 1,
-                        avg_range_end    = floor( ( i + 2 ) * every ) + 1;
-                    avg_range_end = avg_range_end < data_length ? avg_range_end : data_length;
+        var chartXScale = (this.width / this.rows) - (this.margin.right + this.margin.left + 40),
+            chartYScale = this.height - (this.margin.top + this.margin.bottom);
 
-                    var avg_range_length = avg_range_end - avg_range_start;
+        var svg = svgCont.append("svg")
+            .attr("id", "chart" + this.id)
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "-40 " + (-(this.margin.top + this.margin.bottom) / 2) + " " + options.width / this.rows + " " + (options.height));
 
-                    for ( ; avg_range_start<avg_range_end; avg_range_start++ ) {
-                      avg_x += data[ avg_range_start ][ 0 ] * 1; // * 1 enforces Number (value may be Date)
-                      avg_y += data[ avg_range_start ][ 1 ] * 1;
-                    }
-                    avg_x /= avg_range_length;
-                    avg_y /= avg_range_length;
+        /* XScale is based on the number of points to be plotted */
+        this.xScale = d3.scaleLinear()
+            .range([0, chartXScale])
+            .domain([0, this.chartData.length - 1]);
 
-                    // Get the range for this bucket
-                    var range_offs = floor( (i + 0) * every ) + 1,
-                        range_to   = floor( (i + 1) * every ) + 1;
 
-                    // Point a
-                    var point_a_x = data[ a ][ 0 ] * 1, // enforce Number (value may be Date)
-                        point_a_y = data[ a ][ 1 ] * 1;
+        /* YScale is linear based on the maxData Point we found earlier */
+        this.yScale = d3.scaleLinear()
+            .range([chartYScale, 0])
+            .domain([0, d3.max(this.chartData)]);
 
-                    max_area = area = -1;
+        var xS = this.xScale;
+        var yS = this.yScale;
 
-                    for ( ; range_offs < range_to; range_offs++ ) {
-                        // Calculate triangle area over three buckets
-                        area = abs( ( point_a_x - avg_x ) * ( data[ range_offs ][ 1 ] - point_a_y ) -
-                                    ( point_a_x - data[ range_offs ][ 0 ] ) * ( avg_y - point_a_y )
-                                  ) * 0.5;
-                        if ( area > max_area ) {
-                            max_area = area;
-                            max_area_point = data[ range_offs ];
-                            next_a = range_offs; // Next a is this b
-                        }
-                    }
 
-                    sampled[ sampled_index++ ] = max_area_point; // Pick this point from the bucket
-                    a = next_a; // This a is the next a (chosen b)
-                }
+        var floor = Math.floor,
+            abs = Math.abs;
 
-                sampled[ sampled_index++ ] = data[ data_length - 1 ]; // Always add last
+        function largestTriangleThreeBuckets(data, threshold) {
 
-                return sampled;
+            var data_length = data.length;
+            if (threshold >= data_length || threshold === 0) {
+                return data; // Nothing to do
             }
-                
-                var newCharter = largestTriangleThreeBuckets(chr, Math.floor(chartXScale/2));
-                this.data = newCharter;
-                
-                console.log(newCharter);
-                
 
-//                this.data = chr;
-                
+            var sampled = [],
+                sampled_index = 0;
 
-                this.height = chartYScale;
-                this.width = chartXScale;
+            // Bucket size. Leave room for start and end data points
+            var every = (data_length - 2) / (threshold - 2);
 
-                this.area = d3.area()
-                    .curve(d3.curveBasis)
-                    .x(function (d, i) {
-                        return xS(d[0]);
-                    })
-                    .y0(this.height)
-                    .y1(function (d) {
-                        return yS(d[1]);
-                    });
+            var a = 0, // Initially a is the first point in the triangle
+                max_area_point,
+                max_area,
+                area,
+                next_a;
 
-                /*
-                  This isn't required - it simply creates a mask. If this wasn't here,
-                  when we zoom/panned, we'd see the chart go off to the left under the y-axis
-                */
-                
-                svg.append("defs").append("clipPath")
-                    .attr("id", "clip-" + this.id)
-                    .append("rect")
-                    .attr("width", this.width)
-                    .attr("height", this.height);
+            sampled[sampled_index++] = data[a]; // Always add the first point
 
-                svg.select("defs")
-                    .append("linearGradient")
-                    .attr("id", "grad-" + this.id)
-                    .attr("x1", "0%").attr("y1", "0%")
-                    .attr("x2", "0%").attr("y2", "100%")
+            for (var i = 0; i < threshold - 2; i++) {
 
-                d3.select("#grad-" + this.id).append("stop").attr("offset", "0%").style("stop-color", d3.color(colorScale(medoids[this.id])).brighter(1)).style("stop-opacity", "1.0")
-                d3.select("#grad-" + this.id).append("stop").attr("offset", "100%").style("stop-color", colorScale(medoids[this.id])).style("stop-opacity", "1.0");
+                // Calculate point average for next bucket (containing c)
+                var avg_x = 0,
+                    avg_y = 0,
+                    avg_range_start = floor((i + 1) * every) + 1,
+                    avg_range_end = floor((i + 2) * every) + 1;
+                avg_range_end = avg_range_end < data_length ? avg_range_end : data_length;
 
-                this.chartContainer = svg.append("g")
-                    .attr("transform", "translate(" + this.margin.left + "," + "0" + ")");
+                var avg_range_length = avg_range_end - avg_range_start;
 
-                this.chartContainer.append("path")
-                    .data([this.data])
-                    .attr("class", "chart")
-                    .attr("clip-path", "url(#clip-" + this.id + ")")
-//                    .style("fill", "url(#grad-" + this.id + ")")
-                    .attr("fill", colorScale(medoids[this.id]))
-                    .attr("d", this.area);
+                for (; avg_range_start < avg_range_end; avg_range_start++) {
+                    avg_x += data[avg_range_start][0] * 1; // * 1 enforces Number (value may be Date)
+                    avg_y += data[avg_range_start][1] * 1;
+                }
+                avg_x /= avg_range_length;
+                avg_y /= avg_range_length;
 
-                this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
+                // Get the range for this bucket
+                var range_offs = floor((i + 0) * every) + 1,
+                    range_to = floor((i + 1) * every) + 1;
 
-                this.chartContainer.append("g")
-                    .attr("class", "y axis")
-                    .attr("transform", "translate(-10,0)")
-                    .call(this.yAxis);
+                // Point a
+                var point_a_x = data[a][0] * 1, // enforce Number (value may be Date)
+                    point_a_y = data[a][1] * 1;
 
-                this.chartContainer.append("text")
-                    .attr("class", "country-title")
-                    .attr("transform", "translate(" + (chartXScale-150) + ",20)")
-                    .text("mpts: " + v[this.fill]);
-                
+                max_area = area = -1;
+
+                for (; range_offs < range_to; range_offs++) {
+                    // Calculate triangle area over three buckets
+                    area = abs((point_a_x - avg_x) * (data[range_offs][1] - point_a_y) -
+                        (point_a_x - data[range_offs][0]) * (avg_y - point_a_y)
+                    ) * 0.5;
+                    if (area > max_area) {
+                        max_area = area;
+                        max_area_point = data[range_offs];
+                        next_a = range_offs; // Next a is this b
+                    }
+                }
+
+                sampled[sampled_index++] = max_area_point; // Pick this point from the bucket
+                a = next_a; // This a is the next a (chosen b)
             }
+
+            sampled[sampled_index++] = data[data_length - 1]; // Always add last
+
+            return sampled;
+        }
+
+        this.data = largestTriangleThreeBuckets(chr, Math.floor(chartXScale / 2));
+        this.height = chartYScale;
+        this.width = chartXScale;
+
+        this.area = d3.area()
+            .curve(d3.curveMonotoneX)
+            .x(function (d, i) {
+                return xS(d[0]);
+            })
+            .y0(this.height)
+            .y1(function (d) {
+                return yS(d[1]);
+            });
+
+        svg.append("defs").append("clipPath")
+            .attr("id", "clip-" + this.id)
+            .append("rect")
+            .attr("width", this.width)
+            .attr("height", this.height);
+
+        this.chartContainer = svg.append("g")
+            .attr("transform", "translate(" + this.margin.left + "," + "0" + ")");
+
+        this.chartContainer.append("path")
+            .data([this.data])
+            .attr("class", "chart")
+            .attr("clip-path", "url(#clip-" + this.id + ")")
+            .attr("fill", colorScale(medoids[this.id]))
+            .attr("d", this.area);
+
+        this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
+
+        this.chartContainer.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(-3,0)")
+            .call(this.yAxis);
+
+        this.chartContainer.append("text")
+            .attr("class", "country-title")
+            .attr("transform", "translate(" + (chartXScale - 150) + ",20)")
+            .text("mpts: " + v[this.fill]);
+
+    }
 
 }
 
@@ -421,8 +423,7 @@ function dendrogram() {
         // Adds the shape of the nodes in the dendrogram.
         node.append("circle")
             .attr("r", 3.5)
-
-
+        
         node.append("text")
             .attr("x", 0)
             .attr("y", 20)
@@ -435,9 +436,31 @@ function dendrogram() {
         var div = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
+        
+        node.on("mouseover", function (d) {
+            d3.select(this).attr("stroke", "red")
+            div.transition()
+                .duration(200)
+                .style("opacity", 1.0);
 
+            if (d.data.name) {
+                displayText = d.data.name;
+            } else {
+                displayText = d.label;
+            }
 
-        var transitionTime = 75;
+            div.html(displayText)
+                .style("left", (d3.event.pageX + 10) + "px")
+                .style("top", (d3.event.pageY) + "px");
+        })
+        .on("mouseout", function (d) {
+            d3.select(this).attr("stroke", "none");
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
+        
+        var transitionTime = 100;
 
         // colour and extract clusters from dendogram based on threshold bar current value. 
         function clusterThresholdExtraction(currentValue) {
@@ -449,7 +472,7 @@ function dendrogram() {
                     if (d.parent != null && d.parent.data.y > currentValue && d.children != null) {
                         clusters[d.data.name] = d;
                     }
-                } else if (d.data.y == currentValue || currentValue == ymax) {
+                } else if (currentValue == 0) {
                     clusters[root.data.name] = root;
                 }
 
@@ -472,7 +495,7 @@ function dendrogram() {
                 for (y = 0; y < childs.length; y++) {
                     colouring[childs[y].data.name] = counter;
                 }
-                clusters[key].data['color']=counter;
+                clusters[key].data['color'] = counter;
                 counter++;
             });
 
@@ -480,8 +503,7 @@ function dendrogram() {
             colorScale.domain([1, Object.keys(clusters).length + 1]);
 
             // fill node circles with color
-            node.transition()
-                .duration(transitionTime)
+            node
                 .attr("fill", function (d, i) {
                     val = colouring[d.data.name];
 
@@ -499,8 +521,7 @@ function dendrogram() {
                 });
 
             // change node link colors
-            link.transition()
-                .duration(transitionTime)
+            link
                 .attr("stroke", function (d, i) {
 
                     if (clusters[d.data.name]) {
@@ -534,16 +555,18 @@ function dendrogram() {
                     .style("cursor", "row-resize");
                 var dy = d3.event.dy;
                 var dy2 = d3.event.y;
+
+                var lineScale = d3.scalePow().domain([height - 60, 0]).range([ymin, ymax]).clamp(true),
+                    lineBounds = d3.scalePow().range([0,height-60]).exponent(exp).clamp(true);
                 
-                var lineScale = d3.scalePow().domain([height - 60, 0]).range([ymin, ymax]).clamp(true);
+                d3.select(this).attr("y1", dy2).attr("y2", dy2);
+                
             
-                d3.select(this).attr("y1",dy2).attr("y2",dy2);
-
-
                 var currentValue = lineScale(dy2);
                 d3.select("#slider").property("value", function () {
                     return currentValue;
                 });
+                
                 clusters = clusterThresholdExtraction(currentValue);
                 shading(clusters);
             })
@@ -555,29 +578,7 @@ function dendrogram() {
 
         function manualExtract(bool) {
             if (bool) {
-                node.on("mouseover", function (d) {
-                        d3.select(this).attr("stroke", "red")
-                        div.transition()
-                            .duration(200)
-                            .style("opacity", 1.0);
-
-                        if (d.data.name) {
-                            displayText = d.data.name;
-                        } else {
-                            displayText = d.label;
-                        }
-
-                        div.html(displayText)
-                            .style("left", (d3.event.pageX + 10) + "px")
-                            .style("top", (d3.event.pageY) + "px");
-                    })
-                    .on("mouseout", function (d) {
-                        d3.select(this).attr("stroke", "none");
-                        div.transition()
-                            .duration(500)
-                            .style("opacity", 0);
-
-                    }).on("click", function (d) {
+                    node.on("click", function (d) {
                         if (d.children == null) {
                             return;
                         }
@@ -615,13 +616,47 @@ function dendrogram() {
                     });
             } else {
                 node.on("click", null);
-                node.on("mouseover", null);
-                node.on("mouseout", null);
+//                node.on("mouseover", null);
+//                node.on("mouseout", null);
             }
         }
+        
+        var updateDrag = debounce(function(a){
+                
+                clusters = clusterThresholdExtraction(a);
+                shading(clusters);
+                
+            }, 10);
+        
+        var dragger = d3.drag()
+            .on("drag", function(d){
+            
+                    d3.select("body")
+                      .style("cursor", "row-resize");
+                
+                    var dy = d3.event.dy;
+                    var dy2 = d3.event.y;
 
+                    var lineScale = d3.scalePow().domain([height - 60, 0]).range([ymin, ymax]).clamp(true),
+                        lineBounds = d3.scalePow().range([0,height-60]).exponent(exp).clamp(true);
 
+                    d3.select(this).attr("y1", dy2).attr("y2", dy2);
 
+                    var currentValue = lineScale(dy2);
+                    d3.select("#slider").property("value", function () {
+                        return currentValue;
+                    });
+
+                updateDrag(currentValue);
+
+            
+            })
+            .on("end", function () {
+                d3.select("body")
+                    .style("cursor", "auto");
+                update(clusters);
+            });
+        
 
         // Threshold Bar
         var thresholdBar = svg.append("g");
@@ -632,6 +667,8 @@ function dendrogram() {
             .attr("x2", width - margin.left - margin.right - 100) // Dynamic size of the bar
             .attr("y2", yScaleInverted(hardcodeline))
             .call(drag);
+        
+        
 
         d3.select("#slider")
             .property("min", ymin)
@@ -868,7 +905,6 @@ function haiPlot() {
 
                 var svg = d3.select("#hai-plot").append("svg")
                     .attr("preserveAspectRatio", "xMidYMid meet")
-                    //                    .attr("viewBox", "-35 -30 " + (width+60) + " " + (height+35))
                     .attr("viewBox", "-35 -30 " + width + " " + height)
                     .attr("width", width)
                     .attr("height", height)
@@ -978,8 +1014,9 @@ function ReachabilityPlot() {
             bottom: 30,
             left: 40
         },
-        width = parseInt(d3.select('#chart-dendrogram').style('width'), 10) - margin.left - margin.right,
-        height = 345 - margin.top - margin.bottom;
+        width = parseInt(d3.select('#full-reach').style('width'), 10) - margin.left - margin.right,
+        height = 800 - margin.top - margin.bottom;
+        width = 1600;
 
     var x = d3.scaleLinear()
         .range([5, width]);
@@ -992,13 +1029,13 @@ function ReachabilityPlot() {
     var yAxis = d3.axisLeft(y);
     // .ticks(10, "%");
 
-    var svg = d3.select("#reachability-plot").append("svg")
+    var svg = d3.select("#full-reach").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    d3.tsv("../../data/linetemplate2.csv", type, function (error, data) {
+    d3.tsv("data/linetemplate2.csv", type, function (error, data) {
         if (error) throw error;
 
         x.domain([0, data.length]);
@@ -1056,10 +1093,113 @@ function ReachabilityPlot() {
 dendrogram();
 haiPlot("#hai-plot");
 //MultiReachabilityPlots();
+
 $('#loading').delay(1000).fadeOut(1000);
 
 
 
-d3.select("#line-width").on("change", function () {
-    var val = this.value;
+
+
+$("#reach-modal").on("show.bs.modal", function(event){
+   var button = $(event.relatedTarget)
+   var value = button.data('value')
+      
+   var modal = $(this);
+   modal.find('.modal-title').text('Chart '+value);
+
+    
+    var focusChart = dc.seriesChart("#test");
+    var overviewChart = dc.seriesChart("#test-overview");
+    var ndx, runDimension, runGroup, overviewRunDimension, overviewRunGroup;
+    d3.text("data/rpts/reach_0", function(experiments) {
+        
+
+        
+     var data = d3.csvParseRows(experiments)[0];
+        
+     console.log(data);
+        
+      ndx = crossfilter(data);
+      runDimension = ndx.dimension(function(d) {return [+d, +d]; });
+      overviewRunDimension = ndx.dimension(function(d) {return [+d, +d]; });
+      runGroup = runDimension.group().reduceSum(function(d) { return +d; });
+      overviewRunGroup = overviewRunDimension.group().reduceSum(function(d) { return +d; });
+      focusChart
+        .width(1600)
+        .height(480)
+        .chart(function(c) { return dc.barChart(c); })
+        .x(d3.scaleLinear().domain([0,7000]))
+        .brushOn(false)
+        .yAxisLabel("Measured Speed km/s")
+        .xAxisLabel("Run")
+        .elasticY(true)
+        .dimension(runDimension)
+        .group(runGroup)
+        .mouseZoomable(true)
+        .rangeChart(overviewChart)
+        .seriesAccessor(function(d) {return "Expt: " + d;})
+//        .keyAccessor(function(d) {return +d;})
+//        .valueAccessor(function(d) {return +d;})
+//        .legend(dc.legend().x(350).y(350).itemHeight(13).gap(5).horizontal(1).legendWidth(140).itemWidth(70));
+      focusChart.yAxis().tickFormat(function(d) {return d3.format(',d')(+d);});
+      focusChart.margins().left += 40;
+      focusChart.elasticX = function() {
+        return arguments.length ? this : false;
+      };
+        function rangesEqual (range1, range2) {
+            if (!range1 && !range2) {
+                return true;
+            } else if (!range1 || !range2) {
+                return false;
+            } else if (range1.length === 0 && range2.length === 0) {
+                return true;
+            } else if (range1[0].valueOf() === range2[0].valueOf() &&
+                range1[1].valueOf() === range2[1].valueOf()) {
+                return true;
+            }
+            return false;
+        }
+      overviewChart
+        .width(1600)
+        .height(100)
+        .chart(function(c,i) {
+        var chart = dc.barChart(c);
+        if(i===0)
+            chart.on('filtered', function (chart) {
+                if (!chart.filter()) {
+                    dc.events.trigger(function () {
+                        overviewChart.focusChart().x().domain(overviewChart.focusChart().xOriginalDomain());
+                        overviewChart.focusChart().redraw();
+                    });
+                } else if (!rangesEqual(chart.filter(), overviewChart.focusChart().filter())) {
+                    dc.events.trigger(function () {
+                        // The second parameter is quite important. It asks the focus operation not to propagate events
+                        // In absence of that it will cause infinite mutual recursion
+                        overviewChart.focusChart().focus(chart.filter(), true);
+                    });
+                }
+            });
+        return chart;
+        })
+        .x(d3.scaleLinear().domain([0,7000]))
+        .brushOn(true)
+        .xAxisLabel("Run")
+        .clipPadding(10)
+        .dimension(runDimension)
+        .group(runGroup)
+        .seriesAccessor(function(d) {return "Expt: " + d;})
+        .keyAccessor(function(d) {return +d;})
+        .valueAccessor(function(d) {return +d;});
+      dc.renderAll();
+      });
+    
+    
+    
+    
+    
+   
 });
+
+$('#reach-modal').on('hidden.bs.modal', function(){
+    d3.select("#full-reach").select("svg").remove();
+})

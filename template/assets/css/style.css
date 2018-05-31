@@ -145,6 +145,10 @@ body {
     overflow:hidden;
 }
 
+html {
+    overflow:hidden;
+}
+
 .nopadding {
    padding: 0;
    margin: 0 !important;
@@ -337,6 +341,32 @@ body {
 
 .switch-field label:last-of-type {
   border-radius: 0 4px 4px 0;
+}
+
+.no-link {
+    outline: 0;
+    border: none;
+}
+
+.side-icon {
+    width:24px;
+    margin-right: 8px;
+    padding-bottom: 8px;
+    
+}
+
+.brand-block {
+    display: inline-block;
+    color: #097B43;
+}
+
+.brand-logo {
+    margin-left: 6px;
+    padding-bottom:16px;
+}
+
+.modal-xl {
+    width: 90% !important;
 }
 
 
