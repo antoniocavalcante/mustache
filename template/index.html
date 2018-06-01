@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/vendor/linearicons/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/3.0.4/dc.css">
+    <link rel="stylesheet" href="assets/css/animate.css">
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
@@ -28,6 +29,7 @@
     
     <div id="loading">
         <div id="loader">
+<!--
         <div class="sk-cube-grid">
           <div class="sk-cube sk-cube1"></div>
           <div class="sk-cube sk-cube2"></div>
@@ -39,6 +41,8 @@
           <div class="sk-cube sk-cube8"></div>
           <div class="sk-cube sk-cube9"></div>
         </div>
+-->
+            <object data="assets/img/Mustache_Logo_SVG.svg" type="image/svg+xml" class="animated swing infinite loader-logo" fill="white"></object>
         </div>
     </div>
     
@@ -76,7 +80,7 @@
                 
                 <div class="branding">
                     <h1 class="text-center brand-block">M<span>usta</span>CHE</h1>
-                    <img src="assets/img/logo_crop.png" class="brand-logo brand-block">
+                    <img src="assets/img/Mustache_Logo_SVG.svg" class="brand-logo brand-block">
                 </div>
                 <div id="navbar-menu">
                     <ul class="nav navbar-nav navbar-right">
@@ -140,8 +144,8 @@
                                 <div class="panel-heading">
                                     <h1 class="panel-title">Dendogram</h1>
                                     <div class="right">
-                                        <li class="dropdown panel-options">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-download"></i></a>
+                                        <li class="panel-options">
+                                            <i class="lnr lnr-download" data-toggle="tooltip" data-placement="bottom" title="Save Screenshot"></i>
                                     </div>
 <!--
                                     <div class="right">
@@ -168,24 +172,34 @@
                                     
                                 </div>
                                 </div>
-                                <div class="panel-footer">
+                                <div class="panel-footer nopadding pad-t">
                                     <div class="row">
-                                        <div class="col-sm-4 text-center">
-                                            <p>FOSC
-                                            <input type="radio" name="radio" value="fosc" disabled>
-                                            </p>
+                                        <div class="col-sm-4 nopadding">
+                                            <div class="row nopadding">
+                                            <div class="col-sm-4 text-center">
+                                                <p>FOSC
+                                                    <input type="radio" name="radio" value="fosc" disabled>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-4 text-center">
+                                                <p>Threshold Bar
+                                                    <input type="radio" name="radio" value="bar" checked>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-4 text-center">
+                                                <p>Manual Selection
+                                                    <input type="radio" name="radio" value="manual">
+                                                </p>
+                                            </div>
+                                            </div>
                                         </div>
 
                                         <div class="col-sm-4 text-center">
-                                            <p>Threshold Bar
-                                            <input type="radio" name="radio" value="bar" checked>
-                                          </p>
+                                            
                                         </div>
 
                                         <div class="col-sm-4 text-center">
-                                            <p>Manual Selection
-                                            <input type="radio" name="radio" value="manual">
-                                          </p>
+                                            
                                         </div>
                                     </div>
                                 </div>

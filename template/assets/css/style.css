@@ -346,7 +346,10 @@ html {
 .no-link {
     outline: 0;
     border: none;
+    
 }
+
+.no-link svg:focus { border: 0 !important; }
 
 .side-icon {
     width:24px;
@@ -363,10 +366,21 @@ html {
 .brand-logo {
     margin-left: 6px;
     padding-bottom:16px;
+    width: 64px;
+    filter: invert();
 }
 
 .modal-xl {
     width: 90% !important;
+}
+
+.loader-logo {
+    width: 200px;
+    color: white;
+}
+
+inline {
+    display: inline-block;
 }
 
 

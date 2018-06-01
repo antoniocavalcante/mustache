@@ -181,9 +181,7 @@ function update(clus) {
 
         colW = parseInt(12 / this.rows);
 
-
-
-
+        
         var chr = this.chartData.map(function (d, i) {
             return [i, d];
         })
@@ -193,6 +191,7 @@ function update(clus) {
             .classed("chart-scroller", "true")
             .classed("nopadding", "true")
             .append("a")
+            .classed("no-link","true")
             .attr("data-toggle", "modal")
             .attr("data-target", "#reach-modal")
             .attr("data-value", this.id)
@@ -1116,9 +1115,7 @@ $("#reach-modal").on("show.bs.modal", function(event){
 
         
      var data = d3.csvParseRows(experiments)[0];
-        
-     console.log(data);
-        
+    
       ndx = crossfilter(data);
       runDimension = ndx.dimension(function(d) {return [+d, +d]; });
       overviewRunDimension = ndx.dimension(function(d) {return [+d, +d]; });
@@ -1193,11 +1190,6 @@ $("#reach-modal").on("show.bs.modal", function(event){
       dc.renderAll();
       });
     
-    
-    
-    
-    
-   
 });
 
 $('#reach-modal').on('hidden.bs.modal', function(){
