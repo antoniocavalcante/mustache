@@ -4,23 +4,99 @@ var globalColor = d3.interpolateViridis,
     medoids = {};
 
 
+
+var floor = Math.floor,
+    abs = Math.abs;
+
+function largestTriangleThreeBuckets(data, threshold) {
+
+    var data_length = data.length;
+    if (threshold >= data_length || threshold === 0) {
+        return data; // Nothing to do
+    }
+
+    var sampled = [],
+        sampled_index = 0;
+
+    // Bucket size. Leave room for start and end data points
+    var every = (data_length - 2) / (threshold - 2);
+
+    var a = 0, // Initially a is the first point in the triangle
+        max_area_point,
+        max_area,
+        area,
+        next_a;
+
+    sampled[sampled_index++] = data[a]; // Always add the first point
+
+    for (var i = 0; i < threshold - 2; i++) {
+
+        // Calculate point average for next bucket (containing c)
+        var avg_x = 0,
+            avg_y = 0,
+            avg_range_start = floor((i + 1) * every) + 1,
+            avg_range_end = floor((i + 2) * every) + 1;
+        avg_range_end = avg_range_end < data_length ? avg_range_end : data_length;
+
+        var avg_range_length = avg_range_end - avg_range_start;
+
+        for (; avg_range_start < avg_range_end; avg_range_start++) {
+            avg_x += data[avg_range_start][0] * 1; // * 1 enforces Number (value may be Date)
+            avg_y += data[avg_range_start][1] * 1;
+        }
+        avg_x /= avg_range_length;
+        avg_y /= avg_range_length;
+
+        // Get the range for this bucket
+        var range_offs = floor((i + 0) * every) + 1,
+            range_to = floor((i + 1) * every) + 1;
+
+        // Point a
+        var point_a_x = data[a][0] * 1, // enforce Number (value may be Date)
+            point_a_y = data[a][1] * 1;
+
+        max_area = area = -1;
+
+        for (; range_offs < range_to; range_offs++) {
+            // Calculate triangle area over three buckets
+            area = abs((point_a_x - avg_x) * (data[range_offs][1] - point_a_y) -
+                (point_a_x - data[range_offs][0]) * (avg_y - point_a_y)
+            ) * 0.5;
+            if (area > max_area) {
+                max_area = area;
+                max_area_point = data[range_offs];
+                next_a = range_offs; // Next a is this b
+            }
+        }
+
+        sampled[sampled_index++] = max_area_point; // Pick this point from the bucket
+        a = next_a; // This a is the next a (chosen b)
+    }
+
+    sampled[sampled_index++] = data[data_length - 1]; // Always add last
+
+    return sampled;
+}
+
+
 // Returns a function, that, as long as it continues to be invoked, will not
 // be triggered. The function will be called after it stops being called for
 // N milliseconds. If `immediate` is passed, trigger the function on the
 // leading edge, instead of the trailing.
 function debounce(func, wait, immediate) {
-	var timeout;
-	return function() {
-		var context = this, args = arguments;
-		var later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-		var callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
-	};
+    var timeout;
+    return function () {
+        var context = this,
+            args = arguments;
+        var later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
 };
 
 function panelSize() {
@@ -74,17 +150,17 @@ function setWindow(container) {
 function update(clus) {
 
     var medoids = {};
-    
+
     Object.keys(clusters).forEach(function (key) {
-        if(!('medoid' in clusters[key].data)){
+        if (!('medoid' in clusters[key].data)) {
             medoids[clusters[key].children[0].data.medoid] = 0;
         } else {
-        medoids[clusters[key].data.medoid] = clusters[key].data.color-1;
+            medoids[clusters[key].data.medoid] = clusters[key].data.color - 1;
         }
     })
-    
+
     var v = Object.keys(medoids);
-    
+
     var margin = {
             top: 0,
             right: 0,
@@ -123,27 +199,28 @@ function update(clus) {
             .attr("fill", colorScale(medoids[d]));
     })
 
-    console.log(u.enter());
-
     // add new 
     u.enter()
         .append("div").classed("chart-scroller", "true").property("id", function (d) {
             return "chart_" + d;
         })
         .text(function (d, i) {
-            d3.text("data/rpts/reach_" + d, function (d2) {
+            d3.text("data/anuran_mustache/" + d + "RNG_anuran.lr", function (d2) {
                 $('#chart_' + d).hide();
                 createChart(d2, u, i, d);
                 $('#chart_' + d).show("fast");
             });
         });
 
+    reachPaging();
+
+
     function createChart(data, cont, i, id) {
 
         var rows = d3.csvParseRows(data);
 
         new Chart({
-            data: rows[0].map(function (d) {
+            data: rows[1].map(function (d) {
                 return +d;
             }),
             id: id,
@@ -181,7 +258,6 @@ function update(clus) {
 
         colW = parseInt(12 / this.rows);
 
-        
         var chr = this.chartData.map(function (d, i) {
             return [i, d];
         })
@@ -191,7 +267,7 @@ function update(clus) {
             .classed("chart-scroller", "true")
             .classed("nopadding", "true")
             .append("a")
-            .classed("no-link","true")
+            .classed("no-link", "true")
             .attr("data-toggle", "modal")
             .attr("data-target", "#reach-modal")
             .attr("data-value", this.id)
@@ -219,80 +295,6 @@ function update(clus) {
         var xS = this.xScale;
         var yS = this.yScale;
 
-
-        var floor = Math.floor,
-            abs = Math.abs;
-
-        function largestTriangleThreeBuckets(data, threshold) {
-
-            var data_length = data.length;
-            if (threshold >= data_length || threshold === 0) {
-                return data; // Nothing to do
-            }
-
-            var sampled = [],
-                sampled_index = 0;
-
-            // Bucket size. Leave room for start and end data points
-            var every = (data_length - 2) / (threshold - 2);
-
-            var a = 0, // Initially a is the first point in the triangle
-                max_area_point,
-                max_area,
-                area,
-                next_a;
-
-            sampled[sampled_index++] = data[a]; // Always add the first point
-
-            for (var i = 0; i < threshold - 2; i++) {
-
-                // Calculate point average for next bucket (containing c)
-                var avg_x = 0,
-                    avg_y = 0,
-                    avg_range_start = floor((i + 1) * every) + 1,
-                    avg_range_end = floor((i + 2) * every) + 1;
-                avg_range_end = avg_range_end < data_length ? avg_range_end : data_length;
-
-                var avg_range_length = avg_range_end - avg_range_start;
-
-                for (; avg_range_start < avg_range_end; avg_range_start++) {
-                    avg_x += data[avg_range_start][0] * 1; // * 1 enforces Number (value may be Date)
-                    avg_y += data[avg_range_start][1] * 1;
-                }
-                avg_x /= avg_range_length;
-                avg_y /= avg_range_length;
-
-                // Get the range for this bucket
-                var range_offs = floor((i + 0) * every) + 1,
-                    range_to = floor((i + 1) * every) + 1;
-
-                // Point a
-                var point_a_x = data[a][0] * 1, // enforce Number (value may be Date)
-                    point_a_y = data[a][1] * 1;
-
-                max_area = area = -1;
-
-                for (; range_offs < range_to; range_offs++) {
-                    // Calculate triangle area over three buckets
-                    area = abs((point_a_x - avg_x) * (data[range_offs][1] - point_a_y) -
-                        (point_a_x - data[range_offs][0]) * (avg_y - point_a_y)
-                    ) * 0.5;
-                    if (area > max_area) {
-                        max_area = area;
-                        max_area_point = data[range_offs];
-                        next_a = range_offs; // Next a is this b
-                    }
-                }
-
-                sampled[sampled_index++] = max_area_point; // Pick this point from the bucket
-                a = next_a; // This a is the next a (chosen b)
-            }
-
-            sampled[sampled_index++] = data[data_length - 1]; // Always add last
-
-            return sampled;
-        }
-
         this.data = largestTriangleThreeBuckets(chr, Math.floor(chartXScale / 2));
         this.height = chartYScale;
         this.width = chartXScale;
@@ -319,6 +321,7 @@ function update(clus) {
         this.chartContainer.append("path")
             .data([this.data])
             .attr("class", "chart")
+            .attr("val", this.id)
             .attr("clip-path", "url(#clip-" + this.id + ")")
             .attr("fill", colorScale(medoids[this.id]))
             .attr("d", this.area);
@@ -334,6 +337,23 @@ function update(clus) {
             .attr("class", "country-title")
             .attr("transform", "translate(" + (chartXScale - 150) + ",20)")
             .text("mpts: " + v[this.fill]);
+
+        d3.selectAll(".no-link").on("mouseover", function () {
+            var text = d3.select(this).select(".country-title");
+            text.transition().duration(100).style("font-size", 24);
+        }).on("mouseout", function () {
+            var text = d3.select(this).select(".country-title");
+
+            text.transition().duration(100).style("font-size", 15);
+        })
+
+        d3.selectAll(".no-link").selectAll("svg").on("mouseover", function () {
+            var chart = d3.select(this).select("path");
+            chart.transition().duration(100).attr("fill", "blue")
+        }).on("mouseout", function () {
+            var chart = d3.select(this).select("path");
+            chart.transition().duration(100).attr("fill", colorScale(medoids[chart.attr("val")]))
+        })
 
     }
 
@@ -421,8 +441,8 @@ function dendrogram() {
 
         // Adds the shape of the nodes in the dendrogram.
         node.append("circle")
-            .attr("r", 3.5)
-        
+            .attr("r", 2.5)
+
         node.append("text")
             .attr("x", 0)
             .attr("y", 20)
@@ -435,30 +455,30 @@ function dendrogram() {
         var div = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
-        
+
         node.on("mouseover", function (d) {
-            d3.select(this).attr("stroke", "red")
-            div.transition()
-                .duration(200)
-                .style("opacity", 1.0);
+                d3.select(this).attr("stroke", "red")
+                div.transition()
+                    .duration(200)
+                    .style("opacity", 1.0);
 
-            if (d.data.name) {
-                displayText = d.data.name;
-            } else {
-                displayText = d.label;
-            }
+                if (d.data.name) {
+                    displayText = d.data.name;
+                } else {
+                    displayText = d.label;
+                }
 
-            div.html(displayText)
-                .style("left", (d3.event.pageX + 10) + "px")
-                .style("top", (d3.event.pageY) + "px");
-        })
-        .on("mouseout", function (d) {
-            d3.select(this).attr("stroke", "none");
-            div.transition()
-                .duration(500)
-                .style("opacity", 0);
-        });
-        
+                div.html(displayText)
+                    .style("left", (d3.event.pageX + 10) + "px")
+                    .style("top", (d3.event.pageY) + "px");
+            })
+            .on("mouseout", function (d) {
+                d3.select(this).attr("stroke", "none");
+                div.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+
         var transitionTime = 100;
 
         // colour and extract clusters from dendogram based on threshold bar current value. 
@@ -556,16 +576,16 @@ function dendrogram() {
                 var dy2 = d3.event.y;
 
                 var lineScale = d3.scalePow().domain([height - 60, 0]).range([ymin, ymax]).clamp(true),
-                    lineBounds = d3.scalePow().range([0,height-60]).exponent(exp).clamp(true);
-                
+                    lineBounds = d3.scalePow().range([0, height - 60]).exponent(exp).clamp(true);
+
                 d3.select(this).attr("y1", dy2).attr("y2", dy2);
-                
-            
+
+
                 var currentValue = lineScale(dy2);
                 d3.select("#slider").property("value", function () {
                     return currentValue;
                 });
-                
+
                 clusters = clusterThresholdExtraction(currentValue);
                 shading(clusters);
             })
@@ -577,85 +597,85 @@ function dendrogram() {
 
         function manualExtract(bool) {
             if (bool) {
-                    node.on("click", function (d) {
-                        if (d.children == null) {
-                            return;
+                node.on("click", function (d) {
+                    if (d.children == null) {
+                        return;
+                    }
+
+                    if (clusters[d.data.name]) {
+                        delete clusters[d.data.name];
+
+                    } else {
+
+                        children = d.descendants();
+                        parents = d.ancestors();
+
+                        // removes parents from colouring
+                        for (x = 0; x < parents.length; x++) {
+                            if (clusters[parents[x].data.name]) {
+                                delete clusters[parents[x].data.name];
+                            }
                         }
 
-                        if (clusters[d.data.name]) {
-                            delete clusters[d.data.name];
-
-                        } else {
-
-                            children = d.descendants();
-                            parents = d.ancestors();
-
-                            // removes parents from colouring
-                            for (x = 0; x < parents.length; x++) {
-                                if (clusters[parents[x].data.name]) {
-                                    delete clusters[parents[x].data.name];
-                                }
+                        // removes children nodes from the selected clusters
+                        for (x = 0; x < children.length; x++) {
+                            if (clusters[children[x].data.name]) {
+                                delete clusters[children[x].data.name];
                             }
-
-                            // removes children nodes from the selected clusters
-                            for (x = 0; x < children.length; x++) {
-                                if (clusters[children[x].data.name]) {
-                                    delete clusters[children[x].data.name];
-                                }
-                            }
-
-                            // add selection to selected clusters
-                            clusters[d.data.name] = d;
-
                         }
 
-                        shading(clusters);
-                        update(clusters);
+                        // add selection to selected clusters
+                        clusters[d.data.name] = d;
 
-                    });
+                    }
+
+                    shading(clusters);
+                    update(clusters);
+
+                });
             } else {
                 node.on("click", null);
-//                node.on("mouseover", null);
-//                node.on("mouseout", null);
+                //                node.on("mouseover", null);
+                //                node.on("mouseout", null);
             }
         }
-        
-        var updateDrag = debounce(function(a){
-                
-                clusters = clusterThresholdExtraction(a);
-                shading(clusters);
-                
-            }, 10);
-        
+
+        var updateDrag = debounce(function (a) {
+
+            clusters = clusterThresholdExtraction(a);
+            shading(clusters);
+
+        }, 10);
+
         var dragger = d3.drag()
-            .on("drag", function(d){
-            
-                    d3.select("body")
-                      .style("cursor", "row-resize");
-                
-                    var dy = d3.event.dy;
-                    var dy2 = d3.event.y;
+            .on("drag", function (d) {
 
-                    var lineScale = d3.scalePow().domain([height - 60, 0]).range([ymin, ymax]).clamp(true),
-                        lineBounds = d3.scalePow().range([0,height-60]).exponent(exp).clamp(true);
+                d3.select("body")
+                    .style("cursor", "row-resize");
 
-                    d3.select(this).attr("y1", dy2).attr("y2", dy2);
+                var dy = d3.event.dy;
+                var dy2 = d3.event.y;
 
-                    var currentValue = lineScale(dy2);
-                    d3.select("#slider").property("value", function () {
-                        return currentValue;
-                    });
+                var lineScale = d3.scalePow().domain([height - 60, 0]).range([ymin, ymax]).clamp(true),
+                    lineBounds = d3.scalePow().range([0, height - 60]).exponent(exp).clamp(true);
+
+                d3.select(this).attr("y1", dy2).attr("y2", dy2);
+
+                var currentValue = lineScale(dy2);
+                d3.select("#slider").property("value", function () {
+                    return currentValue;
+                });
 
                 updateDrag(currentValue);
 
-            
+
             })
             .on("end", function () {
                 d3.select("body")
                     .style("cursor", "auto");
                 update(clusters);
             });
-        
+
 
         // Threshold Bar
         var thresholdBar = svg.append("g");
@@ -666,8 +686,8 @@ function dendrogram() {
             .attr("x2", width - margin.left - margin.right - 100) // Dynamic size of the bar
             .attr("y2", yScaleInverted(hardcodeline))
             .call(drag);
-        
-        
+
+
 
         d3.select("#slider")
             .property("min", ymin)
@@ -763,8 +783,6 @@ function dendrogram() {
         return "M" + d.parent.x + "," + yScaleInverted(d.parent.data.y) +
             "H" + d.x + "V" + yScaleInverted(d.data.y);
     }
-
-
 
 }
 
@@ -999,93 +1017,6 @@ function haiPlot() {
 
     heatmapChart(datasets[0]);
 
-
-}
-
-function ReachabilityPlot() {
-
-    var colorScale = d3.scaleSequential(d3.interpolateWarm)
-        .domain([0, 11]);
-
-    var margin = {
-            top: 20,
-            right: 20,
-            bottom: 30,
-            left: 40
-        },
-        width = parseInt(d3.select('#full-reach').style('width'), 10) - margin.left - margin.right,
-        height = 800 - margin.top - margin.bottom;
-        width = 1600;
-
-    var x = d3.scaleLinear()
-        .range([5, width]);
-
-    var y = d3.scaleLinear()
-        .range([height, 0]);
-
-    var xAxis = d3.axisBottom(x);
-
-    var yAxis = d3.axisLeft(y);
-    // .ticks(10, "%");
-
-    var svg = d3.select("#full-reach").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    d3.tsv("data/linetemplate2.csv", type, function (error, data) {
-        if (error) throw error;
-
-        x.domain([0, data.length]);
-        y.domain([0, d3.max(data, function (d) {
-            return d.reachability;
-        })]);
-
-        var barWidth = width / data.length;
-
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-            .append("text")
-            .attr("class", "label")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Distance");
-
-        svg.selectAll(".bar")
-            .data(data)
-            .enter().append("rect")
-            .attr("class", "bar")
-            .attr("x", function (d, i) {
-                return x(i);
-            })
-            .attr("width", barWidth)
-            .attr("y", function (d) {
-                return y(d.reachability);
-            })
-            .attr("height", function (d) {
-                return height - y(d.reachability);
-            })
-            .style("fill", function (d) {
-                if (d.label == 0) {
-                    return "#000000";
-                }
-                return colorScale(d.label);
-            });
-    });
-
-    function type(d) {
-        d.reachability = +d.reachability;
-        return d;
-    }
 }
 
 
@@ -1097,101 +1028,48 @@ $('#loading').delay(1000).fadeOut(1000);
 
 
 
+$("#reach-modal").on("show.bs.modal", function (event) {
+    var button = $(event.relatedTarget)
+    var value = button.data('value')
 
+    var modal = $(this);
+    modal.find('.modal-title').text('Chart ' + value);
 
-$("#reach-modal").on("show.bs.modal", function(event){
-   var button = $(event.relatedTarget)
-   var value = button.data('value')
-      
-   var modal = $(this);
-   modal.find('.modal-title').text('Chart '+value);
+    var w = parseInt(window.innerWidth * 0.50),
+        h = parseInt(window.innerHeight * 0.85);
 
-    
-    var focusChart = dc.seriesChart("#test");
-    var overviewChart = dc.seriesChart("#test-overview");
-    var ndx, runDimension, runGroup, overviewRunDimension, overviewRunGroup;
-    d3.text("data/rpts/reach_0", function(experiments) {
-        
+    drawReach(+value);
 
-        
-     var data = d3.csvParseRows(experiments)[0];
-    
-      ndx = crossfilter(data);
-      runDimension = ndx.dimension(function(d) {return [+d, +d]; });
-      overviewRunDimension = ndx.dimension(function(d) {return [+d, +d]; });
-      runGroup = runDimension.group().reduceSum(function(d) { return +d; });
-      overviewRunGroup = overviewRunDimension.group().reduceSum(function(d) { return +d; });
-      focusChart
-        .width(1600)
-        .height(480)
-        .chart(function(c) { return dc.barChart(c); })
-        .x(d3.scaleLinear().domain([0,7000]))
-        .brushOn(false)
-        .yAxisLabel("Measured Speed km/s")
-        .xAxisLabel("Run")
-        .elasticY(true)
-        .dimension(runDimension)
-        .group(runGroup)
-        .mouseZoomable(true)
-        .rangeChart(overviewChart)
-        .seriesAccessor(function(d) {return "Expt: " + d;})
-//        .keyAccessor(function(d) {return +d;})
-//        .valueAccessor(function(d) {return +d;})
-//        .legend(dc.legend().x(350).y(350).itemHeight(13).gap(5).horizontal(1).legendWidth(140).itemWidth(70));
-      focusChart.yAxis().tickFormat(function(d) {return d3.format(',d')(+d);});
-      focusChart.margins().left += 40;
-      focusChart.elasticX = function() {
-        return arguments.length ? this : false;
-      };
-        function rangesEqual (range1, range2) {
-            if (!range1 && !range2) {
-                return true;
-            } else if (!range1 || !range2) {
-                return false;
-            } else if (range1.length === 0 && range2.length === 0) {
-                return true;
-            } else if (range1[0].valueOf() === range2[0].valueOf() &&
-                range1[1].valueOf() === range2[1].valueOf()) {
-                return true;
-            }
-            return false;
-        }
-      overviewChart
-        .width(1600)
-        .height(100)
-        .chart(function(c,i) {
-        var chart = dc.barChart(c);
-        if(i===0)
-            chart.on('filtered', function (chart) {
-                if (!chart.filter()) {
-                    dc.events.trigger(function () {
-                        overviewChart.focusChart().x().domain(overviewChart.focusChart().xOriginalDomain());
-                        overviewChart.focusChart().redraw();
-                    });
-                } else if (!rangesEqual(chart.filter(), overviewChart.focusChart().filter())) {
-                    dc.events.trigger(function () {
-                        // The second parameter is quite important. It asks the focus operation not to propagate events
-                        // In absence of that it will cause infinite mutual recursion
-                        overviewChart.focusChart().focus(chart.filter(), true);
-                    });
-                }
-            });
-        return chart;
-        })
-        .x(d3.scaleLinear().domain([0,7000]))
-        .brushOn(true)
-        .xAxisLabel("Run")
-        .clipPadding(10)
-        .dimension(runDimension)
-        .group(runGroup)
-        .seriesAccessor(function(d) {return "Expt: " + d;})
-        .keyAccessor(function(d) {return +d;})
-        .valueAccessor(function(d) {return +d;});
-      dc.renderAll();
-      });
-    
 });
 
-$('#reach-modal').on('hidden.bs.modal', function(){
+$('#reach-modal').on('hidden.bs.modal', function () {
     d3.select("#full-reach").select("svg").remove();
 })
+
+
+function reachPaging() {
+
+    count = Math.ceil(Object.keys(clusters).length / 4);
+    pages = [];
+    for (i = 0; i < count; i++) {
+        pages.push(i);
+    }
+
+    pgLinks = d3.select(".paging").selectAll(".pg").data(pages, function (d) {
+        return +d;
+    })
+
+    pgLinks.exit().remove();
+
+    pgLinks.enter().append("text").classed("pg", true).append("a").attr("href", "#").html(function (d) {
+        return (d + 1);
+    })
+
+    move = $("#reach-plot").width();
+
+    d3.selectAll(".pg").on("click", function (d) {
+        console.log(d);
+        $("#reach-plot").scrollLeft(move * +d);
+    });
+
+}

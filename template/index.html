@@ -5,7 +5,6 @@
     <title>MustaCHE | Dashboard</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">-->
     <!-- VENDOR CSS -->
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
@@ -15,61 +14,97 @@
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
-    <link rel="stylesheet" href="assets/css/loader.css"/>
+    <link rel="stylesheet" href="assets/css/loader.css" />
     <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:700" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:700" rel="stylesheet">
     <!-- ICONS -->
     <link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
     <link rel="icon" type="image/png" sizes="96x96" href="assets/img/favicon.png">
-        
+
+    <style>
+        p {
+            font-size: 12px;
+        }
+
+        .selection {
+            border-radius: 10px;
+        }
+
+        .overlay {
+            fill: none;
+            pointer-events: all;
+        }
+
+        .brush2 .selection {
+            pointer-events: none;
+        }
+
+        .brush2 .handle {
+            pointer-events: none;
+        }
+
+        .brush2 {
+            opacity: 0.4;
+            fill-opacity: 0.4;
+        }
+
+        .highlight circle {
+            fill: steelblue;
+            stroke: steelblue;
+        }
+
+
+        .bar {
+            fill: blue;
+        }
+
+        .zoom {
+            cursor: move;
+            fill: none;
+            pointer-events: all;
+        }
+
+        html {
+            height: 100%;
+        }
+
+    </style>
+
 </head>
 
 <body class="layout-default">
-    
+
     <div id="loading">
         <div id="loader">
-<!--
-        <div class="sk-cube-grid">
-          <div class="sk-cube sk-cube1"></div>
-          <div class="sk-cube sk-cube2"></div>
-          <div class="sk-cube sk-cube3"></div>
-          <div class="sk-cube sk-cube4"></div>
-          <div class="sk-cube sk-cube5"></div>
-          <div class="sk-cube sk-cube6"></div>
-          <div class="sk-cube sk-cube7"></div>
-          <div class="sk-cube sk-cube8"></div>
-          <div class="sk-cube sk-cube9"></div>
-        </div>
--->
             <object data="assets/img/Mustache_Logo_SVG.svg" type="image/svg+xml" class="animated swing infinite loader-logo" fill="white"></object>
         </div>
     </div>
-    
+
     <!-- WRAPPER -->
     <div id="wrapper">
-        
+
         <!-- Modal -->
         <div class="modal fade" id="reach-modal" tabindex="-1" role="dialog" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-xl" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="reach-modal-title">Chart Title</h5>
-              </div>
-              <div class="modal-body">
-                  <div id="container">
-                    <div id="test"></div>
-                    <div id="test-overview"></div>
-                  </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-              </div>
+            <div id="myreach" class="modal-dialog modal-lg modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reach-modal-title">Chart Title</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="full-reach">
+                            <div id="test"></div>
+                            <div id="test-overview"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        
+
 
         <!-- NAVBAR -->
         <nav class="navbar navbar-default navbar-fixed-top">
@@ -77,7 +112,7 @@
                 <div class="navbar-btn col">
                     <button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-menu"></i></button>
                 </div>
-                
+
                 <div class="branding">
                     <h1 class="text-center brand-block">M<span>usta</span>CHE</h1>
                     <img src="assets/img/Mustache_Logo_SVG.svg" class="brand-logo brand-block">
@@ -126,7 +161,7 @@
                 </nav>
             </div>
             <div style="position: absolute; bottom:0;">
-                <a href=""><img src="assets/img/UA-COLOUR-REVERSE.eps" class="side-logo-uofa"></a>
+                <a href=""><img src="assets/img/UA-EAC-COLOUR-REVERSE.eps" class="side-logo-uofa"></a>
                 <a href=""><img src="assets/img/jcu-logo.png" class="side-logo-jcu"></a>
             </div>
         </div>
@@ -136,7 +171,7 @@
             <!-- MAIN CONTENT -->
             <div class="main-content">
                 <div class="container-fluid">
-       
+
                     <div class="row">
                         <!-- START DENDOGRAM -->
                         <div class="col-xs-12 nopadding">
@@ -147,7 +182,7 @@
                                         <li class="panel-options">
                                             <i class="lnr lnr-download" data-toggle="tooltip" data-placement="bottom" title="Save Screenshot"></i>
                                     </div>
-<!--
+                                    <!--
                                     <div class="right">
                                         <li class="dropdown panel-options">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-cog"></i></a>
@@ -162,44 +197,44 @@
 -->
                                 </div>
                                 <div class="row">
-                                <div class="panel-body" id="panel1">
-                                        
+                                    <div class="panel-body" id="panel1">
+
                                         <div>
                                             <div id="chart-dendrogram">
                                             </div>
                                             <input id="slider" type="range" value="50" class="hidden">
                                         </div>
-                                    
-                                </div>
+
+                                    </div>
                                 </div>
                                 <div class="panel-footer nopadding pad-t">
                                     <div class="row">
                                         <div class="col-sm-4 nopadding">
                                             <div class="row nopadding">
-                                            <div class="col-sm-4 text-center">
-                                                <p>FOSC
-                                                    <input type="radio" name="radio" value="fosc" disabled>
-                                                </p>
-                                            </div>
-                                            <div class="col-sm-4 text-center">
-                                                <p>Threshold Bar
-                                                    <input type="radio" name="radio" value="bar" checked>
-                                                </p>
-                                            </div>
-                                            <div class="col-sm-4 text-center">
-                                                <p>Manual Selection
-                                                    <input type="radio" name="radio" value="manual">
-                                                </p>
-                                            </div>
+                                                <div class="col-sm-4 text-center">
+                                                    <p>FOSC
+                                                        <input type="radio" name="radio" value="fosc" disabled>
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-4 text-center">
+                                                    <p>Threshold Bar
+                                                        <input type="radio" name="radio" value="bar" checked>
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-4 text-center">
+                                                    <p>Manual Selection
+                                                        <input type="radio" name="radio" value="manual">
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="col-sm-4 text-center">
-                                            
+
                                         </div>
 
                                         <div class="col-sm-4 text-center">
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -207,7 +242,7 @@
                         </div>
                         <!-- END DENDOGRAM -->
                     </div>
-                    
+
                     <div class="row pad-t">
                         <!-- START HAI-->
                         <div class="col-xs-3 nopadding">
@@ -221,22 +256,25 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="row nopadding">
-                                    <div id="hai-plot">
+                                        <div id="hai-plot">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-footer">
+                                <div class="panel-footer hidden">
                                     <div id="hai-legend"></div>
                                 </div>
                             </div>
                         </div>
                         <!-- END HAI -->
-                        
+
                         <!-- START REACHABILLITY -->
                         <div class="col-xs-9 nopadding pad-l">
                             <div class="panel nopadding" id="reach-panel">
                                 <div class="panel-heading">
-                                    <h1 class="panel-title">Reachabillity Plots</h1>
+                                    <h1 class="panel-title panel-title-extra" id="goleft">Reachabillity Plots</h1>
+                                    <div class="paging">
+                                        <text class="pg"></text>
+                                    </div>
                                     <div class="right">
                                         <li class="dropdown panel-options">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-download"></i></a>
@@ -248,7 +286,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                         <!-- END REACHABILLITY -->
@@ -280,6 +318,7 @@
     <script src="assets/scripts/klorofil-common.js"></script>
     <script src="assets/js/difference.js"></script>
     <script src="assets/js/layout.js"></script>
+    <script src="assets/js/reach.js"></script>
     <script type="text/javascript" src="assets/js/myplots.js"></script>
 
 </body>
