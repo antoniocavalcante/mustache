@@ -1035,8 +1035,12 @@ $("#reach-modal").on("show.bs.modal", function (event) {
     var modal = $(this);
     modal.find('.modal-title').text('Chart ' + value);
 
-    var w = parseInt(window.innerWidth * 0.50),
-        h = parseInt(window.innerHeight * 0.85);
+    var modalPad = parseInt($(window).innerHeight() * 0.10),
+        width = parseInt($(window).innerWidth() - modalPad),
+        h = parseInt($(window).innerHeight() - modalPad);
+
+    $(".modal-xl").css("height", h);
+    $(".modal-xl").css("width", width);
 
     drawReach(+value);
 
@@ -1068,8 +1072,11 @@ function reachPaging() {
     move = $("#reach-plot").width();
 
     d3.selectAll(".pg").on("click", function (d) {
-        console.log(d);
-        $("#reach-plot").scrollLeft(move * +d);
+        offset = move * +d;
+        $("#reach-plot").scrollLeft(offset);
+
     });
+
+
 
 }

@@ -365,9 +365,6 @@ html {
     filter: invert();
 }
 
-.modal-xl {
-    width: 90% !important;
-}
 
 .loader-logo {
     width: 200px;
