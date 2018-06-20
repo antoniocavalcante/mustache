@@ -80,11 +80,13 @@
                     </div>
                     <div class="modal-body">
                         <div id="full-reach">
-                            <div id="test"></div>
-                            <div id="test-overview"></div>
+                            <div class="row">
+                                <div id="full-plot" class="col-md-10"></div>
+                                <div id="full-options" class="col-md-auto"></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer hidden">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
@@ -259,8 +261,14 @@
                             <div class="panel nopadding" id="reach-panel">
                                 <div class="panel-heading">
                                     <h1 class="panel-title panel-title-extra" id="goleft">Reachabillity Plots</h1>
-                                    <div class="paging">
-                                        <text class="pg"></text>
+                                    <div class="paging nopadding">
+                                        <ul class="pagination pagination-sm nopadding">
+                                            <li class="pg-nav" pg-val="-1">
+                                                <a href="#">
+                                                        <span>&laquo;</span>
+                                                      </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                     <div class="right">
                                         <li class="dropdown panel-options">

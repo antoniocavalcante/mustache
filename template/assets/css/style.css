@@ -377,17 +377,14 @@ inline {
 
 
 .panel-title-extra {
-    width: 50%;
+    width: auto;
     display: inline-block;
+    margin: auto 0;
+
 }
 
 .paging {
     display: inline-block;
-    width: 100px;
-}
-
-.pg {
-
-    /*    padding-left: 10px;*/
-    padding-right: 10px;
+    width: auto;
+    margin: 0 auto;
 }

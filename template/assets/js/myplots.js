@@ -462,11 +462,7 @@ function dendrogram() {
                     .duration(200)
                     .style("opacity", 1.0);
 
-                if (d.data.name) {
-                    displayText = d.data.name;
-                } else {
-                    displayText = d.label;
-                }
+                displayText = d.data.label;
 
                 div.html(displayText)
                     .style("left", (d3.event.pageX + 10) + "px")
@@ -840,86 +836,6 @@ function haiPlot() {
                 var colorScale = d3.scaleSequential(d3.interpolateBuPu)
                     .domain([maxValue, minValue]);
 
-                //                // ------------------------------------------------------------------------------
-                //
-                //                // Scale for workingtime
-                //                var countScale = d3.scaleLinear()
-                //                    .domain([minValue, maxValue])
-                //                    .range([0, width]);
-                //
-                //                // Calculate variables for the temp gradient
-                //                var numStops = 10;
-                //                var countRange = countScale.domain();
-                //                // index 2 is the substraction between max and min
-                //                countRange[2] = countRange[1] - countRange[0];
-                //                var countPoint = [];
-                //
-                //                for (var i = 0; i < numStops; i++) {
-                //                    countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
-                //                }
-                //            
-                //                var legend = d3.select("#hai-legend").append("svg")
-                //                    .attr("preserveAspectRatio", "xMinYMin Slice")
-                //                    .attr("viewBox", height + " 0 " + width + " " + 10);
-                //            
-                //                // Create the gradient
-                //                legend.append("defs")
-                //                    .append("linearGradient")
-                //                    .attr("id", "legend-traffic")
-                //                    .attr("x1", "0%").attr("y1", "0%")
-                //                    .attr("x2", "100%").attr("y2", "0%")
-                //                    .selectAll("stop")
-                //                    .data(d3.range(numStops))
-                //                    .enter().append("stop")
-                //                    .attr("offset", function (d, i) {
-                //                        return countScale(countPoint[i]) / width;
-                //                    })
-                //                    .attr("stop-color", function (d, i) {
-                //                        return colorScale(countPoint[i]);
-                //                    });
-                //
-                //                var legendWidth = Math.min(width * 0.8, 400);
-                //            
-                //                var legendsvg = legend.append("g")
-                //                    .attr("class", "legendWrapper")
-                //
-                //                // Append title
-                //                legendsvg.append("text")
-                //                    .attr("class", "legendTitle")
-                //                    .attr("x", 0)
-                //                    .attr("y", 30)
-                //                    .style("text-anchor", "middle");
-                //                // .text("Number of times I started to work");
-                //
-                //                // Draw the Rectangle
-                //                legendsvg.append("rect")
-                //                    .attr("class", "legendRect")
-                //                    .attr("x", -legendWidth / 2)
-                //                    .attr("y", 50)
-                //                    .attr("width", legendWidth)
-                //                    .attr("height", 10)
-                //                    .style("fill", "url(#legend-traffic)");
-                //
-                //                // Set scale for x-axis
-                //                var xScale = d3.scaleLinear()
-                //                    .range([-legendWidth / 2, legendWidth / 2])
-                //                    .domain([minValue, maxValue]);
-                //
-                //                // Define x-axis
-                //                var xAxis = d3.axisBottom()
-                //                    .ticks(5)
-                //                    .scale(xScale);
-                //
-                //                // Set up X axis
-                //                legendsvg.append("g")
-                //                    .attr("class", "axis")
-                //                    .attr("transform", "translate(0," + 55 + ")")
-                //                    .call(xAxis);
-                //            
-                //            // ------------------------------------------------------------------------------
-                //            
-                //                
-
                 var svg = d3.select("#hai-plot").append("svg")
                     .attr("preserveAspectRatio", "xMidYMid meet")
                     .attr("viewBox", "-35 -30 " + width + " " + height)
@@ -1022,7 +938,7 @@ function haiPlot() {
 
 dendrogram();
 haiPlot("#hai-plot");
-//MultiReachabilityPlots();
+
 
 $('#loading').delay(1000).fadeOut(1000);
 
@@ -1035,9 +951,13 @@ $("#reach-modal").on("show.bs.modal", function (event) {
     var modal = $(this);
     modal.find('.modal-title').text('Chart ' + value);
 
+
     var modalPad = parseInt($(window).innerHeight() * 0.10),
         width = parseInt($(window).innerWidth() - modalPad),
-        h = parseInt($(window).innerHeight() - modalPad);
+        h = parseInt($(window).innerHeight() - (modalPad * 2));
+
+    $(".modal-xl").attr("height", h);
+    $(".modal-xl").attr("width", width);
 
     $(".modal-xl").css("height", h);
     $(".modal-xl").css("width", width);
@@ -1053,29 +973,89 @@ $('#reach-modal').on('hidden.bs.modal', function () {
 
 function reachPaging() {
 
-    count = Math.ceil(Object.keys(clusters).length / 4);
+    meds = Object.keys(clusters).length / 4;
+    count = Math.ceil(meds);
     pages = [];
     for (i = 0; i < count; i++) {
         pages.push(i);
     }
 
-    pgLinks = d3.select(".paging").selectAll(".pg").data(pages, function (d) {
+    pgLinks = d3.select(".pagination").selectAll(".pg").data(pages, function (d) {
         return +d;
     })
 
     pgLinks.exit().remove();
 
-    pgLinks.enter().append("text").classed("pg", true).append("a").attr("href", "#").html(function (d) {
+    d3.selectAll(".arr").remove();
+
+
+    pgLinks.enter().append("li").classed("pg", "true").append("a").attr("href", "#").html(function (d) {
         return (d + 1);
     })
 
+    d3.select(".pg").classed("active", "true");
+
     move = $("#reach-plot").width();
 
-    d3.selectAll(".pg").on("click", function (d) {
-        offset = move * +d;
+    buttons = d3.selectAll(".pg");
+
+    function toggleActive(current) {
+        if (current < 0 || current > pages.length - 1) return;
+        buttons.each(function (d) {
+            $(this).removeClass("active")
+            if (current == d) {
+                $(this).addClass("active");
+            }
+        })
+    }
+
+    buttons.on("click", function (d) {
+        offset = move * d;
+        if (d == pages.length - 1) {
+            offset = offset + 10;
+        }
         $("#reach-plot").scrollLeft(offset);
 
     });
+
+
+    $("#reach-plot").scroll(function () {
+        pos = $(this).scrollLeft() + 1;
+        console.log(pos);
+        current = Math.floor(pos / move);
+        if (pos + move >= Math.ceil(meds * move)) {
+            current = pages.length - 1;
+        }
+        toggleActive(current);
+
+    })
+
+    $("#reach-plot").scrollLeft(0);
+
+    d3.select(".pagination")
+        .append("li")
+        .attr("pg-val", "1")
+        .classed("arr", "true")
+        .classed("pg-nav", "true")
+        .append("a")
+        .attr("href", "#")
+        .append("span")
+        .html("&raquo;");
+
+    nav = d3.selectAll(".pg-nav");
+
+    nav.on("click", function () {
+        i = d3.select(this).attr("pg-val")
+        g = $(".pg.active")[0];
+        d3.select(g).each(function (d) {
+            shift = d + parseInt(i);
+            offset = move * shift;
+            if (shift == pages.length - 1) {
+                offset = offset + 10;
+            }
+            $("#reach-plot").scrollLeft(offset);
+        })
+    })
 
 
 
