@@ -411,10 +411,12 @@ function dendrogram() {
                 ymin = d.data.y;
         });
 
-        var exp = 0.25;
+        var exp = 0.5;
 
         yScale = d3.scalePow().domain([ymin, ymax]).range([0, height - 60]).exponent(exp).clamp(true);
         yScaleInverted = d3.scalePow().domain([ymax, ymin]).range([0, height - 60]).exponent(exp).clamp(true);
+        lineScale = d3.scalePow().range([0, height - 60]).exponent(exp).domain([ymax, ymin]).clamp(true);
+        lineMove = d3.scaleLinear().range([0, height - 60]).domain([0, height - 60]).clamp(true);
 
         var loadLine = d3.select("#slider").property("value")
         if (typeof (loadLine) == 'float') {
@@ -481,6 +483,7 @@ function dendrogram() {
 
         // colour and extract clusters from dendogram based on threshold bar current value. 
         function clusterThresholdExtraction(currentValue) {
+
             var clusters = {}
 
             function traverse(d, i) {
@@ -488,9 +491,10 @@ function dendrogram() {
                 if (d.data.y <= currentValue) {
                     if (d.parent != null && d.parent.data.y > currentValue && d.children != null) {
                         clusters[d.data.name] = d;
+                    } else if (currentValue == ymax) {
+
+                        clusters[root.data.name] = root;
                     }
-                } else if (currentValue == 0) {
-                    clusters[root.data.name] = root;
                 }
 
             };
@@ -571,14 +575,11 @@ function dendrogram() {
                 d3.select("body")
                     .style("cursor", "row-resize");
 
-                var dy = d3.event.dy;
-                var dy2 = d3.event.y;
+                var dy = d3.event.y;
 
-                var lineScale = d3.scalePow().range([0, height - 60]).exponent(exp).domain([ymax, ymin]).clamp(true);
+                d3.select(this).attr("y1", lineMove(dy)).attr("y2", lineMove(dy));
 
-                d3.select(this).attr("y1", dy2).attr("y2", dy2);
-
-                var currentValue = lineScale.invert(dy2);
+                var currentValue = lineScale.invert(dy);
 
                 d3.select("#slider").property("value", function () {
                     return currentValue;
@@ -664,8 +665,8 @@ function dendrogram() {
         // Link the threshold bar to the slider.
         d3.select("#slider").on("input", function () {
             var currentValue = this.value;
-            thresholdBar.select("line").attr("y1", y1 => yScaleInverted(currentValue))
-            thresholdBar.select("line").attr("y2", y2 => yScaleInverted(currentValue))
+            thresholdBar.select("line").attr("y1", y1 => yScaleInverted(currentValue));
+            thresholdBar.select("line").attr("y2", y2 => yScaleInverted(currentValue));
             clusters = clusterThresholdExtraction(currentValue);
             shading(clusters);
 
@@ -703,8 +704,9 @@ function dendrogram() {
 
                     if (!isEqual) {
 
-                        d3.select("#slider").text(function () {
-                            clusters = clusterThresholdExtraction(this.value);
+                        thresholdBar.each(function () {
+                            value = lineScale.invert(d3.select(this).select("line").attr("y1"))
+                            clusters = clusterThresholdExtraction(value);
                             shading(clusters);
                             update(clusters);
                         });

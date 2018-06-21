@@ -354,6 +354,8 @@ function drawReach(filename, wid, hie) {
 
         bars.exit().remove();
 
+        throttled_version();
+
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
             .scale(width / (s[1] - s[0]))
             .translate(-s[0], 0));
@@ -362,7 +364,6 @@ function drawReach(filename, wid, hie) {
 
     function brushEnd() {
 
-        throttled_version();
         focus.select(".axis--y").transition().duration(500).call(yAxis);
 
     }
