@@ -1,7 +1,8 @@
 var globalColor = d3.interpolateViridis,
     clusters = {},
     charts = [],
-    medoids = {};
+    medoids = {},
+    ppg;
 
 
 
@@ -147,7 +148,7 @@ function setWindow(container) {
 }
 
 
-function update(clus) {
+function update() {
 
     var medoids = {};
 
@@ -254,7 +255,8 @@ function update(clus) {
 
         this.fill = v.indexOf(this.id);
 
-        this.rows = 4;
+        this.rows = $("#reach-per-pg").find(":selected").text();
+
 
         colW = parseInt(12 / this.rows);
 
@@ -409,7 +411,7 @@ function dendrogram() {
                 ymin = d.data.y;
         });
 
-        var exp = 1.0;
+        var exp = 0.25;
 
         yScale = d3.scalePow().domain([ymin, ymax]).range([0, height - 60]).exponent(exp).clamp(true);
         yScaleInverted = d3.scalePow().domain([ymax, ymin]).range([0, height - 60]).exponent(exp).clamp(true);
@@ -568,16 +570,16 @@ function dendrogram() {
             .on('drag', function (d) {
                 d3.select("body")
                     .style("cursor", "row-resize");
+
                 var dy = d3.event.dy;
                 var dy2 = d3.event.y;
 
-                var lineScale = d3.scalePow().domain([height - 60, 0]).range([ymin, ymax]).clamp(true),
-                    lineBounds = d3.scalePow().range([0, height - 60]).exponent(exp).clamp(true);
+                var lineScale = d3.scalePow().range([0, height - 60]).exponent(exp).domain([ymax, ymin]).clamp(true);
 
                 d3.select(this).attr("y1", dy2).attr("y2", dy2);
 
+                var currentValue = lineScale.invert(dy2);
 
-                var currentValue = lineScale(dy2);
                 d3.select("#slider").property("value", function () {
                     return currentValue;
                 });
@@ -635,42 +637,6 @@ function dendrogram() {
                 //                node.on("mouseout", null);
             }
         }
-
-        var updateDrag = debounce(function (a) {
-
-            clusters = clusterThresholdExtraction(a);
-            shading(clusters);
-
-        }, 10);
-
-        var dragger = d3.drag()
-            .on("drag", function (d) {
-
-                d3.select("body")
-                    .style("cursor", "row-resize");
-
-                var dy = d3.event.dy;
-                var dy2 = d3.event.y;
-
-                var lineScale = d3.scalePow().domain([height - 60, 0]).range([ymin, ymax]).clamp(true),
-                    lineBounds = d3.scalePow().range([0, height - 60]).exponent(exp).clamp(true);
-
-                d3.select(this).attr("y1", dy2).attr("y2", dy2);
-
-                var currentValue = lineScale(dy2);
-                d3.select("#slider").property("value", function () {
-                    return currentValue;
-                });
-
-                updateDrag(currentValue);
-
-
-            })
-            .on("end", function () {
-                d3.select("body")
-                    .style("cursor", "auto");
-                update(clusters);
-            });
 
 
         // Threshold Bar
@@ -973,7 +939,8 @@ $('#reach-modal').on('hidden.bs.modal', function () {
 
 function reachPaging() {
 
-    meds = Object.keys(clusters).length / 4;
+    ppg = $("#reach-per-pg").find(":selected").text();
+    meds = Object.keys(clusters).length / ppg;
     count = Math.ceil(meds);
     pages = [];
     for (i = 0; i < count; i++) {
@@ -1057,6 +1024,11 @@ function reachPaging() {
         })
     })
 
-
-
 }
+
+
+d3.select("#reach-per-pg").on("change", function () {
+    d3.select('#reach-plot').selectAll(".chart-scroller").remove();
+    reachPaging();
+    update();
+})

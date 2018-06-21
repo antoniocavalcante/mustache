@@ -387,4 +387,22 @@ inline {
     display: inline-block;
     width: auto;
     margin: 0 auto;
+    float: right;
+}
+
+.perpg {
+    display: inline-block;
+    padding-left: 10px;
+
+}
+
+
+.input-group > .input-group-btn:last-child > .selectpicker {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.input-group > .input-group-btn:first-child > .selectpicker {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
