@@ -446,6 +446,19 @@ function dendrogram() {
         // Adds the shape of the nodes in the dendrogram.
         node.append("circle")
             .attr("r", 2.5)
+            .attr("data-target", "#reach-modal")
+            .attr("data-value", function (d) {
+                if (d.children == null) {
+                    return d.data.label;
+                }
+            })
+            .attr("data-toggle", function (d) {
+                if (d.children == null) {
+                    return "modal";
+                }
+
+            });
+
 
         node.append("text")
             .attr("x", 0)
@@ -915,6 +928,8 @@ $('#loading').delay(1000).fadeOut(1000);
 $("#reach-modal").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget)
     var value = button.data('value')
+
+    console.log(event);
 
     var modal = $(this);
     modal.find('.modal-title').text('Chart ' + value);

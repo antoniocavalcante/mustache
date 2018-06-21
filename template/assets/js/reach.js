@@ -122,7 +122,7 @@ function drawReach(filename, wid, hie) {
         return sampled;
     }
 
-    var width = parseInt($(".modal-xl").attr("width") * 0.80),
+    var width = parseInt($(".modal-xl").attr("width") * 0.90),
         h = $(".modal-xl").attr("height");
 
     var svg = d3.select("#full-plot")
