@@ -456,7 +456,6 @@ function dendrogram() {
                 if (d.children == null) {
                     return "modal";
                 }
-
             });
 
 
@@ -770,44 +769,42 @@ function haiPlot() {
     var width = parseInt($("#hai-panel").find(".panel-body").attr("width"));
     var height = parseInt($("#hai-panel").find(".panel-body").attr("height"));
 
-    console.log(width, height);
-
     if (width > height) {
         width = height;
     } else if (height > width) {
         height = width;
     }
 
-    console.log(width, height);
+    var datasets = ["data/data4.csv", "data/data.tsv"];
 
-    var gridSize = (width - (30 * 2)) / 47,
-        gridSizeY = (height - (30 * 2)) / 47,
-        haiRange = 0,
-        padding = height * 0.05,
-        datasets = ["data/matrix_sim.csv", "data/data.tsv"];
-
-    var heatmapChart = function (tsvFile) {
-        d3.tsv(tsvFile,
-            function (d) {
-                return {
-                    day: +d.day,
-                    hour: +d.hour,
-                    value: +d.value
-                };
-            },
+    var heatmapChart = function (file) {
+        d3.text(file,
             function (error, data) {
 
-                var minValue = d3.min(data, function (d) {
-                    return +d.value;
+                data = d3.csvParseRows(data);
+                var haiRange = data.length;
+
+                var gridSize = (width - (30 * 2)) / haiRange,
+                    gridSizeY = (height - (30 * 2)) / haiRange,
+                    padding = height * 0.05;
+
+                var minValue = d3.min(data, function (d, i) {
+                    return +d3.min(d);
                 });
 
-                var maxValue = d3.max(data, function (d) {
-                    return +d.value;
-                });
+                minValue = data.map(function (d) {
+                    return +d3.values(d).reverse()[0];
+                })
 
-                var haiRange = d3.max(data, function (d) {
-                    return +d.hour;
-                });
+                minValue = d3.min(minValue);
+
+                maxValue = data.map(function (d) {
+                    return +d3.values(d).sort()[0];
+                })
+
+                maxValue = d3.max(maxValue);
+
+                console.log(haiRange, minValue, maxValue);
 
                 labels = [];
                 for (var i = 0; i < (haiRange + 1); i++) {
@@ -859,54 +856,55 @@ function haiPlot() {
                     .attr("class", "tooltip")
                     .style("opacity", 0);
 
+                ndata = []
+                for (i = 0; i < data.length; i++) {
+                    ndata[i] = data[i].map(function (d, j) {
+                        return [d, i, j];
+                    })
+                }
+
+                data = [].concat.apply([], ndata);
+
+
                 var cards = svg.selectAll(".hour")
-                    .data(data, function (d) {
-                        return d.day + ':' + d.hour;
-                    });
+                    .data(data);
 
                 cards.append("title");
 
                 cards.enter().append("rect")
                     .attr("x", function (d, i) {
-                        return (d.hour - 1) * (gridSize);
+                        return (d[2]) * (gridSize);
                     })
                     .attr("y", function (d, i) {
-                        return (d.day - 1) * gridSizeY;
+                        return (d[1]) * gridSizeY;
                     })
                     .attr("width", gridSize)
                     .attr("height", gridSizeY)
                     .style("fill", function (d, i) {
-                        return colorScale(d.value);
+                        return colorScale(+d[0]);
                     })
                     .on("mouseover", function (d) {
                         d3.select(this).style("fill", "#ffffff");
                         div.transition()
                             .duration(200)
                             .style("opacity", 1.0);
-                        div.html(d.hour + " " + d.day + "  <br> " + d.value)
+                        div.html(+d[0])
                             .style("left", (d3.event.pageX + 10) + "px")
                             .style("top", (d3.event.pageY) + "px");
                     })
                     .on("mouseout", function (d) {
                         d3.select(this).style("fill", function (d, i) {
-                            return colorScale(d.value);
+                            return colorScale(+d[0]);
                         });
                         div.transition()
                             .duration(500)
                             .style("opacity", 0);
                     });
 
-                cards.transition().duration(50)
-                    .style("fill", function (d, i) {
-                        return colorScale(d.value);
-                    });
 
                 cards.select("title").text(function (d) {
-                    return d.value;
+                    return +d[0];
                 });
-
-                cards.exit().remove();
-
 
             });
 
@@ -918,9 +916,7 @@ function haiPlot() {
 
 
 dendrogram();
-haiPlot("#hai-plot");
-
-
+haiPlot();
 $('#loading').delay(1000).fadeOut(1000);
 
 
