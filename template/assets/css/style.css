@@ -13,7 +13,6 @@ text.instructions {
     font-size: 16px;
 }
 
-
 .axis path,
 .axis line {
     fill: none;
@@ -86,11 +85,9 @@ text.axis-worktime {
     fill: #000;
 }
 
-
 .logo-wrapper {
     max-width: 100%;
     max-height: 100%;
-
 }
 
 div.tooltip {
@@ -160,7 +157,23 @@ html {
     padding-bottom: 0;
     margin-top: 0;
     margin-bottom: 0;
+}
 
+.nopadding-h {
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.nopadding-r {
+    padding-right: 0;
+    margin-right: 0;
+}
+
+.nopadding-l {
+    padding-left: 0;
+    margin-left: 0;
 }
 
 .pad-l {
@@ -175,15 +188,12 @@ html {
     padding-top: 10px;
 }
 
-
-
 .side-logo {
     width: 80%;
     margin: 0 10%;
     filter: grayscale(100%) invert(100%);
     opacity: 0.5;
     mix-blend-mode: screen;
-
 }
 
 .side-logo-uofa {
@@ -197,14 +207,12 @@ html {
     margin-bottom: 10%;
 }
 
-
 .branding {
     font-family: 'Roboto Condensed', sans-serif;
     float: left;
 }
 
-
-.grouper > .row {
+.grouper>.row {
     overflow-x: scroll;
     white-space: nowrap;
 }
@@ -214,28 +222,26 @@ html {
     float: none;
 }
 
-::-webkit-scrollbar {
+#reach-panel>::-webkit-scrollbar {
     background-color: rgba(64, 64, 64, 0.1);
     border-radius: 3px;
     height: 10px;
 }
 
-::-webkit-scrollbar-thumb {
+#reach-panel>::-webkit-scrollbar-thumb {
     background: #cccc;
     border-radius: 3px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+#reach-panel>::-webkit-scrollbar-thumb:hover {
     background: #ccc;
     border-radius: 3px;
 }
 
-
-::-webkit-scrollbar-track-piece {
+#reach-panel>::-webkit-scrollbar-track-piece {
     background-color: transparent;
     border-radius: 3px;
 }
-
 
 /*
 .panel-options > .dropdown-menu {
@@ -253,24 +259,21 @@ html {
     margin: 0 auto;
 }
 
-.options-value > p {
+.options-value>p {
     display: inline-block;
     padding: 0 8px 0 0;
 }
 
-.options-value > input[type=number] {
+.options-value>input[type=number] {
     display: inline-block;
     width: 100%;
     display: none;
 }
 
-.panel-options > .dropdown-menu > li > input {
+.panel-options>.dropdown-menu>li>input {
     padding: 10px;
     width: 5px;
 }
-
-
-
 
 /*dendogram input button*/
 
@@ -295,7 +298,6 @@ html {
 
 .switch-field label {
     display: inline-block;
-
     background-color: #9f9f9f;
     color: rgba(0, 0, 0, 0.6);
     font-size: 14px;
@@ -315,18 +317,17 @@ html {
     cursor: pointer;
 }
 
-.switch-field input:checked + label {
+.switch-field input:checked+label {
     background-color: #eeeeee;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
 
-.switch-field input:disabled + label label {
+.switch-field input:disabled+label label {
     -webkit-box-shadow: none;
     box-shadow: none;
     opacity: 0.5;
 }
-
 
 .switch-field label:first-of-type {
     border-radius: 4px 0 0 4px;
@@ -339,7 +340,6 @@ html {
 .no-link {
     outline: 0;
     border: none;
-
 }
 
 .no-link svg:focus {
@@ -350,7 +350,6 @@ html {
     width: 24px;
     margin-right: 8px;
     padding-bottom: 8px;
-
 }
 
 .brand-block {
@@ -362,25 +361,26 @@ html {
     margin-left: 6px;
     padding-bottom: 16px;
     width: 64px;
-    filter: invert();
+    fill: "currentColor";
 }
-
 
 .loader-logo {
     width: 200px;
     color: white;
 }
 
-inline {
+.inline {
     display: inline-block;
 }
 
+.block {
+    display: block;
+}
 
 .panel-title-extra {
     width: auto;
     display: inline-block;
     margin: auto 0;
-
 }
 
 .paging {
@@ -393,5 +393,46 @@ inline {
 .perpg {
     display: inline-block;
     padding-left: 10px;
+}
 
+/* #full-options {
+    overflow-y: scroll;
+} */
+
+.scrollable-menu {
+    height: auto;
+    max-height: 400px;
+    overflow-x: hidden;
+}
+
+.strike {
+    display: block;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.strike>span {
+    position: relative;
+    display: inline-block;
+}
+
+.strike>span:before,
+.strike>span:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 9999px;
+    height: 1.5px;
+    background: rgb(226, 226, 226);
+}
+
+.strike>span:before {
+    right: 100%;
+    margin-right: 15px;
+}
+
+.strike>span:after {
+    left: 100%;
+    margin-left: 15px;
 }

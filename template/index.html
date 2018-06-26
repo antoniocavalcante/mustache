@@ -5,6 +5,7 @@
     <title>MustaCHE | Dashboard</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- VENDOR CSS -->
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
@@ -55,7 +56,6 @@
         html {
             height: 100%;
         }
-
     </style>
 
 </head>
@@ -64,7 +64,7 @@
 
     <div id="loading">
         <div id="loader">
-            <object data="assets/img/Mustache_Logo_SVG.svg" type="image/svg+xml" class="animated swing infinite loader-logo" fill="white"></object>
+            <object data="assets/img/Mustache_Logo_SVG.svg" type="image/svg+xml" class="animated swing infinite loader-logo"></object>
         </div>
     </div>
 
@@ -75,14 +75,134 @@
         <div class="modal" id="reach-modal" tabindex="-1" role="dialog" aria-hidden="true">
             <div id="myreach" class="modal-dialog modal-lg modal-xl" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="reach-modal-title">Chart Title</h5>
+                    <div class="modal-header text-center">
+                        <div class="dropdown inline">
+                            <span>
+                                <a href="#">
+                                    <i class="lnr lnr-chevron-left pad-r"></i>
+                                </a>
+                            </span>
+                            <a id="dLabel" data-target="#" data-toggle="dropdown" role="button">
+                                <h5 class="modal-title inline">
+                                </h5>
+                            </a>
+                            <span>
+                                <a href="#">
+                                    <i class="lnr lnr-chevron-right pad-l"></i>
+                                </a>
+                            </span>
+                            <ul class="dropdown-menu scrollable-menu">
+                            </ul>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <!-- <h5 class="modal-title" id="reach-modal-title">Chart Title</h5> -->
                     </div>
                     <div class="modal-body">
                         <div id="full-reach">
-                            <div class="row">
+                            <div class="row row-eq-height">
                                 <div id="full-plot" class="col-md-10"></div>
-                                <div id="full-options" class="col-md-auto"></div>
+                                <div id="full-options" class="col-md-2">
+                                    <div class="">
+                                        <h1> tooltip region</h1>
+                                    </div>
+                                    <form class="">
+                                        <div class="strike">
+                                            <span>Settings</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 for="domainRange">Domain: </h5>
+                                            <div class="row">
+                                                <div class="col-xs-6 nopadding-r">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon" id="basic-addon1">In</span>
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6 nopadding-l">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon" id="basic-addon1">Out</span>
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group hidden">
+                                            <h5 for="yAxesScale">Y Axes Scale: </h5>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+
+                                                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                                                        <div class="btn-group-sm btn-group">
+                                                            <button type="button" class="btn btn-default active">Auto</button>
+                                                        </div>
+                                                        <div class="btn-group-sm btn-group">
+                                                            <button type="button" class="btn btn-default">Max</button>
+                                                        </div>
+                                                        <div class="btn-group-sm btn-group">
+                                                            <button type="button" class="btn btn-default">Manual</button>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <!-- <label class="radio-inline">
+                                                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked> Auto
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Max
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Manual
+                                                    </label> -->
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 pad-t">
+                                                    <input type="text" class="form-control" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 for="exampleFormControlSelect2">Y Axes Scaling: </h5>
+                                            <input type="range" name="" min="0.05" max="1.0" step="0.05" value="0.5">
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 for="exampleFormControlSelect2">Bar Width: </h5>
+                                            <input type="range" name="" min="4" max="14" step="1" value="6">
+                                        </div>
+
+                                        <div class="strike">
+                                            <span>Stats</span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <h5>
+                                                <strong>Points: </strong>
+                                                <span>7195</span>
+                                            </h5>
+                                            <h5>
+                                                <strong>Sample Window: </strong>
+                                                <span>226</span>
+                                            </h5>
+                                            <h5>
+                                                <strong>Sampled Points: </strong>
+                                                <span>226</span>
+                                            </h5>
+                                            <h5>
+                                                <strong>Zoom: </strong>
+                                                <span>100%</span>
+                                            </h5>
+                                            <h5>
+                                                <strong>Resolution: </strong>
+                                                <span>1.36%</span>
+                                            </h5>
+
+                                        </div>
+
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -99,36 +219,67 @@
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid text-center">
                 <div class="navbar-btn col">
-                    <button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-menu"></i></button>
+                    <button type="button" class="btn-toggle-fullwidth">
+                        <i class="lnr lnr-menu"></i>
+                    </button>
                 </div>
 
                 <div class="branding">
-                    <h1 class="text-center brand-block">M<span>usta</span>CHE</h1>
+                    <h1 class="text-center brand-block">
+                        MustaCHE</h1>
                     <img src="assets/img/Mustache_Logo_SVG.svg" class="brand-logo brand-block">
                 </div>
                 <div id="navbar-menu">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
-								<i class="lnr lnr-alarm"></i>
-								<span class="badge bg-warning"></span>
-							</a>
+                                <i class="lnr lnr-alarm"></i>
+                                <span class="badge bg-warning"></span>
+                            </a>
                             <ul class="dropdown-menu notifications">
-                                <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>System space is almost full</a></li>
-                                <li><a href="#" class="notification-item"><span class="dot bg-danger"></span>You have 9 unfinished tasks</a></li>
-                                <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Monthly report is available</a></li>
-                                <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>Weekly meeting in 1 hour</a></li>
-                                <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Your request has been approved</a></li>
-                                <li><a href="#" class="more">See all notifications</a></li>
+                                <li>
+                                    <a href="#" class="notification-item">
+                                        <span class="dot bg-warning"></span>System space is almost full</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="notification-item">
+                                        <span class="dot bg-danger"></span>You have 9 unfinished tasks</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="notification-item">
+                                        <span class="dot bg-success"></span>Monthly report is available</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="notification-item">
+                                        <span class="dot bg-warning"></span>Weekly meeting in 1 hour</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="notification-item">
+                                        <span class="dot bg-success"></span>Your request has been approved</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="more">See all notifications</a>
+                                </li>
                             </ul>
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span></span> <i class="lnr lnr-chevron-down"></i></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span></span>
+                                <i class="lnr lnr-chevron-down"></i>
+                            </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">Basic Use</a></li>
-                                <li><a href="#">Working With Data</a></li>
-                                <li><a href="#">Security</a></li>
-                                <li><a href="#">Troubleshooting</a></li>
+                                <li>
+                                    <a href="#">Basic Use</a>
+                                </li>
+                                <li>
+                                    <a href="#">Working With Data</a>
+                                </li>
+                                <li>
+                                    <a href="#">Security</a>
+                                </li>
+                                <li>
+                                    <a href="#">Troubleshooting</a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -141,17 +292,46 @@
             <div class="sidebar-scroll">
                 <nav>
                     <ul class="nav">
-                        <li><a href="#"><img src="assets/img/pie-chart-2.svg" class="side-icon"/> <span>Datasets</span></a></li>
-                        <li><a href="#"><img src="assets/img/settings.svg" class="side-icon"/> <span>Global Settings</span></a></li>
-                        <li><a href="#"><img src="assets/img/diagram.svg" class="side-icon"/><span>Dendogram</span></a></li>
-                        <li><a href="#"><img src="assets/img/grid-2.svg" class="side-icon"/><span>Hai Plot</span></a></li>
-                        <li><a href="#"><img src="assets/img/area-chart.svg" class="side-icon"/> <span>Reachabillity</span></a></li>
+                        <li>
+                            <a href="#">
+                                <img src="assets/img/pie-chart-2.svg" class="side-icon" />
+                                <span>Datasets</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="assets/img/settings.svg" class="side-icon" />
+                                <span>Global Settings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="assets/img/diagram.svg" class="side-icon" />
+                                <span>Dendogram</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="assets/img/grid-2.svg" class="side-icon" />
+                                <span>Hai Plot</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="assets/img/area-chart.svg" class="side-icon" />
+                                <span>Reachabillity</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
             <div style="position: absolute; bottom:0;">
-                <a href=""><img src="assets/img/UA-EAC-COLOUR-REVERSE.eps" class="side-logo-uofa"></a>
-                <a href=""><img src="assets/img/jcu-logo.png" class="side-logo-jcu"></a>
+                <a href="">
+                    <img src="assets/img/UA-EAC-COLOUR-REVERSE.svg" class="side-logo-uofa">
+                </a>
+                <a href="">
+                    <img src="assets/img/jcu-logo.png" class="side-logo-jcu">
+                </a>
             </div>
         </div>
         <!-- END LEFT SIDEBAR -->
@@ -242,7 +422,9 @@
                                     <h1 class="panel-title">Hai Plot</h1>
                                     <div class="right">
                                         <li class="dropdown panel-options">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-download"></i></a>
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                <i class="lnr lnr-download"></i>
+                                            </a>
                                     </div>
                                 </div>
                                 <div class="panel-body">
@@ -266,12 +448,12 @@
                                     <div class="perpg input-sm">
 
                                         <select id="reach-per-pg">
-                                          <option>1</option>
-                                          <option>2</option>
-                                          <option>3</option>
-                                          <option selected>4</option>
-                                          <option>6</option>
-                                          <option>12</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option selected>4</option>
+                                            <option>6</option>
+                                            <option>12</option>
                                         </select>
 
                                     </div>
@@ -279,13 +461,17 @@
                                     <div class="paging nopadding right">
                                         <ul class="pagination pagination-sm nopadding">
                                             <li class="pg-nav" pg-val="-1">
-                                                <a href="#"><span>&laquo;</span></a>
+                                                <a href="#">
+                                                    <span>&laquo;</span>
+                                                </a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="right hidden">
                                         <li class="dropdown panel-options">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-download"></i></a>
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                <i class="lnr lnr-download"></i>
+                                            </a>
                                     </div>
                                 </div>
                                 <div class="panel-body nopadding">
@@ -308,7 +494,8 @@
         <div class="clearfix hidden"></div>
         <footer>
             <div class="container-fluid hidden">
-                <p class="copyright">&copy; 2017 <a href="https://www.themeineed.com" target="_blank">Theme I Need</a>. All Rights Reserved.</p>
+                <p class="copyright">&copy; 2017
+                    <a href="https://www.themeineed.com" target="_blank">Theme I Need</a>. All Rights Reserved.</p>
             </div>
         </footer>
     </div>
@@ -325,8 +512,8 @@
     <script src="assets/scripts/klorofil-common.js"></script>
     <script src="assets/js/difference.js"></script>
     <script src="assets/js/layout.js"></script>
-    <script src="assets/js/reach.js"></script>
     <script type="text/javascript" src="assets/js/myplots.js"></script>
+    <script type="text/javascript" src="assets/js/reach.js"></script>
 
 </body>
 

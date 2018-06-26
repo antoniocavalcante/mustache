@@ -5,7 +5,6 @@ var globalColor = d3.interpolateViridis,
     ppg;
 
 
-
 var floor = Math.floor,
     abs = Math.abs;
 
@@ -78,27 +77,6 @@ function largestTriangleThreeBuckets(data, threshold) {
 
     return sampled;
 }
-
-
-// Returns a function, that, as long as it continues to be invoked, will not
-// be triggered. The function will be called after it stops being called for
-// N milliseconds. If `immediate` is passed, trigger the function on the
-// leading edge, instead of the trailing.
-function debounce(func, wait, immediate) {
-    var timeout;
-    return function () {
-        var context = this,
-            args = arguments;
-        var later = function () {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    };
-};
 
 function panelSize() {
 
@@ -214,6 +192,35 @@ function update() {
         });
 
     reachPaging();
+
+
+    //    highlightMedoidNode();
+    //
+    //
+    //    function highlightMedoidNode() {
+    //
+    //        d3.selectAll(".node").each(function (d) {
+    //
+    //            if (v.find(function (element) {
+    //                    return +element == d.data.label;
+    //                })) {
+    //
+    //                d3.select(this).transition().duration(500).attr("fill", "red")
+    //                d3.select(this).select("circle").transition().duration(500).attr("r", 3);
+    //
+    //            } else {
+    //                try {
+    //                    n = clusters[d.data.name];
+    //                    d3.select(this).transition().duration(500).attr("fill", colorScale(n.data.color - 1))
+    //                    d3.select(this).select("circle").transition().duration(500).attr("r", 2.5);
+    //                } catch (error) {
+    //                    return;
+    //                }
+    //
+    //
+    //            }
+    //        })
+    //    }
 
 
     function createChart(data, cont, i, id) {
@@ -345,7 +352,6 @@ function update() {
             text.transition().duration(100).style("font-size", 24);
         }).on("mouseout", function () {
             var text = d3.select(this).select(".country-title");
-
             text.transition().duration(100).style("font-size", 15);
         })
 
@@ -401,7 +407,7 @@ function dendrogram() {
 
         clusterLayout(root);
 
-        var nodes = root.descendants()
+        var nodes = root.descendants();
 
         // Finds the maximum and minimum density values.
         nodes.forEach(function (d) {
@@ -424,7 +430,6 @@ function dendrogram() {
         } else {
             var hardcodeline = (loadLine / 100) * ymax;
         }
-
 
         var link = svg.selectAll(".link")
             .data(nodes.slice(1))
@@ -495,20 +500,16 @@ function dendrogram() {
 
         // colour and extract clusters from dendogram based on threshold bar current value. 
         function clusterThresholdExtraction(currentValue) {
-
             var clusters = {}
 
             function traverse(d, i) {
-
                 if (d.data.y <= currentValue) {
                     if (d.parent != null && d.parent.data.y > currentValue && d.children != null) {
                         clusters[d.data.name] = d;
                     } else if (currentValue == ymax) {
-
                         clusters[root.data.name] = root;
                     }
                 }
-
             };
 
             node.each(traverse);
@@ -751,7 +752,6 @@ function dendrogram() {
 
         update(clusters);
 
-
     });
 
     // Transform this into a path
@@ -775,7 +775,7 @@ function haiPlot() {
         height = width;
     }
 
-    var datasets = ["data/data4.csv", "data/data.tsv"];
+    var dataset = "data/data4.csv";
 
     var heatmapChart = function (file) {
         d3.text(file,
@@ -785,8 +785,7 @@ function haiPlot() {
                 var haiRange = data.length;
 
                 var gridSize = (width - (30 * 2)) / haiRange,
-                    gridSizeY = (height - (30 * 2)) / haiRange,
-                    padding = height * 0.05;
+                    gridSizeY = (height - (30 * 2)) / haiRange;
 
                 var minValue = d3.min(data, function (d, i) {
                     return +d3.min(d);
@@ -865,6 +864,8 @@ function haiPlot() {
 
                 data = [].concat.apply([], ndata);
 
+                node = d3.selectAll(".node");
+
 
                 var cards = svg.selectAll(".hour")
                     .data(data);
@@ -888,9 +889,28 @@ function haiPlot() {
                         div.transition()
                             .duration(200)
                             .style("opacity", 1.0);
-                        div.html(+d[0])
+                        div.html(+d[0] + '<br>' + d[1] + '<br>' + d[2])
                             .style("left", (d3.event.pageX + 10) + "px")
                             .style("top", (d3.event.pageY) + "px");
+
+
+                        nodes = []
+                        node.each(function (d) {
+
+                            start = d[1]
+                            end = d[2]
+
+                            if (+d.data.label == start) {
+                                nodes.push(d3.select(this));
+                            }
+
+                            if (+d.data.label == end) {
+                                nodes.push(d3.select(this));
+                            }
+                        })
+
+                        nodePath(nodes[0], nodes[1]);
+
                     })
                     .on("mouseout", function (d) {
                         d3.select(this).style("fill", function (d, i) {
@@ -910,7 +930,15 @@ function haiPlot() {
 
     };
 
-    heatmapChart(datasets[0]);
+    function nodePath(start, end) {
+
+        console.log(start, end);
+        //        path = start.d.path(end);
+        //        console.log(path);
+
+    }
+
+    heatmapChart(dataset);
 
 }
 
@@ -1001,7 +1029,6 @@ function reachPaging() {
 
     $("#reach-plot").scroll(function () {
         pos = $(this).scrollLeft() + 1;
-        console.log(pos);
         current = Math.floor(pos / move);
         if (pos + move >= Math.ceil(meds * move)) {
             current = pages.length - 1;
