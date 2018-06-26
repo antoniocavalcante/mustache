@@ -746,7 +746,7 @@ function dendrogram() {
         })
 
         // set dendogram when radio buttons changed
-        d3.selectAll("input[name='radio']").on("change", function () {
+        $('.dendo-method input[type=radio]').on("change", function () {
             dendoSelect(this)
         })
 

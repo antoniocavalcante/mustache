@@ -218,7 +218,7 @@ function drawReach(filename) {
                 .attr("stop-color", function (d) {
                     var b = barData.color[d[1]]
                     return colorScale(barColoring[b]);
-                }).exit().selectAll("stop").remove();
+                });
 
             var mini = context.selectAll(".area").data([sampled])
 
