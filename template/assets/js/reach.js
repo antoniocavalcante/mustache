@@ -47,17 +47,19 @@ function drawReach(filename) {
         return d.children == null;
     });
 
-    leaves.sort(function (a, b) {
-        return +a.d.data.label - +b.d.data.label;
+    leaves = leaves.sort(function (a, b) {
+        return (+a.data.label) - (+b.data.label);
     });
 
     dropdown = d3.select("#myreach").select(".dropdown-menu");
 
+    dropdown.selectAll("li").remove();
+
     leaves.each(function (d) {
         if (d.data.label == filename) {
-            dropdown.append("li").append("a").attr("href", "#").classed("dropdown-item", "true").classed("active", "true").html(d.data.label);
+            dropdown.append("li").classed("active", "true").append("a").attr("href", "#").html(+d.data.label);
         } else {
-            dropdown.append("li").append("a").attr("href", "#").classed("dropdown-item", "true").html(d.data.label);
+            dropdown.append("li").append("a").attr("href", "#").html(+d.data.label);
         }
     })
 
@@ -83,11 +85,11 @@ function drawReach(filename) {
         },
 
         width = width - margin.left - margin.right,
-        height = (h - (h * 0.10)) - margin.top - margin.bottom;
+        height = h - margin.top - margin.bottom;
 
     margin2.top = height
 
-    height2 = (h * 0.10) - margin2.bottom;
+    height2 = (h * 0.08) - margin2.bottom;
 
     var x = d3.scaleLinear().range([0, width]),
         x2 = d3.scaleLinear().range([0, width]),

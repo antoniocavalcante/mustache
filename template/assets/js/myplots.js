@@ -952,13 +952,8 @@ $('#loading').delay(1000).fadeOut(1000);
 $("#reach-modal").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget)
     var value = button.data('value')
-
-    console.log(event);
-
     var modal = $(this);
     modal.find('.modal-title').text('Chart ' + value);
-
-
     var modalPad = parseInt($(window).innerHeight() * 0.10),
         width = parseInt($(window).innerWidth() - modalPad),
         h = parseInt($(window).innerHeight() - (modalPad * 2));
