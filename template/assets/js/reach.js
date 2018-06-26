@@ -7,20 +7,58 @@ function drawReach(filename) {
     barData.color;
     barData.mapping;
     var bars;
-    var barColoring = {};
+    var barColoring;
     var globalColor = d3.interpolateRainbow;
     var colorScale = d3.scaleSequential(globalColor);
     var file = "data/anuran_mustache/" + filename + "RNG_anuran.lr"
-    var bisectVal = d3.bisector(function (d) {
-        return +d[1];
-    }).left
     var barWindow;
+
+    function panelSetup() {
+
+        $("#myreach").find('.modal-title').text('Chart ' + filename);
+
+        leaves = d3.selectAll(".node").filter(function (d) {
+            return d.children == null;
+        });
+
+        leaves = leaves.sort(function (a, b) {
+            return (+a.data.label) - (+b.data.label);
+        });
+
+        dropdown = d3.select("#myreach").select(".dropdown-menu");
+
+        dropdown.selectAll("li").remove();
+
+        leaves.each(function (d) {
+            if (d.data.label == filename) {
+                dropdown.append("li")
+                    .classed("full-reach-page", "true")
+                    .classed("active", "true")
+                    .append("a").attr("href", "#")
+                    .html(+d.data.label);
+            } else {
+                dropdown.append("li")
+                    .classed("full-reach-page", "true")
+                    // .classed("disabled", "true")
+                    .append("a").attr("href", "#")
+                    .html(+d.data.label);
+            }
+        })
+
+        d3.selectAll(".full-reach-page").on("click", function () {
+            selection = d3.select(this).select("a").html();
+            update(selection);
+        })
+    }
 
     function loadLabel(callback) {
 
         d3.text(file, function (error, data) {
             if (error) throw error;
+
             barData.color = d3.csvParseRows(data)[0];
+
+            barColoring = {};
 
             data = barData.color;
 
@@ -42,26 +80,6 @@ function drawReach(filename) {
 
         });
     }
-
-    leaves = d3.selectAll(".node").filter(function (d) {
-        return d.children == null;
-    });
-
-    leaves = leaves.sort(function (a, b) {
-        return (+a.data.label) - (+b.data.label);
-    });
-
-    dropdown = d3.select("#myreach").select(".dropdown-menu");
-
-    dropdown.selectAll("li").remove();
-
-    leaves.each(function (d) {
-        if (d.data.label == filename) {
-            dropdown.append("li").classed("active", "true").append("a").attr("href", "#").html(+d.data.label);
-        } else {
-            dropdown.append("li").append("a").attr("href", "#").html(+d.data.label);
-        }
-    })
 
     var width = parseInt($(".modal-xl").attr("width") * (10 / 12)),
         h = $(".modal-xl").attr("height");
@@ -179,14 +197,11 @@ function drawReach(filename) {
             barWindow = (width / barWidth);
 
             focus.append("g")
-                .attr("class", "axis axis--x")
-                .attr("transform", "translate(0," + height + ")")
-                .call(xAxis);
-
-            focus.append("g")
                 .attr("class", "axis axis--y");
 
             var sampled = largestTriangleThreeBuckets(barData.chr, width);
+
+            context.selectAll("#area-gradient").remove();
 
             // set the gradient
             context.append("linearGradient")
@@ -203,23 +218,35 @@ function drawReach(filename) {
                 .attr("stop-color", function (d) {
                     var b = barData.color[d[1]]
                     return colorScale(barColoring[b]);
-                });
+                }).exit().selectAll("stop").remove();
 
-            context.append("path")
-                .data([sampled])
+            var mini = context.selectAll(".area").data([sampled])
+
+            mini.enter().append("path")
                 .attr("class", "area")
                 .attr("d", area2)
-                .style("fill", "url(#area-gradient)");
+                .style("fill", "url(#area-gradient)")
+
+            mini.transition().duration(500).attr("d", area2)
+                .style("fill", "url(#area-gradient)")
+
+            mini.exit().remove();
+
+            context.selectAll(".axis--x").remove();
 
             context.append("g")
                 .attr("class", "axis axis--x")
                 .attr("transform", "translate(0," + height2 + ")")
                 .call(xAxis2);
 
+            context.selectAll(".brush").remove();
+
             context.append("g")
                 .attr("class", "brush")
                 .call(brush)
                 .call(brush.move, x.range());
+
+            svg.selectAll(".zoom").remove();
 
             svg.append("rect")
                 .attr("class", "zoom")
@@ -347,6 +374,19 @@ function drawReach(filename) {
         context.select(".brush").call(brush.move, window);
     }
 
+    function update(a) {
+        filename = a;
+        file = "data/anuran_mustache/" + filename + "RNG_anuran.lr"
+        panelSetup();
+        var q = d3.queue();
+        q.defer(loadLabel);
+        q.await(function (error) {
+            if (error) throw error;
+            loadChart();
+        });
+    }
+
+    panelSetup();
     var q = d3.queue();
     q.defer(loadLabel);
     q.await(function (error) {

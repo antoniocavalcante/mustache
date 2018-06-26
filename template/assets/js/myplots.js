@@ -953,7 +953,7 @@ $("#reach-modal").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget)
     var value = button.data('value')
     var modal = $(this);
-    modal.find('.modal-title').text('Chart ' + value);
+    // modal.find('.modal-title').text('Chart ' + value);
     var modalPad = parseInt($(window).innerHeight() * 0.10),
         width = parseInt($(window).innerWidth() - modalPad),
         h = parseInt($(window).innerHeight() - (modalPad * 2));
