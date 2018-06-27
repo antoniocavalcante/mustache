@@ -49,6 +49,15 @@ function drawReach(filename) {
             selection = d3.select(this).select("a").html();
             update(selection);
         })
+
+
+        d3.selectAll(".full-reach-arrow").on("click", function () {
+            shift = d3.select(this).attr("data-val");
+            selection = (+shift) + (+filename)
+            leaves.each(function (d) {
+                if (+d.data.label == selection) update(selection);
+            })
+        })
     }
 
     function loadLabel(callback) {
