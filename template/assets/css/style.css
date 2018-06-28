@@ -361,7 +361,7 @@ html {
     margin-left: 6px;
     padding-bottom: 16px;
     width: 64px;
-    fill: "currentColor";
+    fill: black;
 }
 
 .loader-logo {
@@ -375,6 +375,10 @@ html {
 
 .block {
     display: block;
+}
+
+.f-left {
+    float: left;
 }
 
 .panel-title-extra {
@@ -435,4 +439,12 @@ html {
 .strike>span:after {
     left: 100%;
     margin-left: 15px;
+}
+
+.info-format {
+    font-size: 12px;
+}
+
+.cap {
+    text-transform: capitalize;
 }

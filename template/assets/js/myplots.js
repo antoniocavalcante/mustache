@@ -4,7 +4,6 @@ var globalColor = d3.interpolateViridis,
     medoids = {},
     ppg;
 
-
 var floor = Math.floor,
     abs = Math.abs;
 
