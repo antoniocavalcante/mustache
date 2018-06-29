@@ -2,10 +2,15 @@ var globalColor = d3.interpolateViridis,
     clusters = {},
     charts = [],
     medoids = {},
-    ppg;
+    ppg,
+    ids;
 
 var floor = Math.floor,
     abs = Math.abs;
+
+d3.text("data/ra/ids", function (data) {
+    ids = d3.csvParseRows(data);
+})
 
 function largestTriangleThreeBuckets(data, threshold) {
 
@@ -384,7 +389,7 @@ function dendrogram() {
 
     var svg = d3.select("#chart-dendrogram").append("svg")
         .attr("preserveAspectRatio", "xMidYMid Slice")
-        .attr("viewBox", "-40 -15 " + (width - 60) + " " + (height - 15));
+        .attr("viewBox", "-40 -15 " + (width - 20) + " " + (height - 15));
 
     // Variable to hold the root of the hierarchy.
     var clusterLayout = d3.cluster()
@@ -416,12 +421,37 @@ function dendrogram() {
                 ymin = d.data.y;
         });
 
+        labelVals = nodes.filter(function (d) {
+            return d.children == null;
+        });
+
+        labelVals = labelVals.sort(function (a, b) {
+            return (+a.data.label) - (+b.data.label);
+        });
+
         var exp = 0.5;
+
+        xmin = d3.min(d3.values(labelVals));
+        xmax = d3.max(d3.values(labelVals));
 
         yScale = d3.scalePow().domain([ymin, ymax]).range([0, height - 60]).exponent(exp).clamp(true);
         yScaleInverted = d3.scalePow().domain([ymax, ymin]).range([0, height - 60]).exponent(exp).clamp(true);
+        xScale = d3.scaleLinear().domain([2, 100]).range([0, width - 100]);
         lineScale = d3.scalePow().range([0, height - 60]).exponent(exp).domain([ymax, ymin]).clamp(true);
         lineMove = d3.scaleLinear().range([0, height - 60]).domain([0, height - 60]).clamp(true);
+
+        var yAxis = d3.axisLeft().scale(this.yScaleInverted).ticks(5);
+        // var xAxis = d3.axisBottom().scale(this.xScale).tickValues([2, 100])
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(0,0)")
+            .call(yAxis);
+
+        // svg.append("g")
+        //     .attr("class", "x axis")
+        //     .attr("transform", "translate(0," + (height - 60) + ")")
+        //     .call(xAxis);
 
         var loadLine = d3.select("#slider").property("value")
         if (typeof (loadLine) == 'float') {
@@ -463,13 +493,13 @@ function dendrogram() {
             });
 
 
-        node.append("text")
-            .attr("x", 0)
-            .attr("y", 20)
-            .style("text-anchor", "middle")
-            .text(function (d) {
-                return d.children ? "" : d.data.label;
-            });
+        // node.append("text")
+        //     .attr("x", 0)
+        //     .attr("y", 20)
+        //     .style("text-anchor", "middle")
+        //     .text(function (d) {
+        //         return d.children ? "" : d.data.label;
+        //     });
 
         // Define the div for the tooltip
         var div = d3.select("body").append("div")
@@ -656,9 +686,9 @@ function dendrogram() {
         var thresholdBar = svg.append("g");
 
         thresholdBar.append("line")
-            .attr("x1", 0)
+            .attr("x1", -40)
             .attr("y1", yScaleInverted(hardcodeline))
-            .attr("x2", width - margin.left - margin.right - 100) // Dynamic size of the bar
+            .attr("x2", width) // Dynamic size of the bar
             .attr("y2", yScaleInverted(hardcodeline))
             .call(drag);
 
@@ -683,14 +713,6 @@ function dendrogram() {
             shading(clusters);
 
         });
-
-
-        var yAxis = d3.axisLeft().scale(this.yScaleInverted).ticks(5);
-
-        svg.append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(0,0)")
-            .call(yAxis);
 
         // dendogram node selection method switcher
         var a1, b1;

@@ -399,9 +399,13 @@ html {
     padding-left: 10px;
 }
 
-/* #full-options {
+/* .tip-values {
     overflow-y: scroll;
 } */
+
+#tip-color {
+    pointer-events: none;
+}
 
 .scrollable-menu {
     height: auto;

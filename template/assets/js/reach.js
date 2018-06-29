@@ -10,7 +10,7 @@ function drawReach(filename) {
     var barColoring;
     var globalColor = d3.interpolateRainbow;
     var colorScale = d3.scaleSequential(globalColor);
-    var file = "data/anuran_mustache/" + filename + "RNG_anuran.lr"
+    var file = "data/ra/" + filename + "RNG_anuran.lr"
     var barWindow;
 
     function panelSetup() {
@@ -65,7 +65,8 @@ function drawReach(filename) {
         d3.text(file, function (error, data) {
             if (error) throw error;
 
-            barData.color = d3.csvParseRows(data)[0];
+            barData.color = d3.csvParseRows(data)[1];
+            barData.mapping = d3.csvParseRows(data)[0];
 
             barColoring = {};
 
@@ -125,7 +126,8 @@ function drawReach(filename) {
         x5 = d3.scaleLinear().range([0, width]),
         y = d3.scaleLinear().range([height, 0]),
         y2 = d3.scaleLinear().range([height2, 0]),
-        y4 = d3.scalePow().range([height2, 0]).exponent(0.3);
+        y4 = d3.scalePow().range([height2, 0]).exponent(0.3),
+        xtip = d3.scaleLinear().domain([0, width]);
 
 
     var xAxis = d3.axisBottom(x).ticks(0),
@@ -163,6 +165,8 @@ function drawReach(filename) {
             return y4(+d[0]);
         });
 
+    // svg.call(zoom);
+
     svg.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
@@ -177,6 +181,91 @@ function drawReach(filename) {
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + (margin2.top + 20) + ")");
 
+    svg.append("rect")
+        .attr("class", "zoom")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(zoom)
+        .on("mousemove", function () {
+            v = d3.mouse(this);
+            sel = Math.floor(xtip(v[0]));
+            d3.selectAll(".bar").style("fill", function (d, i) {
+
+                if (i == sel) {
+                    j = barData.mapping.indexOf(String(d[1]));
+
+                    region = d3.select(".tooltip-region")
+                    values = region.selectAll(".tip-values").data([i]);
+                    data = region.selectAll(".tip-data").data([i]);
+
+                    values.each(function () {
+                        vals = d3.select(this).selectAll("span").data(ids[j]);
+
+                        vals.enter().append("span").html(function (d) {
+                            return d;
+                        }).append("br");
+
+                        vals.html(function (d) {
+                            return d;
+                        }).append("br");
+
+                        vals.exit().remove();
+
+                    })
+
+                    values.exit().remove();
+
+                    data.each(function () {
+                        vals = d3.select(this).selectAll("h5").data([{
+                            label: "Value: ",
+                            value: d[0]
+                        }, {
+                            label: "Index: ",
+                            value: d[1]
+                        }]);
+
+                        vals.enter().append("h5").html(function (d) {
+                            return d.label;
+                        }).append("span").html(function (d) {
+                            return d.value;
+                        });
+
+                        vals.html(function (d) {
+                            return d.label;
+                        }).append("span").html(function (d) {
+                            return d.value;
+                        });
+
+                        vals.exit().remove();
+
+                    })
+
+                    data.exit().remove();
+
+                    region.select("#tip-color").style("background-color", function () {
+                        var b = barData.color[d[1]]
+                        return colorScale(barColoring[b]);
+                    });
+
+                    return "black";
+
+                } else {
+
+                    var b = barData.color[d[1]]
+                    return colorScale(barColoring[b]);
+                }
+            });
+        })
+        .on("mouseout", function () {
+            d3.select(".tooltip-region").selectAll("span").remove();
+            d3.selectAll(".bar").style("fill", function (d, i) {
+                var b = barData.color[d[1]]
+                return colorScale(barColoring[b]);
+            });
+        })
+
+
     var barWidth = 6;
     var barPadding = 1.5;
 
@@ -185,10 +274,10 @@ function drawReach(filename) {
 
             if (error) throw error;
 
-            barData.raw = d3.csvParseRows(data)[1];
+            barData.raw = d3.csvParseRows(data)[2];
 
-            barData.chr = barData.raw.map(function (a, i) {
-                return [a, i]
+            barData.chr = barData.raw.map(function (d, i) {
+                return [d, i]
             });
 
             var data = barData.raw;
@@ -199,11 +288,12 @@ function drawReach(filename) {
             x2.domain(d3.extent(data, function (d, i) {
                 return i;
             }));
-
             x4.domain(x2.domain());
             x5.domain(x2.domain());
 
             barWindow = (width / barWidth);
+
+            xtip.range([0, barWindow]);
 
             focus.append("g")
                 .attr("class", "axis axis--y");
@@ -255,15 +345,6 @@ function drawReach(filename) {
                 .call(brush)
                 .call(brush.move, x.range());
 
-            svg.selectAll(".zoom").remove();
-
-            svg.append("rect")
-                .attr("class", "zoom")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .call(zoom);
-
         });
 
     }
@@ -285,13 +366,14 @@ function drawReach(filename) {
         //sample data        
         x3.domain([0, barWindow]);
         Swindow = s.map(x3.invert);
-        threshold = Math.floor(barWindow / factor);
 
         let minFactor = (barWindow / barData.raw.length);
 
         if (factor < minFactor) {
-            return;
+            factor = minFactor;
         }
+
+        threshold = Math.floor(barWindow / factor);
 
         if (threshold < barData.raw.length) {
             barData.small = largestTriangleThreeBuckets(barData.chr.slice(selected), threshold);
@@ -385,7 +467,7 @@ function drawReach(filename) {
 
     function update(a) {
         filename = a;
-        file = "data/anuran_mustache/" + filename + "RNG_anuran.lr"
+        file = "data/ra/" + filename + "RNG_anuran.lr"
         panelSetup();
         var q = d3.queue();
         q.defer(loadLabel);
