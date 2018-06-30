@@ -202,7 +202,7 @@ function drawReach(filename) {
                     values.each(function () {
                         vals = d3.select(this).selectAll("span").data(ids[j]);
 
-                        vals.enter().append("span").html(function (d) {
+                        vals.enter().append("span").attr("class", "tip-text").html(function (d) {
                             return d;
                         }).append("br");
 
@@ -227,13 +227,13 @@ function drawReach(filename) {
 
                         vals.enter().append("h5").html(function (d) {
                             return d.label;
-                        }).append("span").html(function (d) {
+                        }).append("span").attr("class", "tip-text").html(function (d) {
                             return d.value;
                         });
 
                         vals.html(function (d) {
                             return d.label;
-                        }).append("span").html(function (d) {
+                        }).append("span").attr("class", "tip-text").html(function (d) {
                             return d.value;
                         });
 
@@ -248,7 +248,12 @@ function drawReach(filename) {
                         return colorScale(barColoring[b]);
                     });
 
-                    return "black";
+                    var b = barData.color[d[1]]
+                    if (b == 0) {
+                        return "orange";
+                    } else {
+                        return d3.rgb(colorScale(barColoring[b])).darker(3);
+                    }
 
                 } else {
 
@@ -256,9 +261,18 @@ function drawReach(filename) {
                     return colorScale(barColoring[b]);
                 }
             });
+
+            // .attr("fill-opacity", function (d, i) {
+            //     if (i == sel) {
+            //         return 1.0;
+            //     } else {
+            //         return 0.3;
+            //     }
+            // })
         })
         .on("mouseout", function () {
-            d3.select(".tooltip-region").selectAll("span").remove();
+            d3.select(".tooltip-region").selectAll(".tip-text").remove();
+            d3.select(".tooltip-region").select("#tip-color").style("background-color", "#cccccc")
             d3.selectAll(".bar").style("fill", function (d, i) {
                 var b = barData.color[d[1]]
                 return colorScale(barColoring[b]);
