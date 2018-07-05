@@ -22,7 +22,22 @@ def.points = {
 def.smplWindow = {
     title: "Sample Window",
     tip: "Number of sampled points in the graph window."
-}
+};
+
+def.smplPoints = {
+    title: "Sample Points",
+    tip: "Number of total points sampled."
+};
+
+def.zoom = {
+    title: "Zoom",
+    tip: "Current level of zoom for the chart."
+};
+
+def.resolution = {
+    title: "Resolution",
+    tip: "Current % of points shown from the total number of points."
+};
 
 
 var elements = $("*").filter(function () {

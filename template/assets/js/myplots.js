@@ -1,9 +1,13 @@
+//globals
+
 var globalColor = d3.interpolateViridis,
     clusters = {},
     charts = [],
     medoids = {},
     ppg,
     ids;
+
+var barWidth = 6;
 
 var floor = Math.floor,
     abs = Math.abs;
@@ -132,7 +136,7 @@ function setWindow(container) {
 
 function update() {
 
-    var medoids = {};
+    medoids = {};
 
     Object.keys(clusters).forEach(function (key) {
         if (!('medoid' in clusters[key].data)) {
@@ -507,16 +511,21 @@ function dendrogram() {
             .style("opacity", 0);
 
         node.on("mouseover", function (d) {
+
                 d3.select(this).attr("stroke", "red")
-                div.transition()
-                    .duration(200)
-                    .style("opacity", 1.0);
 
-                displayText = d.data.label;
+                if (!d.children) {
 
-                div.html(displayText)
-                    .style("left", (d3.event.pageX + 10) + "px")
-                    .style("top", (d3.event.pageY) + "px");
+                    div.transition()
+                        .duration(200)
+                        .style("opacity", 1.0);
+
+                    displayText = d.data.label;
+                    div.html(displayText)
+                        .style("left", (d3.event.pageX + 10) + "px")
+                        .style("top", (d3.event.pageY) + "px");
+
+                }
             })
             .on("mouseout", function (d) {
                 d3.select(this).attr("stroke", "none");
@@ -676,8 +685,6 @@ function dendrogram() {
                 });
             } else {
                 node.on("click", null);
-                //                node.on("mouseover", null);
-                //                node.on("mouseout", null);
             }
         }
 

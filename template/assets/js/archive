@@ -46,6 +46,42 @@
 //
 //        }
 
+.on("mousemove", function () {
+            v = d3.mouse(this);
+            sel = Math.floor(xtip(v[0]));
+            d3.selectAll(".bar").style("fill", function (d, i) {
+
+                if (i == sel) {
+                    j = barData.mapping.indexOf(String(d[1]));
+
+                    region = d3.select(".tooltip-region")
+                    data = region.selectAll("span").data([i]);
+
+                    data.enter().append("span").html(function () {
+                        return d[0] + " " + d[1];
+                    });
+                    data.html(function () {
+                        return d[0] + " " + d[1];
+                    });
+                    data.exit().remove();
+
+                    region.select("#tip-color").style("background-color", function () {
+                        var b = barData.color[d[1]]
+                        return colorScale(barColoring[b]);
+                    });
+
+                    return "black";
+
+                } else {
+
+                    var b = barData.color[d[1]]
+                    return colorScale(barColoring[b]);
+                }
+            });
+        })
+
+
+
 
 
 function MultiReachabilityPlots() {

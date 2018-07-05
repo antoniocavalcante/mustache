@@ -15,7 +15,6 @@ function panelSize() {
 
     return panelH;
 
-
 }
 
 
@@ -72,9 +71,4 @@ $.fn.extend({
 
 $(".brand-logo").hover(function () {
     $(this).animateCss("swing");
-});
-
-
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip()
 });

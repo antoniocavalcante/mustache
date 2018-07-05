@@ -12,10 +12,16 @@ function drawReach(filename) {
     var colorScale = d3.scaleSequential(globalColor);
     var file = "data/ra/" + filename + "RNG_anuran.lr"
     var barWindow;
+    var barPadding = 1.5;
+    var statElements = $("*").filter(function () {
+        return $(this).data("inf") == "stats";
+    });
 
     function panelSetup() {
 
-        $("#myreach").find('.modal-title').text('Chart ' + filename);
+        $("#myreach").find('.modal-title').text('Mpts ' + filename);
+
+        interest = Object.keys(medoids);
 
         leaves = d3.selectAll(".node").filter(function (d) {
             return d.children == null;
@@ -30,24 +36,31 @@ function drawReach(filename) {
         dropdown.selectAll("li").remove();
 
         leaves.each(function (d) {
-            if (d.data.label == filename) {
-                dropdown.append("li")
-                    .classed("full-reach-page", "true")
+            var label = d.data.label;
+            item = dropdown.append("li");
+            if (label == filename) {
+                item.classed("full-reach-page", "true")
                     .classed("active", "true")
                     .append("a").attr("href", "#")
-                    .html(+d.data.label);
+                    .html(label);
             } else {
-                dropdown.append("li")
-                    .classed("full-reach-page", "true")
-                    // .classed("disabled", "true")
+                item.classed("full-reach-page", "true")
                     .append("a").attr("href", "#")
-                    .html(+d.data.label);
+                    .html(label);
+            }
+            if (label in medoids) {
+                item.classed("bg-success", "true")
+                item.select("a").style("color", "white")
             }
         })
 
         d3.selectAll(".full-reach-page").on("click", function () {
             selection = d3.select(this).select("a").html();
-            update(selection);
+
+            filename = selection;
+            file = "data/ra/" + filename + "RNG_anuran.lr"
+
+            update();
         })
 
 
@@ -55,7 +68,13 @@ function drawReach(filename) {
             shift = d3.select(this).attr("data-val");
             selection = (+shift) + (+filename)
             leaves.each(function (d) {
-                if (+d.data.label == selection) update(selection);
+                if (+d.data.label == selection) {
+
+                    filename = selection;
+                    file = "data/ra/" + filename + "RNG_anuran.lr"
+
+                    update()
+                };
             })
         })
     }
@@ -165,8 +184,6 @@ function drawReach(filename) {
             return y4(+d[0]);
         });
 
-    // svg.call(zoom);
-
     svg.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
@@ -180,6 +197,9 @@ function drawReach(filename) {
     var context = svg.append("g")
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + (margin2.top + 20) + ")");
+
+    // var crosshair = svg.append("rect")
+    //     .attr("class","crosshair")
 
     svg.append("rect")
         .attr("class", "zoom")
@@ -260,6 +280,9 @@ function drawReach(filename) {
                     var b = barData.color[d[1]]
                     return colorScale(barColoring[b]);
                 }
+
+                crosshair.attr("")
+
             });
 
             // .attr("fill-opacity", function (d, i) {
@@ -279,9 +302,21 @@ function drawReach(filename) {
             });
         })
 
+    function settingsFull() {
+        settings = d3.select("#full-settings");
 
-    var barWidth = 6;
-    var barPadding = 1.5;
+        settings.select("#full-bar-width").on("change", function () {
+            barWidth = +this.value;
+            d3.selectAll(".bar").remove();
+            update();
+        })
+
+        settings.on("submit", function () {
+            start = +$("#full-domain-in").find("input").val();
+            end = +$("#full-domain-out").find("input").val();
+            context.call(brush.move, [start, end]);
+        })
+    }
 
     function loadChart() {
         d3.text(file, function (error, data) {
@@ -299,6 +334,9 @@ function drawReach(filename) {
             y.domain([0, d3.max(data, function (d) {
                 return +d;
             })]);
+            x.domain(d3.extent(data, function (d, i) {
+                return i;
+            }));
             x2.domain(d3.extent(data, function (d, i) {
                 return i;
             }));
@@ -359,13 +397,48 @@ function drawReach(filename) {
                 .call(brush)
                 .call(brush.move, x.range());
 
+            settingsFull();
+
         });
 
     }
 
     var throttled_version = _.debounce(addNewBars, 200);
 
-    function brushed(type) {
+    function stats(points, window, smplpoints, zoom, start, end) {
+
+        for (i = 0; i < statElements.length; i++) {
+
+            var elem = $(statElements[i]);
+            var val = elem.data("val");
+
+            if (val == "points") {
+                elem.find("span").text(points);
+            }
+
+            if (val == "smplWindow") {
+                elem.find("span").text(Math.floor(window));
+            }
+
+            if (val == "smplPoints") {
+                elem.find("span").text(smplpoints);
+            }
+
+            if (val == "zoom") {
+                elem.find("span").text((zoom * 100).toFixed(2) + "%");
+            }
+
+            if (val == "resolution") {
+                elem.find("span").text(((smplpoints / points) * 100).toFixed(2) + "%");
+            }
+        }
+
+        $("#full-domain-in").find("input").val(Math.max(0, start.toFixed(0)))
+        $("#full-domain-out").find("input").val(Math.max(0, end.toFixed(0)))
+
+    }
+
+    function brushed() {
 
         var factor;
         var threshold;
@@ -373,13 +446,6 @@ function drawReach(filename) {
         //get brush selection      
         var s = d3.event.selection;
         factor = Math.abs((s[1] - s[0]) / width);
-        x5.domain(s.map(x2.invert));
-
-        selected = s.map(x2.invert);
-
-        //sample data        
-        x3.domain([0, barWindow]);
-        Swindow = s.map(x3.invert);
 
         let minFactor = (barWindow / barData.raw.length);
 
@@ -387,11 +453,15 @@ function drawReach(filename) {
             factor = minFactor;
         }
 
+        selected = s.map(x2.invert);
+
+        x3.domain([0, barWindow]);
+        Swindow = s.map(x3.invert);
+
         threshold = Math.floor(barWindow / factor);
 
         if (threshold < barData.raw.length) {
-            barData.small = largestTriangleThreeBuckets(barData.chr.slice(selected), threshold);
-            data = barData.small;
+            data = largestTriangleThreeBuckets(barData.chr.slice(selected), threshold);
             points = data.length;
         } else {
             data = barData.chr;
@@ -433,6 +503,8 @@ function drawReach(filename) {
         bars.exit().remove();
 
         throttled_version();
+
+        stats(barData.raw.length, barWindow, threshold, factor, x.invert(s[0]), x.invert(s[1]));
 
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
             .scale(width / (s[1] - s[0]))
@@ -479,9 +551,7 @@ function drawReach(filename) {
         context.select(".brush").call(brush.move, window);
     }
 
-    function update(a) {
-        filename = a;
-        file = "data/ra/" + filename + "RNG_anuran.lr"
+    function update() {
         panelSetup();
         var q = d3.queue();
         q.defer(loadLabel);
