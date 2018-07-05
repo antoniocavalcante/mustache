@@ -60,6 +60,13 @@ line {
     cursor: row-resize;
 }
 
+.crosshair {
+    stroke: red;
+    opacity: 0.75;
+    stroke-width: 2px;
+    stroke-dasharray: 1;
+}
+
 /* HEATMAP */
 
 rect.bordered {

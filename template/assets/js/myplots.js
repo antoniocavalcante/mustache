@@ -8,6 +8,8 @@ var globalColor = d3.interpolateViridis,
     ids;
 
 var barWidth = 6;
+var barPadding = 1.5;
+var fullYScale = 0.3;
 
 var floor = Math.floor,
     abs = Math.abs;

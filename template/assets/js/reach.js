@@ -12,7 +12,6 @@ function drawReach(filename) {
     var colorScale = d3.scaleSequential(globalColor);
     var file = "data/ra/" + filename + "RNG_anuran.lr"
     var barWindow;
-    var barPadding = 1.5;
     var statElements = $("*").filter(function () {
         return $(this).data("inf") == "stats";
     });
@@ -141,18 +140,15 @@ function drawReach(filename) {
     var x = d3.scaleLinear().range([0, width]),
         x2 = d3.scaleLinear().range([0, width]),
         x3 = d3.scaleLinear().range([0, width]),
-        x4 = d3.scaleLinear().range([0, width]),
         x5 = d3.scaleLinear().range([0, width]),
         y = d3.scaleLinear().range([height, 0]),
         y2 = d3.scaleLinear().range([height2, 0]),
-        y4 = d3.scalePow().range([height2, 0]).exponent(0.3),
         xtip = d3.scaleLinear().domain([0, width]);
 
 
     var xAxis = d3.axisBottom(x).ticks(0),
         xAxis2 = d3.axisBottom(x2),
         yAxis = d3.axisLeft(y);
-
 
     var brush = d3.brushX()
         .extent([
@@ -174,16 +170,6 @@ function drawReach(filename) {
         ])
         .on("zoom", zoomed);
 
-    var area2 = d3.area()
-        .curve(d3.curveStep)
-        .x(function (d) {
-            return x4(+d[1]);
-        })
-        .y0(height2)
-        .y1(function (d) {
-            return y4(+d[0]);
-        });
-
     svg.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
@@ -198,8 +184,9 @@ function drawReach(filename) {
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + (margin2.top + 20) + ")");
 
-    // var crosshair = svg.append("rect")
-    //     .attr("class","crosshair")
+    var crosshair = svg.append("g").append("line").classed("crosshair", "true");
+
+    $("#full-y-scale").val(fullYScale);
 
     svg.append("rect")
         .attr("class", "zoom")
@@ -210,7 +197,17 @@ function drawReach(filename) {
         .on("mousemove", function () {
             v = d3.mouse(this);
             sel = Math.floor(xtip(v[0]));
-            d3.selectAll(".bar").style("fill", function (d, i) {
+
+            var x = xtip.invert(sel) + margin.left + (barWidth / 2) + barPadding - (2 / 2);
+            var y = height;
+
+            crosshair.attr("x1", x)
+                .attr("x2", x)
+                .attr("y1", margin.top)
+                .attr("y2", y + margin.top)
+                .attr("class", "crosshair")
+
+            d3.selectAll(".bar").each(function (d, i) {
 
                 if (i == sel) {
                     j = barData.mapping.indexOf(String(d[1]));
@@ -268,20 +265,22 @@ function drawReach(filename) {
                         return colorScale(barColoring[b]);
                     });
 
-                    var b = barData.color[d[1]]
-                    if (b == 0) {
-                        return "orange";
-                    } else {
-                        return d3.rgb(colorScale(barColoring[b])).darker(3);
-                    }
+                    // var b = barData.color[d[1]]
+                    // if (b == 0) {
+                    //     return "orange";
+                    // } else {
+                    //     return d3.rgb(colorScale(barColoring[b])).darker(3);
+                    // }
 
-                } else {
-
-                    var b = barData.color[d[1]]
-                    return colorScale(barColoring[b]);
                 }
+                // else {
 
-                crosshair.attr("")
+                //     var b = barData.color[d[1]]
+                //     return colorScale(barColoring[b]);
+                // }
+
+                // var b = barData.color[d[1]]
+                // return colorScale(barColoring[b]);
 
             });
 
@@ -292,14 +291,18 @@ function drawReach(filename) {
             //         return 0.3;
             //     }
             // })
+
         })
         .on("mouseout", function () {
             d3.select(".tooltip-region").selectAll(".tip-text").remove();
             d3.select(".tooltip-region").select("#tip-color").style("background-color", "#cccccc")
-            d3.selectAll(".bar").style("fill", function (d, i) {
-                var b = barData.color[d[1]]
-                return colorScale(barColoring[b]);
-            });
+
+            // d3.selectAll(".bar").style("fill", function (d, i) {
+            //     var b = barData.color[d[1]]
+            //     return colorScale(barColoring[b]);
+            // });
+
+            crosshair.classed("hidden", "true");
         })
 
     function settingsFull() {
@@ -311,11 +314,11 @@ function drawReach(filename) {
             update();
         })
 
-        settings.on("submit", function () {
-            start = +$("#full-domain-in").find("input").val();
-            end = +$("#full-domain-out").find("input").val();
-            context.call(brush.move, [start, end]);
+        settings.select("#full-y-scale").on("change", function () {
+            fullYScale = +this.value;
+            update();
         })
+
     }
 
     function loadChart() {
@@ -340,8 +343,22 @@ function drawReach(filename) {
             x2.domain(d3.extent(data, function (d, i) {
                 return i;
             }));
+
+            x4 = d3.scaleLinear().range([0, width]),
+                y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
+
             x4.domain(x2.domain());
             x5.domain(x2.domain());
+
+            var area2 = d3.area()
+                .curve(d3.curveStep)
+                .x(function (d) {
+                    return x4(+d[1]);
+                })
+                .y0(height2)
+                .y1(function (d) {
+                    return y4(+d[0]);
+                });
 
             barWindow = (width / barWidth);
 
@@ -433,12 +450,14 @@ function drawReach(filename) {
             }
         }
 
-        $("#full-domain-in").find("input").val(Math.max(0, start.toFixed(0)))
-        $("#full-domain-out").find("input").val(Math.max(0, end.toFixed(0)))
+        $("#full-domain-in").find("span").html(Math.max(0, start.toFixed(0)))
+        $("#full-domain-out").find("span").html(Math.max(0, end.toFixed(0)))
 
     }
 
     function brushed() {
+
+        d3.select(".crosshair").classed("hidden", "true");
 
         var factor;
         var threshold;
