@@ -297,7 +297,9 @@ function drawReach(filename) {
             highlighted = Math.floor(xtip(v[0]));
             highlight(v)
         }).on("contextmenu", function () {
+            v = d3.mouse(this);
             highlighted = null;
+            highlight(v)
         })
 
     function settingsFull() {
