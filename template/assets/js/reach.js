@@ -18,6 +18,12 @@ function drawReach(filename) {
 
     function panelSetup() {
 
+        // disable left click context menu in full reachabillity plot
+        $("#full-plot").bind("contextmenu", function (e) {
+            return false;
+        })
+
+        // Defines the current mean points value in the title of the modal
         $("#myreach").find('.modal-title').text('Mpts ' + filename);
 
         interest = Object.keys(medoids);
@@ -186,7 +192,10 @@ function drawReach(filename) {
 
     var crosshair = svg.append("g").append("line").classed("crosshair", "true");
 
+    // set the y scale for the context view based on the html input value
     $("#full-y-scale").val(fullYScale);
+
+    var highlighted = null;
 
     svg.append("rect")
         .attr("class", "zoom")
@@ -198,6 +207,9 @@ function drawReach(filename) {
             v = d3.mouse(this);
             sel = Math.floor(xtip(v[0]));
 
+
+            if (highlighted) sel = highlighted;
+
             var x = xtip.invert(sel) + margin.left + (barWidth / 2) + barPadding - (2 / 2);
             var y = height;
 
@@ -206,6 +218,7 @@ function drawReach(filename) {
                 .attr("y1", margin.top)
                 .attr("y2", y + margin.top)
                 .attr("class", "crosshair")
+
 
             d3.selectAll(".bar").each(function (d, i) {
 
@@ -291,9 +304,9 @@ function drawReach(filename) {
             //         return 0.3;
             //     }
             // })
-
         })
         .on("mouseout", function () {
+            if (highlighted) return;
             d3.select(".tooltip-region").selectAll(".tip-text").remove();
             d3.select(".tooltip-region").select("#tip-color").style("background-color", "#cccccc")
 
@@ -303,6 +316,11 @@ function drawReach(filename) {
             // });
 
             crosshair.classed("hidden", "true");
+        }).on("click", function () {
+            v = d3.mouse(this);
+            highlighted = Math.floor(xtip(v[0]));
+        }).on("contextmenu", function () {
+            highlighted = null;
         })
 
     function settingsFull() {
@@ -458,6 +476,7 @@ function drawReach(filename) {
     function brushed() {
 
         d3.select(".crosshair").classed("hidden", "true");
+        highlighted = null;
 
         var factor;
         var threshold;
