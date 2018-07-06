@@ -197,6 +197,86 @@ function drawReach(filename) {
 
     var highlighted = null;
 
+    function highlight(v) {
+        sel = Math.floor(xtip(v[0]));
+
+
+        if (highlighted) sel = highlighted;
+
+        var x = xtip.invert(sel) + margin.left + (barWidth / 2) + barPadding - (2 / 2);
+        var y = height;
+
+        crosshair.attr("x1", x)
+            .attr("x2", x)
+            .attr("y1", margin.top)
+            .attr("y2", y + margin.top)
+            .attr("class", "crosshair")
+
+
+        d3.selectAll(".bar").each(function (d, i) {
+
+            if (i == sel) {
+                j = barData.mapping.indexOf(String(d[1]));
+
+                region = d3.select(".tooltip-region")
+                values = region.selectAll(".tip-values").data([i]);
+                data = region.selectAll(".tip-data").data([i]);
+
+                values.each(function () {
+                    vals = d3.select(this).selectAll("span").data(ids[j]);
+
+                    vals.enter().append("span").attr("class", "tip-text").html(function (d) {
+                        return d;
+                    }).append("br");
+
+                    vals.html(function (d) {
+                        return d;
+                    }).append("br");
+
+                    vals.exit().remove();
+
+                })
+
+                values.exit().remove();
+
+                data.each(function () {
+                    vals = d3.select(this).selectAll("h5").data([{
+                        label: "Value: ",
+                        value: d[0]
+                    }, {
+                        label: "Index: ",
+                        value: d[1]
+                    }]);
+
+                    vals.enter().append("h5").html(function (d) {
+                        return d.label;
+                    }).append("span").attr("class", "tip-text").html(function (d) {
+                        return d.value;
+                    });
+
+                    vals.html(function (d) {
+                        return d.label;
+                    }).append("span").attr("class", "tip-text").html(function (d) {
+                        return d.value;
+                    });
+
+                    vals.exit().remove();
+
+                })
+
+                data.exit().remove();
+
+                region.select("#tip-color").style("background-color", function () {
+                    var b = barData.color[d[1]]
+                    return colorScale(barColoring[b]);
+                });
+
+            }
+
+        });
+
+    }
+
     svg.append("rect")
         .attr("class", "zoom")
         .attr("width", width)
@@ -205,120 +285,17 @@ function drawReach(filename) {
         .call(zoom)
         .on("mousemove", function () {
             v = d3.mouse(this);
-            sel = Math.floor(xtip(v[0]));
-
-
-            if (highlighted) sel = highlighted;
-
-            var x = xtip.invert(sel) + margin.left + (barWidth / 2) + barPadding - (2 / 2);
-            var y = height;
-
-            crosshair.attr("x1", x)
-                .attr("x2", x)
-                .attr("y1", margin.top)
-                .attr("y2", y + margin.top)
-                .attr("class", "crosshair")
-
-
-            d3.selectAll(".bar").each(function (d, i) {
-
-                if (i == sel) {
-                    j = barData.mapping.indexOf(String(d[1]));
-
-                    region = d3.select(".tooltip-region")
-                    values = region.selectAll(".tip-values").data([i]);
-                    data = region.selectAll(".tip-data").data([i]);
-
-                    values.each(function () {
-                        vals = d3.select(this).selectAll("span").data(ids[j]);
-
-                        vals.enter().append("span").attr("class", "tip-text").html(function (d) {
-                            return d;
-                        }).append("br");
-
-                        vals.html(function (d) {
-                            return d;
-                        }).append("br");
-
-                        vals.exit().remove();
-
-                    })
-
-                    values.exit().remove();
-
-                    data.each(function () {
-                        vals = d3.select(this).selectAll("h5").data([{
-                            label: "Value: ",
-                            value: d[0]
-                        }, {
-                            label: "Index: ",
-                            value: d[1]
-                        }]);
-
-                        vals.enter().append("h5").html(function (d) {
-                            return d.label;
-                        }).append("span").attr("class", "tip-text").html(function (d) {
-                            return d.value;
-                        });
-
-                        vals.html(function (d) {
-                            return d.label;
-                        }).append("span").attr("class", "tip-text").html(function (d) {
-                            return d.value;
-                        });
-
-                        vals.exit().remove();
-
-                    })
-
-                    data.exit().remove();
-
-                    region.select("#tip-color").style("background-color", function () {
-                        var b = barData.color[d[1]]
-                        return colorScale(barColoring[b]);
-                    });
-
-                    // var b = barData.color[d[1]]
-                    // if (b == 0) {
-                    //     return "orange";
-                    // } else {
-                    //     return d3.rgb(colorScale(barColoring[b])).darker(3);
-                    // }
-
-                }
-                // else {
-
-                //     var b = barData.color[d[1]]
-                //     return colorScale(barColoring[b]);
-                // }
-
-                // var b = barData.color[d[1]]
-                // return colorScale(barColoring[b]);
-
-            });
-
-            // .attr("fill-opacity", function (d, i) {
-            //     if (i == sel) {
-            //         return 1.0;
-            //     } else {
-            //         return 0.3;
-            //     }
-            // })
+            highlight(v)
         })
         .on("mouseout", function () {
             if (highlighted) return;
             d3.select(".tooltip-region").selectAll(".tip-text").remove();
             d3.select(".tooltip-region").select("#tip-color").style("background-color", "#cccccc")
-
-            // d3.selectAll(".bar").style("fill", function (d, i) {
-            //     var b = barData.color[d[1]]
-            //     return colorScale(barColoring[b]);
-            // });
-
             crosshair.classed("hidden", "true");
         }).on("click", function () {
             v = d3.mouse(this);
             highlighted = Math.floor(xtip(v[0]));
+            highlight(v)
         }).on("contextmenu", function () {
             highlighted = null;
         })
