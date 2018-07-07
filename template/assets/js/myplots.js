@@ -423,18 +423,21 @@ function dendrogram() {
 
     svg.append("rect")
         .attr("class", "zoom")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", width - 20)
+        .attr("height", height - 15)
         .attr("transform", "translate(" + (-40) + "," + (-15) + ")")
         .call(zoom);
 
     function zoomed() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
         var t = d3.event.transform;
-        x.domain(t.rescaleX(x2).domain());
-        focus.select(".area").attr("d", area);
-        focus.select(".axis--x").call(xAxis);
-        context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+        x3.domain(t.rescaleX(x2).domain());
+
+        svg.selectAll(".node").attr("transform", function (d) {
+            return "translate(" + x3(d.x) + "," + yScaleInverted(d.data.y) + ")";
+        });
+
+        svg.selectAll(".link").attr("d", elbow);
     }
 
 
@@ -443,7 +446,9 @@ function dendrogram() {
     //     .attr("class", "context")
     //     .attr("transform", "translate(-40," + (height - 30 - 60) + ")")
 
-    // var x = d3.scaleLinear().range([0, width]);
+    var x3 = d3.scaleLinear().range([0, width - 100]);
+    var x2 = d3.scaleLinear().range([0, width - 100]);
+
 
     // context.append("g").attr("class", "brush").call(brush).call(brush.move, x.range());
 
@@ -452,6 +457,8 @@ function dendrogram() {
     // Maximum values for the Y axis
     var ymax = Number.MIN_VALUE;
     var ymin = Number.MAX_VALUE;
+    var xmax2 = Number.MIN_VALUE;
+    var xmin2 = Number.MAX_VALUE;
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -470,6 +477,13 @@ function dendrogram() {
                 ymin = d.data.y;
         });
 
+        nodes.forEach(function (d) {
+            if (d.x > xmax2)
+                xmax2 = d.x;
+            if (d.x < xmin2)
+                xmin2 = d.x;
+        });
+
         labelVals = nodes.filter(function (d) {
             return d.children == null;
         });
@@ -480,8 +494,11 @@ function dendrogram() {
 
         var exp = 0.5;
 
-        xmin = d3.min(d3.values(labelVals));
-        xmax = d3.max(d3.values(labelVals));
+        // xmin = d3.min(d3.values(labelVals));
+        // xmax = d3.max(d3.values(labelVals));
+
+        x3.domain([xmin2 - 5, xmax2]);
+        x2.domain(x3.domain());
 
         yScale = d3.scalePow().domain([ymin, ymax]).range([0, height - 60]).exponent(exp).clamp(true);
         yScaleInverted = d3.scalePow().domain([ymax, ymin]).range([0, height - 60]).exponent(exp).clamp(true);
@@ -491,11 +508,6 @@ function dendrogram() {
 
         var yAxis = d3.axisLeft().scale(this.yScaleInverted).ticks(5);
         // var xAxis = d3.axisBottom().scale(this.xScale).tickValues([2, 100])
-
-        svg.append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(0,0)")
-            .call(yAxis);
 
         // svg.append("g")
         //     .attr("class", "x axis")
@@ -523,7 +535,7 @@ function dendrogram() {
             .attr("class", "node")
             .style("opacity", 0.3)
             .attr("transform", function (d) {
-                return "translate(" + d.x + "," + yScaleInverted(d.data.y) + ")";
+                return "translate(" + x3(d.x) + "," + yScaleInverted(d.data.y) + ")";
             });
 
         // Adds the shape of the nodes in the dendrogram.
@@ -541,14 +553,13 @@ function dendrogram() {
                 }
             });
 
-
-        // node.append("text")
-        //     .attr("x", 0)
-        //     .attr("y", 20)
-        //     .style("text-anchor", "middle")
-        //     .text(function (d) {
-        //         return d.children ? "" : d.data.label;
-        //     });
+        node.append("text")
+            .attr("x", 0)
+            .attr("y", 20)
+            .style("text-anchor", "middle")
+            .text(function (d) {
+                return d.children ? "" : d.data.label;
+            });
 
         // Define the div for the tooltip
         var div = d3.select("body").append("div")
@@ -729,7 +740,9 @@ function dendrogram() {
 
                 });
             } else {
-                node.on("click", null);
+                node.on("click", function (d) {
+                    return;
+                });
             }
         }
 
@@ -743,8 +756,6 @@ function dendrogram() {
             .attr("x2", width) // Dynamic size of the bar
             .attr("y2", yScaleInverted(hardcodeline))
             .call(drag);
-
-
 
         d3.select("#slider")
             .property("min", ymin)
@@ -765,6 +776,14 @@ function dendrogram() {
             shading(clusters);
 
         });
+
+        svg.append("rect").attr("width", 40).attr("height", height).style("fill", "white").attr("transform", "translate(-40,-15)");
+        // svg.append("rect").attr("width", 40).attr("height", height).style("fill", "white").attr("transform", "translate(" + (width - 60) + ",-15)");
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(0,0)")
+            .call(yAxis);
 
         // dendogram node selection method switcher
         var a1, b1;
@@ -829,8 +848,8 @@ function dendrogram() {
 
     // Transform this into a path
     function elbow(d, i) {
-        return "M" + d.parent.x + "," + yScaleInverted(d.parent.data.y) +
-            "H" + d.x + "V" + yScaleInverted(d.data.y);
+        return "M" + x3(d.parent.x) + "," + yScaleInverted(d.parent.data.y) +
+            "H" + x3(d.x) + "V" + yScaleInverted(d.data.y);
     }
 
 }
