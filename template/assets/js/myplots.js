@@ -404,6 +404,49 @@ function dendrogram() {
             return a.parent == b.parent ? 2 : 2;
         });
 
+    // var brush = d3.brushX().extent([
+    //     [0, 0],
+    //     [width - 20, 30]
+    // ]).on("brush", brushed);
+
+    var zoom = d3.zoom()
+        .scaleExtent([1, Infinity])
+        .translateExtent([
+            [0, 0],
+            [width, height]
+        ])
+        .extent([
+            [0, 0],
+            [width, height]
+        ])
+        .on("zoom", zoomed);
+
+    svg.append("rect")
+        .attr("class", "zoom")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("transform", "translate(" + (-40) + "," + (-15) + ")")
+        .call(zoom);
+
+    function zoomed() {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+        var t = d3.event.transform;
+        x.domain(t.rescaleX(x2).domain());
+        focus.select(".area").attr("d", area);
+        focus.select(".axis--x").call(xAxis);
+        context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+    }
+
+
+
+    // var context = svg.append("g")
+    //     .attr("class", "context")
+    //     .attr("transform", "translate(-40," + (height - 30 - 60) + ")")
+
+    // var x = d3.scaleLinear().range([0, width]);
+
+    // context.append("g").attr("class", "brush").call(brush).call(brush.move, x.range());
+
     var changedClusters = false;
 
     // Maximum values for the Y axis

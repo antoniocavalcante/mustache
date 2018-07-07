@@ -176,6 +176,8 @@ function drawReach(filename) {
         ])
         .on("zoom", zoomed);
 
+    var area2;
+
     svg.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
@@ -189,6 +191,8 @@ function drawReach(filename) {
     var context = svg.append("g")
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + (margin2.top + 20) + ")");
+
+    var mini;
 
     var crosshair = svg.append("g").append("line").classed("crosshair", "true");
 
@@ -246,6 +250,9 @@ function drawReach(filename) {
                     }, {
                         label: "Index: ",
                         value: d[1]
+                    }, {
+                        label: "Cluster: ",
+                        value: barData.color[d[1]]
                     }]);
 
                     vals.enter().append("h5").html(function (d) {
@@ -313,7 +320,12 @@ function drawReach(filename) {
 
         settings.select("#full-y-scale").on("change", function () {
             fullYScale = +this.value;
-            update();
+            y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
+            mini = context.selectAll(".area")
+            area2.y1(function (d) {
+                return y4(+d[0]);
+            });
+            mini.transition().duration(500).attr("d", area2);
         })
 
     }
@@ -347,7 +359,7 @@ function drawReach(filename) {
             x4.domain(x2.domain());
             x5.domain(x2.domain());
 
-            var area2 = d3.area()
+            area2 = d3.area()
                 .curve(d3.curveStep)
                 .x(function (d) {
                     return x4(+d[1]);
@@ -385,7 +397,7 @@ function drawReach(filename) {
                     return colorScale(barColoring[b]);
                 });
 
-            var mini = context.selectAll(".area").data([sampled])
+            mini = context.selectAll(".area").data([sampled])
 
             mini.enter().append("path")
                 .attr("class", "area")

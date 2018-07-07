@@ -5,7 +5,7 @@ def.domain = {
 };
 
 def.yAxes = {
-    title: "Y Axes Scale",
+    title: "Y Scale",
     tip: "set a power scale for the y axes."
 };
 
