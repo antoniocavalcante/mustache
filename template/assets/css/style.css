@@ -67,6 +67,13 @@ line {
     stroke-dasharray: 1;
 }
 
+.crosshair2 {
+    stroke: #333333;
+    opacity: 0.35;
+    stroke-width: 2px;
+    stroke-dasharray: 1;
+}
+
 /* HEATMAP */
 
 rect.bordered {

@@ -196,6 +196,8 @@ function drawReach(filename) {
 
     var crosshair = svg.append("g").append("line").classed("crosshair", "true");
 
+    var crosshair2 = svg.append("g").append("line").classed("crosshair2", "true");
+
     // set the y scale for the context view based on the html input value
     $("#full-y-scale").val(fullYScale);
 
@@ -204,18 +206,29 @@ function drawReach(filename) {
     function highlight(v) {
         sel = Math.floor(xtip(v[0]));
 
-
-        if (highlighted) sel = highlighted;
-
-        var x = xtip.invert(sel) + margin.left + (barWidth / 2) + barPadding - (2 / 2);
+        var cx2 = xtip.invert(Math.floor(xtip(v[0]))) + margin.left + (barWidth / 2) + barPadding - (2 / 2);
         var y = height;
 
-        crosshair.attr("x1", x)
-            .attr("x2", x)
+        crosshair2.attr("x1", cx2)
+            .attr("x2", cx2)
             .attr("y1", margin.top)
             .attr("y2", y + margin.top)
-            .attr("class", "crosshair")
+            .attr("class", "crosshair2")
 
+        if (highlighted) {
+            sel = highlighted;
+            var x = xtip.invert(sel) + margin.left + (barWidth / 2) + barPadding - (2 / 2);
+            crosshair.attr("x1", x)
+                .attr("x2", x)
+                .attr("y1", margin.top)
+                .attr("y2", y + margin.top)
+                .attr("class", "crosshair")
+            if (x == cx2) {
+                crosshair2.classed("hidden", "true");
+            }
+        } else {
+            crosshair.classed("hidden", "true");
+        }
 
         d3.selectAll(".bar").each(function (d, i) {
 
