@@ -9,7 +9,7 @@ function panelSize() {
         globalMainHeight = globalHeight - navBarH,
         padding = 10
 
-    panelH = (globalMainHeight - (padding * 2) - (padding * 1.5)) / 2;
+    panelH = (globalMainHeight - (padding * 2)) / 2;
 
     console.log("panel size is: " + panelH);
 
@@ -67,6 +67,15 @@ $.fn.extend({
         return this;
     },
 });
+
+// Addition to jQuery to get the inner text width
+$.fn.textWidth = function () {
+    var text = $(this).html();
+    $(this).html('<span>' + text + '</span>');
+    var width = $(this).find('span:first').width();
+    $(this).html(text);
+    return width;
+};
 
 
 $(".brand-logo").hover(function () {

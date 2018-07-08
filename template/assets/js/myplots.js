@@ -204,33 +204,33 @@ function update() {
     reachPaging();
 
 
-    //    highlightMedoidNode();
-    //
-    //
-    //    function highlightMedoidNode() {
-    //
-    //        d3.selectAll(".node").each(function (d) {
-    //
-    //            if (v.find(function (element) {
-    //                    return +element == d.data.label;
-    //                })) {
-    //
-    //                d3.select(this).transition().duration(500).attr("fill", "red")
-    //                d3.select(this).select("circle").transition().duration(500).attr("r", 3);
-    //
-    //            } else {
-    //                try {
-    //                    n = clusters[d.data.name];
-    //                    d3.select(this).transition().duration(500).attr("fill", colorScale(n.data.color - 1))
-    //                    d3.select(this).select("circle").transition().duration(500).attr("r", 2.5);
-    //                } catch (error) {
-    //                    return;
-    //                }
-    //
-    //
-    //            }
-    //        })
-    //    }
+    highlightMedoidNode();
+
+
+    // function highlightMedoidNode() {
+
+    //     d3.selectAll(".node").each(function (d) {
+
+    //         if (v.find(function (element) {
+    //                 return +element == d.data.label;
+    //             })) {
+
+    //             d3.select(this).transition().duration(500).attr("fill", "red")
+    //             d3.select(this).select("circle").transition().duration(500).attr("r", 3);
+
+    //         } else {
+    //             try {
+    //                 n = clusters[d.data.name];
+    //                 d3.select(this).transition().duration(500).attr("fill", colorScale(n.data.color - 1))
+    //                 d3.select(this).select("circle").transition().duration(500).attr("r", 2.5);
+    //             } catch (error) {
+    //                 return;
+    //             }
+
+
+    //         }
+    //     })
+    // }
 
 
     function createChart(data, cont, i, id) {
@@ -307,7 +307,11 @@ function update() {
 
 
         /* YScale is linear based on the maxData Point we found earlier */
-        this.yScale = d3.scaleLinear()
+        // this.yScale = d3.scaleLinear()
+        //     .range([chartYScale, 0])
+        //     .domain([0, d3.max(this.chartData)]);
+
+        this.yScale = d3.scalePow().exponent(0.3)
             .range([chartYScale, 0])
             .domain([0, d3.max(this.chartData)]);
 
@@ -367,7 +371,7 @@ function update() {
 
         d3.selectAll(".no-link").selectAll("svg").on("mouseover", function () {
             var chart = d3.select(this).select("path");
-            chart.transition().duration(100).attr("fill", "blue")
+            chart.transition().duration(100).attr("fill", d3.color(colorScale(medoids[chart.attr("val")])).brighter(1))
         }).on("mouseout", function () {
             var chart = d3.select(this).select("path");
             chart.transition().duration(100).attr("fill", colorScale(medoids[chart.attr("val")]))
@@ -404,11 +408,6 @@ function dendrogram() {
             return a.parent == b.parent ? 2 : 2;
         });
 
-    // var brush = d3.brushX().extent([
-    //     [0, 0],
-    //     [width - 20, 30]
-    // ]).on("brush", brushed);
-
     var zoom = d3.zoom()
         .scaleExtent([1, Infinity])
         .translateExtent([
@@ -423,9 +422,9 @@ function dendrogram() {
 
     svg.append("rect")
         .attr("class", "zoom")
-        .attr("width", width - 20)
+        .attr("width", width - 60)
         .attr("height", height - 15)
-        .attr("transform", "translate(" + (-40) + "," + (-15) + ")")
+        .attr("transform", "translate(" + (0) + "," + (-15) + ")")
         .call(zoom);
 
     function zoomed() {
@@ -440,17 +439,9 @@ function dendrogram() {
         svg.selectAll(".link").attr("d", elbow);
     }
 
-
-
-    // var context = svg.append("g")
-    //     .attr("class", "context")
-    //     .attr("transform", "translate(-40," + (height - 30 - 60) + ")")
-
     var x3 = d3.scaleLinear().range([0, width - 100]);
     var x2 = d3.scaleLinear().range([0, width - 100]);
 
-
-    // context.append("g").attr("class", "brush").call(brush).call(brush.move, x.range());
 
     var changedClusters = false;
 
@@ -493,9 +484,6 @@ function dendrogram() {
         });
 
         var exp = 0.5;
-
-        // xmin = d3.min(d3.values(labelVals));
-        // xmax = d3.max(d3.values(labelVals));
 
         x3.domain([xmin2 - 5, xmax2]);
         x2.domain(x3.domain());
@@ -560,6 +548,11 @@ function dendrogram() {
             .text(function (d) {
                 return d.children ? "" : d.data.label;
             });
+
+        node.selectAll("text").each(function (d) {
+            console.log(d3.select(this).style("textLength"));
+
+        })
 
         // Define the div for the tooltip
         var div = d3.select("body").append("div")
@@ -777,7 +770,7 @@ function dendrogram() {
 
         });
 
-        svg.append("rect").attr("width", 40).attr("height", height).style("fill", "white").attr("transform", "translate(-40,-15)");
+        // svg.append("rect").attr("width", 40).attr("height", height).style("fill", "white").attr("transform", "translate(-40,-15)");
         // svg.append("rect").attr("width", 40).attr("height", height).style("fill", "white").attr("transform", "translate(" + (width - 60) + ",-15)");
 
         svg.append("g")
@@ -981,7 +974,7 @@ function haiPlot() {
                         div.transition()
                             .duration(200)
                             .style("opacity", 1.0);
-                        div.html(+d[0] + '<br>' + d[1] + '<br>' + d[2])
+                        div.html((+d[0]).toFixed(5) + '<br>' + d[1] + '<br>' + d[2])
                             .style("left", (d3.event.pageX + 10) + "px")
                             .style("top", (d3.event.pageY) + "px");
 
