@@ -308,10 +308,12 @@ function drawReach(filename) {
             highlight(v)
         })
         .on("mouseout", function () {
+            crosshair2.classed("hidden", "true");
             if (highlighted) return;
             d3.select(".tooltip-region").selectAll(".tip-text").remove();
             d3.select(".tooltip-region").select("#tip-color").style("background-color", "#cccccc")
             crosshair.classed("hidden", "true");
+
         }).on("click", function () {
             v = d3.mouse(this);
             highlighted = Math.floor(xtip(v[0]));
