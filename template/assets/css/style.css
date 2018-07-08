@@ -6,7 +6,7 @@ svg {
 }
 
 .grad {
-    background: linear-gradient(to bottom, white, #f5f5f5);
+    background: linear-gradient(to bottom, white, #eeeeee);
 }
 
 .axis path,
@@ -153,6 +153,11 @@ html {
     padding-bottom: 0;
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.nopadding-b {
+    padding-bottom: 0 !important;
+    margin: 0 !important;
 }
 
 .nopadding-h {
@@ -356,7 +361,18 @@ html {
     width: 48px;
     position: absolute;
     top: 10px;
-    left: 200px;
+    left: 210px;
+}
+
+.panel-clear-header {
+    background: none !important;
+    outline: none !important;
+    border: none !important;
+}
+
+.panel-heading-fix {
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .loader-logo {
@@ -374,6 +390,10 @@ html {
 
 .f-left {
     float: left;
+}
+
+.f-right {
+    float: right;
 }
 
 .panel-title-extra {

@@ -5,6 +5,7 @@
     <title>MustaCHE | Dashboard</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <!-- VENDOR CSS -->
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
@@ -26,9 +27,9 @@
 
 
     <style>
-        p {
+        /* p {
             font-size: 12px;
-        }
+        } */
 
         .selection {
             border-radius: 10px;
@@ -251,9 +252,9 @@
 
 
         <!-- NAVBAR -->
-        <nav class="navbar navbar-default navbar-fixed-top">
+        <nav class="navbar navbar-default navbar-fixed-top grad">
             <div class="text-center">
-                <div class="navbar-btn no-margin">
+                <div class="navbar-btn no-margin pad-l">
                     <button type="button" class="btn-toggle-fullwidth">
                         <i class="lnr lnr-menu"></i>
                     </button>
@@ -321,54 +322,6 @@
             </div>
         </nav>
         <!-- END NAVBAR -->
-        <!-- LEFT SIDEBAR -->
-        <!-- <div id="sidebar-nav" class="sidebar">
-            <div class="sidebar-scroll">
-                <nav>
-                    <ul class="nav">
-                        <li>
-                            <a href="#">
-                                <img src="assets/img/pie-chart-2.svg" class="side-icon" />
-                                <span>Datasets</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="assets/img/settings.svg" class="side-icon" />
-                                <span>Global Settings</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="assets/img/diagram.svg" class="side-icon" />
-                                <span>Dendrogram</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="assets/img/grid-2.svg" class="side-icon" />
-                                <span>Hai Plot</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="assets/img/area-chart.svg" class="side-icon" />
-                                <span>Reachabillity</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <div style="position: absolute; bottom:0;">
-                <a href="">
-                    <img src="assets/img/UA-EAC-COLOUR-REVERSE.svg" class="side-logo-uofa">
-                </a>
-                <a href="">
-                    <img src="assets/img/jcu-logo.png" class="side-logo-jcu">
-                </a>
-            </div>
-        </div> -->
-        <!-- END LEFT SIDEBAR -->
 
         <!-- LEFT SIDEBAR -->
         <div id="sidebar-nav" class="sidebar">
@@ -411,21 +364,11 @@
                         <div id="subLayouts" class="collapse ">
                             <ul class="submenu">
                                 <li>
-                                    <a href="index-topnav.html" target="_blank">Top Navigation
-                                        <span class="label label-success">NEW</span>
+                                    <a>Color Theme:
+                                        <select>
+                                            <option>Cool color</option>
+                                        </select>
                                     </a>
-                                </li>
-                                <li>
-                                    <a href="index-minified.html" target="_blank">Minified</a>
-                                </li>
-                                <li>
-                                    <a href="index-fullwidth.html" target="_blank">Fullwidth</a>
-                                </li>
-                                <li>
-                                    <a href="index.html" target="_blank">Default</a>
-                                </li>
-                                <li>
-                                    <a href="layouts/layout-grid.html">Grid</a>
                                 </li>
                             </ul>
                         </div>
@@ -440,21 +383,19 @@
                         <div id="navDendrogram" class="collapse ">
                             <ul class="submenu">
                                 <li>
-                                    <a href="index-topnav.html" target="_blank">Top Navigation
-                                        <span class="label label-success">NEW</span>
+                                    <a>Y Scale:
+                                        <input type="range">
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="index-minified.html" target="_blank">Minified</a>
+                                    <a>Node Size:
+                                        <input type="range">
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="index-fullwidth.html" target="_blank">Fullwidth</a>
-                                </li>
-                                <li>
-                                    <a href="index.html" target="_blank">Default</a>
-                                </li>
-                                <li>
-                                    <a href="layouts/layout-grid.html">Grid</a>
+                                    <a>Link Width:
+                                        <input type="range">
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -467,23 +408,6 @@
                         </a>
                         <div id="navHai" class="collapse ">
                             <ul class="submenu">
-                                <li>
-                                    <a href="index-topnav.html" target="_blank">Top Navigation
-                                        <span class="label label-success">NEW</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="index-minified.html" target="_blank">Minified</a>
-                                </li>
-                                <li>
-                                    <a href="index-fullwidth.html" target="_blank">Fullwidth</a>
-                                </li>
-                                <li>
-                                    <a href="index.html" target="_blank">Default</a>
-                                </li>
-                                <li>
-                                    <a href="layouts/layout-grid.html">Grid</a>
-                                </li>
                             </ul>
                         </div>
                     </li>
@@ -496,21 +420,9 @@
                         <div id="navReach" class="collapse ">
                             <ul class="submenu">
                                 <li>
-                                    <a href="index-topnav.html" target="_blank">Top Navigation
-                                        <span class="label label-success">NEW</span>
+                                    <a>Y Scale:
+                                        <input type="range">
                                     </a>
-                                </li>
-                                <li>
-                                    <a href="index-minified.html" target="_blank">Minified</a>
-                                </li>
-                                <li>
-                                    <a href="index-fullwidth.html" target="_blank">Fullwidth</a>
-                                </li>
-                                <li>
-                                    <a href="index.html" target="_blank">Default</a>
-                                </li>
-                                <li>
-                                    <a href="layouts/layout-grid.html">Grid</a>
                                 </li>
                             </ul>
                         </div>
@@ -642,10 +554,11 @@
                         <!-- START REACHABILLITY -->
                         <div class="col-xs-9 nopadding pad-l">
                             <div class="panel panel-default nopadding grad" id="reach-panel">
-                                <div class="panel-heading">
-                                    <h1 class="panel-title panel-title-extra">Multiple Reachabillity Plots</h1>
-                                    <div class="perpg input-sm">
-                                        <select id="reach-per-pg">
+                                <div class="panel-heading clearfix">
+                                    <p class="pull-left">Multiple Reachabillity Plots</p>
+
+                                    <div class="perpg btn-group pull-right nopadding-b">
+                                        <select class="input-sm" id="reach-per-pg">
                                             <option>1</option>
                                             <option>2</option>
                                             <option>3</option>
@@ -654,15 +567,15 @@
                                             <option>12</option>
                                         </select>
                                     </div>
-                                    <div class="paging right">
-                                        <ul class="pagination pagination-sm nopadding">
-                                            <li class="pg-nav" pg-val="-1">
-                                                <a href="#">
-                                                    <span>&laquo;</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+
+                                    <ul class="pagination pagination-sm pull-right nopadding nopadding-b">
+                                        <li class="pg-nav" pg-val="-1">
+                                            <a href="#">
+                                                <span>&laquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+
                                     <div class="right hidden">
                                         <li class="dropdown panel-options">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">

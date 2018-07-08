@@ -151,9 +151,9 @@ function update() {
     var v = Object.keys(medoids);
 
     var margin = {
-            top: 0,
+            top: 10,
             right: 0,
-            bottom: 20,
+            bottom: 10,
             left: 0
         },
 
@@ -204,7 +204,7 @@ function update() {
     reachPaging();
 
 
-    highlightMedoidNode();
+    // highlightMedoidNode();
 
 
     // function highlightMedoidNode() {
@@ -298,7 +298,7 @@ function update() {
         var svg = svgCont.append("svg")
             .attr("id", "chart" + this.id)
             .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "-40 " + (-(this.margin.top + this.margin.bottom) / 2) + " " + options.width / this.rows + " " + (options.height));
+            .attr("viewBox", "-40 " + (-(this.margin.top)) + " " + options.width / this.rows + " " + (options.height));
 
         /* XScale is based on the number of points to be plotted */
         this.xScale = d3.scaleLinear()
