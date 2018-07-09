@@ -274,7 +274,7 @@
                         MustaCHE</h1>
                     <img src="assets/img/Mustache_Logo_SVG_black.svg" class="brand-logo">
                 </div>
-                <h3 class="navbar-text dataset-title navbar-center">
+                <h3 class="navbar-text dataset-title navbar-center hidden">
                     <span>Project: </span>Anuran
                 </h3>
                 <div id="navbar-menu" class="pad-r">
@@ -340,6 +340,17 @@
         <div id="sidebar-nav" class="sidebar">
             <nav class="side-nav">
                 <ul class="nav" id="sidebar-nav-menu">
+                    <li class="menu-group spec2">Project
+                        <a class="disabled spec">
+                            <strong>Anuran</strong>
+                        </a>
+                        <a class="disabled spec">
+                            <strong>Mpts: </strong> 50</a>
+                        <a class="disabled spec">
+                            <strong>Distance: </strong> Euclidean</a>
+                        <a class="disabled spec">
+                            <strong>RNG: </strong> Filtered</a>
+                    </li>
                     <li class="menu-group">Main</li>
                     <li class="panel">
                         <a href="#dashboards" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
@@ -353,17 +364,16 @@
                         </div>
                     </li>
                     <li class="panel">
-                        <a href="#subLayouts" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
+                        <a href="#globalSettings" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
                             <img src="assets/img/settings.svg" class="side-icon" />
                             <span class="title">Global Settings</span>
                             <i class="icon-submenu ti-angle-left"></i>
                         </a>
-                        <div id="subLayouts" class="collapse ">
+                        <div id="globalSettings" class="collapse ">
                             <ul class="submenu">
-                                <li>
+                                <li id="colorTheme">
                                     <a>Color Theme:
-                                        <select>
-                                            <option>Cool color</option>
+                                        <select class="form-control input-sm">
                                         </select>
                                     </a>
                                 </li>
@@ -381,17 +391,17 @@
                             <ul class="submenu">
                                 <li>
                                     <a>Y Scale:
-                                        <input type="range" class="istyle">
+                                        <input type="range" id="yScale">
                                     </a>
                                 </li>
                                 <li>
                                     <a>Node Size:
-                                        <input type="range">
+                                        <input type="range" id="nodeSize">
                                     </a>
                                 </li>
                                 <li>
                                     <a>Link Width:
-                                        <input type="range">
+                                        <input type="range" id="linkWidth">
                                     </a>
                                 </li>
                             </ul>
@@ -426,7 +436,7 @@
                     </li>
                 </ul>
             </nav>
-            <div>
+            <div style="position: absolute; bottom: 0;">
                 <a href="">
                     <img src="assets/img/UA-EAC-COLOUR-REVERSE.svg" class="side-logo-uofa">
                 </a>
@@ -454,20 +464,53 @@
 
                                     <div class="col-xs-2 pull-left">
                                         <div class="btn-group btn-group-xs dendo-method btn-group-justified" data-toggle="buttons">
-                                            <label class="btn btn-default disabled btn-xs">
-                                                <input type="radio" name="radio" value="fosc" disabled>
-                                                <span class="ti-target"></span>
+                                            <label class="btn btn-default btn-xs">
+                                                <input type="radio" name="radio" value="fosc">
+                                                <span class="ti-wand" title="FOSC"></span>
                                             </label>
                                             <label class="btn btn-default active btn-xs">
                                                 <input type="radio" name="radio" value="bar" checked>
-                                                <span class="ti-split-v"></span>
+                                                <span class="ti-split-v" title="Threshold"></span>
                                             </label>
                                             <label class="btn btn-default btn-xs">
                                                 <input type="radio" name="radio" value="manual">
-                                                <span class="ti-hand-point-up"></span>
+                                                <span class="ti-hand-point-up" title="Manual Selection"></span>
                                             </label>
                                         </div>
                                     </div>
+
+
+                                    <div class="col-xs-2">
+
+                                        <div class="btn-group btn-group-xs btn-group-justified" data-toggle="buttons">
+                                            <label class="btn btn-default btn-xs">
+                                                <button type="button">
+                                                    <span class="ti-zoom-in"></span>
+                                                </button>
+
+                                            </label>
+                                            <label class="btn btn-default btn-xs">
+                                                <button type="button">
+                                                    <span class="ti-zoom-out"></span>
+                                                </button>
+                                            </label>
+                                            <label class="btn btn-default btn-xs disabled">
+                                                <button type="button" disabled>
+                                                    <span>100%</span>
+                                                </button>
+                                            </label>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="col-xs-2 pull-left">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-addon">Threshold</span>
+                                            <input class="form-control" id="manualThresh">
+                                        </div>
+                                    </div>
+
                                     <div class="right">
                                         <li class="panel-options">
                                             <i class="lnr lnr-download" data-toggle="tooltip" data-placement="bottom" title="Save Screenshot"></i>

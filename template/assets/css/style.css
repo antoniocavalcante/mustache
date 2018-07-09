@@ -479,6 +479,11 @@ html {
     /* optional: just make scrollbar invisible */
 }
 
+#sidebar-nav {
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+}
+
 /* optional: show position indicator in red */
 
 #sidebar-nav>::-webkit-scrollbar-thumb {
@@ -494,4 +499,8 @@ html {
     position: absolute;
     left: 50%;
     transform: translatex(-50%);
+}
+
+#colorTheme {
+    vertical-align: top;
 }

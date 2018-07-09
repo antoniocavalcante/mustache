@@ -5,11 +5,46 @@ var globalColor = d3.interpolateViridis,
     charts = [],
     medoids = {},
     ppg,
-    ids;
+    ids,
+    fosc = [146, 150, 138, 122, 163, 121, 187, 180];
 
 var barWidth = 6;
 var barPadding = 1.5;
 var fullYScale = 0.3;
+var HAicolorScale = d3.scaleSequential(globalColor);
+var MultiReachcolorScale = d3.scaleSequential(globalColor);
+
+var interpolators = [
+    // These are from d3-scale.
+    "Viridis",
+    "Inferno",
+    "Magma",
+    "Plasma",
+    "Warm",
+    "Cool",
+    "Rainbow",
+    "CubehelixDefault"
+];
+
+// "Blues",
+// "Greens",
+// "Greys",
+// "Oranges",
+// "Purples",
+// "Reds",
+// "BuGn",
+// "BuPu",
+// "GnBu",
+// "OrRd",
+// "PuBuGn",
+// "PuBu",
+// "PuRd",
+// "RdPu",
+// "YlGnBu",
+// "YlGn",
+// "YlOrBr",
+// "YlOrRd"
+
 
 var floor = Math.floor,
     abs = Math.abs;
@@ -17,6 +52,38 @@ var floor = Math.floor,
 d3.text("data/ra/ids", function (data) {
     ids = d3.csvParseRows(data);
 })
+
+function settings() {
+
+    var globalSettings = $("#globalSettings");
+    var colorTheme = globalSettings.find("#colorTheme").find("select");
+    $.each(interpolators, function (i, item) {
+        colorTheme.append($('<option>', {
+            value: interpolators[i],
+            text: interpolators[i]
+        }));
+    });
+
+    colorTheme.on("change", function () {
+        globalColor = d3.scaleSequential(d3["interpolate" + this.value])
+
+        // hai plot
+        var last = HAicolorScale.domain();
+        HAicolorScale = d3.scaleSequential(globalColor).domain(last)
+        var cards = d3.select("#hai-plot").selectAll("rect")
+        cards.transition().duration(500).style("fill", function (d, i) {
+            return HAicolorScale(+d[0]);
+        })
+
+        // dendrogram
+        MultiReachcolorScale = d3.scaleSequential(globalColor);
+        shading(clusters);
+
+        // multiple reachabillity
+        update();
+    })
+
+}
 
 function largestTriangleThreeBuckets(data, threshold) {
 
@@ -160,8 +227,7 @@ function update() {
         width = $("#reach-panel").find(".panel-body").attr("width"),
         height = $("#reach-panel").find(".panel-body").attr("height") - 10;
 
-    var colorScale = d3.scaleSequential(globalColor)
-        .domain([0, v.length]);
+    MultiReachcolorScale.domain([0, v.length]);
 
     var t = d3.transition()
         .duration(750);
@@ -185,7 +251,7 @@ function update() {
         var chart = d3.select(this);
         chart.select("path")
             .transition(t)
-            .attr("fill", colorScale(medoids[d]));
+            .attr("fill", MultiReachcolorScale(medoids[d]));
     })
 
     // add new 
@@ -346,7 +412,7 @@ function update() {
             .attr("class", "chart")
             .attr("val", this.id)
             .attr("clip-path", "url(#clip-" + this.id + ")")
-            .attr("fill", colorScale(medoids[this.id]))
+            .attr("fill", MultiReachcolorScale(medoids[this.id]))
             .attr("d", this.area);
 
         this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
@@ -371,15 +437,86 @@ function update() {
 
         d3.selectAll(".no-link").selectAll("svg").on("mouseover", function () {
             var chart = d3.select(this).select("path");
-            chart.transition().duration(100).attr("fill", d3.color(colorScale(medoids[chart.attr("val")])).brighter(1))
+            chart.transition().duration(100).attr("fill", d3.color(MultiReachcolorScale(medoids[chart.attr("val")])).brighter(1))
         }).on("mouseout", function () {
             var chart = d3.select(this).select("path");
-            chart.transition().duration(100).attr("fill", colorScale(medoids[chart.attr("val")]))
+            chart.transition().duration(100).attr("fill", MultiReachcolorScale(medoids[chart.attr("val")]))
         })
 
     }
 
 }
+
+
+function shading(clusters) {
+
+    var colorScale = d3.scaleSequential(globalColor);
+
+    var colouring = {};
+
+    // label nodes with the color colors
+    counter = 1;
+    Object.keys(clusters).forEach(function (key) {
+        childs = clusters[key].descendants();
+        for (y = 0; y < childs.length; y++) {
+            colouring[childs[y].data.name] = counter;
+        }
+        clusters[key].data['color'] = counter;
+        counter++;
+    });
+
+    // adjust color scale to match number of selection
+    colorScale.domain([1, Object.keys(clusters).length + 1]);
+
+    node = d3.selectAll(".node");
+    link = d3.selectAll(".link");
+
+    // fill node circles with color
+    node
+        .attr("fill", function (d, i) {
+            val = colouring[d.data.name];
+
+            if (val) {
+                return colorScale(val);
+            }
+            return "grey"
+
+        }).style("opacity", function (d, i) {
+            val = colouring[d.data.name];
+            if (val) {
+                return 1;
+            }
+            return 0.3
+        });
+
+    // change node link colors
+    link
+        .attr("stroke", function (d, i) {
+
+            if (clusters[d.data.name]) {
+                return "grey";
+            }
+
+            val = colouring[d.data.name];
+            if (val) {
+                return colorScale(val);
+            }
+            return "grey";
+        }).style("opacity", function (d, i) {
+
+            if (clusters[d.data.name]) {
+                return 0.3;
+            }
+
+            val = colouring[d.data.name];
+            if (val) {
+                return 1;
+            }
+            return 0.3
+        });
+
+}
+
 
 
 function dendrogram() {
@@ -394,8 +531,6 @@ function dendrogram() {
     var width = $("#dendogram-panel").find(".panel-body").attr("width"),
         height = $("#dendogram-panel").find(".panel-body").attr("height");
 
-
-    var colorScale = d3.scaleSequential(globalColor);
 
     var svg = d3.select("#chart-dendrogram").append("svg")
         .attr("preserveAspectRatio", "xMidYMid Slice")
@@ -562,6 +697,8 @@ function dendrogram() {
         node.on("mouseover", function (d) {
 
                 d3.select(this).attr("stroke", "red")
+                d3.select("body")
+                    .style("cursor", "pointer");
 
                 if (!d.children) {
 
@@ -581,12 +718,19 @@ function dendrogram() {
                 div.transition()
                     .duration(500)
                     .style("opacity", 0);
+                d3.select("body")
+                    .style("cursor", "auto");
             });
 
         var transitionTime = 100;
 
         // colour and extract clusters from dendogram based on threshold bar current value. 
         function clusterThresholdExtraction(currentValue) {
+
+            d3.select("#manualThresh").property("value", function () {
+                return (+currentValue).toFixed(8);
+            });
+
             var clusters = {}
 
             function traverse(d, i) {
@@ -605,69 +749,6 @@ function dendrogram() {
 
         }
 
-        function shading(clusters) {
-
-            var colouring = {};
-
-            // label nodes with the color colors
-            counter = 1;
-            Object.keys(clusters).forEach(function (key) {
-                childs = clusters[key].descendants();
-                for (y = 0; y < childs.length; y++) {
-                    colouring[childs[y].data.name] = counter;
-                }
-                clusters[key].data['color'] = counter;
-                counter++;
-            });
-
-            // adjust color scale to match number of selection
-            colorScale.domain([1, Object.keys(clusters).length + 1]);
-
-            // fill node circles with color
-            node
-                .attr("fill", function (d, i) {
-                    val = colouring[d.data.name];
-
-                    if (val) {
-                        return colorScale(val);
-                    }
-                    return "grey"
-
-                }).style("opacity", function (d, i) {
-                    val = colouring[d.data.name];
-                    if (val) {
-                        return 1;
-                    }
-                    return 0.3
-                });
-
-            // change node link colors
-            link
-                .attr("stroke", function (d, i) {
-
-                    if (clusters[d.data.name]) {
-                        return "grey";
-                    }
-
-                    val = colouring[d.data.name];
-                    if (val) {
-                        return colorScale(val);
-                    }
-                    return "grey";
-                }).style("opacity", function (d, i) {
-
-                    if (clusters[d.data.name]) {
-                        return 0.3;
-                    }
-
-                    val = colouring[d.data.name];
-                    if (val) {
-                        return 1;
-                    }
-                    return 0.3
-                });
-
-        }
 
 
         var drag = d3.drag()
@@ -800,22 +881,37 @@ function dendrogram() {
 
                     var isEqual = (JSON.stringify(a1.sort()) === JSON.stringify(b1.sort()));
 
-                    if (!isEqual) {
+                    // if (!isEqual) {
 
-                        thresholdBar.each(function () {
-                            value = lineScale.invert(d3.select(this).select("line").attr("y1"))
-                            clusters = clusterThresholdExtraction(value);
-                            shading(clusters);
-                            update(clusters);
-                        });
+                    thresholdBar.each(function () {
+                        value = lineScale.invert(d3.select(this).select("line").attr("y1"))
+                        clusters = clusterThresholdExtraction(value);
+                        shading(clusters);
+                    });
 
-                    }
+                    // }
+
+                    update();
 
                 } else if (option == 'manual') {
 
                     thresholdBar.classed("hidden", true);
                     manualExtract(true);
                     shading(clusters);
+
+                } else if (option == "fosc") {
+
+                    clusters = {}
+                    node.each(function (d) {
+                        if (fosc.includes(+d.data.name)) {
+                            clusters[d.data.name] = d;
+                        }
+                    })
+
+                    thresholdBar.classed("hidden", true);
+                    manualExtract(false);
+                    shading(clusters);
+                    update();
 
                 }
 
@@ -895,8 +991,7 @@ function haiPlot() {
                     labels.push(i);
                 }
 
-                var colorScale = d3.scaleSequential(d3.interpolateBuPu)
-                    .domain([maxValue, minValue]);
+                HAicolorScale.domain([minValue, maxValue]);
 
                 var svg = d3.select("#hai-plot").append("svg")
                     .attr("preserveAspectRatio", "xMidYMid meet")
@@ -965,7 +1060,7 @@ function haiPlot() {
                     .attr("width", gridSize)
                     .attr("height", gridSizeY)
                     .style("fill", function (d, i) {
-                        return colorScale(+d[0]);
+                        return HAicolorScale(+d[0]);
                     })
                     .on("mouseover", function (d) {
                         d3.select(this).style("fill", "#ffffff");
@@ -992,34 +1087,19 @@ function haiPlot() {
                             }
                         })
 
-                        nodePath(nodes[0], nodes[1]);
-
                     })
                     .on("mouseout", function (d) {
                         d3.select(this).style("fill", function (d, i) {
-                            return colorScale(+d[0]);
+                            return HAicolorScale(+d[0]);
                         });
                         div.transition()
                             .duration(500)
                             .style("opacity", 0);
                     });
 
-
-                cards.select("title").text(function (d) {
-                    return +d[0];
-                });
-
             });
 
     };
-
-    function nodePath(start, end) {
-
-        console.log(start, end);
-        //        path = start.d.path(end);
-        //        console.log(path);
-
-    }
 
     heatmapChart(dataset);
 
@@ -1028,6 +1108,7 @@ function haiPlot() {
 
 dendrogram();
 haiPlot();
+settings();
 $('#loading').delay(1000).fadeOut(1000);
 
 
