@@ -19,6 +19,11 @@ def.points = {
     tip: "number of points in the dataset."
 };
 
+def.clusters = {
+    title: "Clusters",
+    tip: "number of clusters in the dataset."
+};
+
 def.smplWindow = {
     title: "Sample Window",
     tip: "Number of sampled points in the graph window."

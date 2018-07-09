@@ -456,6 +456,10 @@ function drawReach(filename) {
                 elem.find("span").text(points);
             }
 
+            if (val == "clusters") {
+                elem.find("span").text(Object.keys(barColoring).length);
+            }
+
             if (val == "smplWindow") {
                 elem.find("span").text(Math.floor(window));
             }

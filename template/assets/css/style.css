@@ -466,3 +466,32 @@ html {
 .cap {
     text-transform: capitalize;
 }
+
+.side-nav {
+    height: 80%;
+    overflow-y: scroll;
+}
+
+#sidebar-nav>::-webkit-scrollbar {
+    width: 0px;
+    /* remove scrollbar space */
+    background: transparent;
+    /* optional: just make scrollbar invisible */
+}
+
+/* optional: show position indicator in red */
+
+#sidebar-nav>::-webkit-scrollbar-thumb {
+    background: rgba(50, 50, 50, 0.5)
+}
+
+.dataset_title {
+    float: inherit !important;
+    margin: 0 auto;
+}
+
+.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translatex(-50%);
+}
