@@ -727,7 +727,7 @@ function dendrogram() {
         // colour and extract clusters from dendogram based on threshold bar current value. 
         function clusterThresholdExtraction(currentValue) {
 
-            d3.select("#manualThresh").property("value", function () {
+            d3.select("#manualThresh").select("input").property("value", function () {
                 return (+currentValue).toFixed(8);
             });
 
@@ -872,6 +872,8 @@ function dendrogram() {
 
                 if (option == 'bar') {
 
+                    d3.select("#manualThresh").classed("hidden", false);
+
                     thresholdBar.classed("hidden", false);
                     manualExtract(false);
 
@@ -895,11 +897,15 @@ function dendrogram() {
 
                 } else if (option == 'manual') {
 
+                    d3.select("#manualThresh").classed("hidden", true);
+
                     thresholdBar.classed("hidden", true);
                     manualExtract(true);
                     shading(clusters);
 
                 } else if (option == "fosc") {
+
+                    d3.select("#manualThresh").classed("hidden", true);
 
                     clusters = {}
                     node.each(function (d) {
