@@ -368,9 +368,8 @@ function drawReach(filename) {
                 return i;
             }));
 
-            x4 = d3.scaleLinear().range([0, width]),
-                y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
-
+            x4 = d3.scaleLinear().range([0, width]);
+            y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
             x4.domain(x2.domain());
             x5.domain(x2.domain());
 
@@ -479,6 +478,9 @@ function drawReach(filename) {
 
     }
 
+    var where;
+
+
     function brushed() {
 
         d3.select(".crosshair").classed("hidden", "true");
@@ -491,13 +493,19 @@ function drawReach(filename) {
         var s = d3.event.selection;
         factor = Math.abs((s[1] - s[0]) / width);
 
+        if (Math.abs(s[1] - s[0]) < x3.invert(barWindow)) {
+            return;
+        }
+
         let minFactor = (barWindow / barData.raw.length);
+
+        selected = s.map(x2.invert);
+        where = s;
 
         if (factor < minFactor) {
             factor = minFactor;
-        }
 
-        selected = s.map(x2.invert);
+        }
 
         x3.domain([0, barWindow]);
         Swindow = s.map(x3.invert);
@@ -558,6 +566,20 @@ function drawReach(filename) {
 
     function brushEnd() {
 
+        var s = d3.event.selection;
+
+        try {
+            var deltaS = Math.abs(s[1] - s[0])
+        } catch (error) {
+            d3.select(this).call(brush.move, x.range());
+        }
+
+        var deltaW = Math.abs(where[1] - where[0])
+
+        if (deltaS < deltaW) {
+            d3.select(this).call(brush.move, where);
+        }
+
         focus.select(".axis--y").transition().duration(500).call(yAxis);
 
     }
@@ -588,10 +610,16 @@ function drawReach(filename) {
     }
 
     function zoomed() {
-        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return;
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type == "brush") {
+            return;
+        }
         var t = d3.event.transform;
         x2.domain(t.rescaleX(x2).domain());
         var window = x2.range().map(t.invertX, t);
+        var delta = Math.abs(window[1] - window[0]);
+        if (x3(delta) < barWindow) {
+            window = [where[0], where[1]];
+        }
         context.select(".brush").call(brush.move, window);
     }
 

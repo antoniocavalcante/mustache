@@ -900,11 +900,9 @@ function haiPlot() {
 
                 var svg = d3.select("#hai-plot").append("svg")
                     .attr("preserveAspectRatio", "xMidYMid meet")
-                    .attr("viewBox", "-35 -30 " + width + " " + height)
+                    .attr("viewBox", "-35 -40 " + width + " " + height)
                     .attr("width", width)
-                    .attr("height", height)
-                    .style("display", "block")
-                    .style("margin", "auto");
+                    .attr("height", height);
 
                 var HeatMapxScale = d3.scaleLinear()
                     .range([gridSize / 2, (haiRange + 0.5) * gridSize])
