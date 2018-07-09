@@ -274,8 +274,8 @@ html.fullscreen-bg #wrapper {
     *vertical-align: auto;
     *zoom: 1;
     *display: inline;
-    padding-top: 28px;
-    padding-bottom: 28px;
+    padding-top: 15px;
+    padding-bottom: 10px;
     position: relative;
 }
 
@@ -286,7 +286,7 @@ html.fullscreen-bg #wrapper {
 }
 
 .navbar-nav>li>a {
-    padding: 28px 20px;
+    padding: 15px 20px;
 }
 
 .navbar-nav>li>a>i {
