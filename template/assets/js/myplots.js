@@ -651,15 +651,13 @@ function dendrogram() {
             return (+a.data.label) - (+b.data.label);
         });
 
-        var exp = 0.5;
-
         x3.domain([xmin2 - 5, xmax2]);
         x2.domain(x3.domain());
 
-        yScale = d3.scalePow().domain([ymin, ymax]).range([0, height - 60]).exponent(exp).clamp(true);
-        yScaleInverted = d3.scalePow().domain([ymax, ymin]).range([0, height - 60]).exponent(exp).clamp(true);
+        yScale = d3.scalePow().domain([ymin, ymax]).range([0, height - 60]).exponent(dendrogramExponent).clamp(true);
+        yScaleInverted = d3.scalePow().domain([ymax, ymin]).range([0, height - 60]).exponent(dendrogramExponent).clamp(true);
         xScale = d3.scaleLinear().domain([2, 100]).range([0, width - 100]);
-        lineScale = d3.scalePow().range([0, height - 60]).exponent(exp).domain([ymax, ymin]).clamp(true);
+        lineScale = d3.scalePow().range([0, height - 60]).exponent(dendrogramExponent).domain([ymax, ymin]).clamp(true);
         lineMove = d3.scaleLinear().range([0, height - 60]).domain([0, height - 60]).clamp(true);
 
         var yAxis = d3.axisLeft().scale(this.yScaleInverted).ticks(5);
