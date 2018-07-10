@@ -166,9 +166,9 @@ function panelSize() {
         globalMainHeight = globalHeight - navBarH,
         padding = 10
 
-    panelH = (globalMainHeight - (padding * 2) - (padding * 1.5)) / 2;
+    console.log(globalMainHeight, globalHeight);
 
-    console.log("panel size is: " + panelH);
+    panelH = (globalMainHeight / 2);
 
     return panelH;
 
@@ -195,7 +195,7 @@ function setWindow(container) {
     bodyH = body.outerHeight(true);
     panelW = panel.outerWidth(true);
 
-    newH = parseInt(panelH - bodyH - footerH - headerH);
+    newH = parseInt(panelH - bodyH - footerH - headerH - (10));
     console.log(newH, panelW);
     body.attr("width", panelW);
     body.attr("height", newH);

@@ -81,3 +81,13 @@ $.fn.textWidth = function () {
 $(".brand-logo").hover(function () {
     $(this).animateCss("swing");
 });
+
+
+$(window).resize(function () {
+    w = $(window).width()
+    h = $(window).height()
+    w2 = $(document).width()
+    h2 = $(document).height()
+    console.log("window", w, h);
+    console.log("screen", w2, h2);
+});
