@@ -480,6 +480,13 @@ html {
     font-size: 12px;
 }
 
+.tip-values {}
+
+.scroller {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
 .cap {
     text-transform: capitalize;
 }

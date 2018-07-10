@@ -18,7 +18,7 @@ var MultiReachcolorScale = d3.scaleSequential(globalColor);
 // dendrogram settings
 var nodeSize = 2.5;
 var linkWidth = 1;
-var dendrogramExponent = 0.3;
+var dendrogramExponent = 0.5;
 var dendrogramXScale;
 var yScaleInverted;
 var lineScale;
@@ -454,16 +454,18 @@ function update() {
 
         this.chartContainer.append("text")
             .attr("class", "country-title")
-            .attr("transform", "translate(" + (chartXScale - 150) + ",20)")
+            // .style("text-anchor", "middle")
+            .attr("fill", "white")
+            .attr("transform", "translate(" + (chartXScale - ((options.width / this.rows) / 2)) + "," + (options.height * 0.9) + ")")
             .text("mpts: " + v[this.fill]);
 
-        d3.selectAll(".no-link").on("mouseover", function () {
-            var text = d3.select(this).select(".country-title");
-            text.transition().duration(100).style("font-size", 24);
-        }).on("mouseout", function () {
-            var text = d3.select(this).select(".country-title");
-            text.transition().duration(100).style("font-size", 15);
-        })
+        // d3.selectAll(".no-link").on("mouseover", function () {
+        //     var text = d3.select(this).select(".country-title");
+        //     text.transition().duration(100).style("font-size", 24);
+        // }).on("mouseout", function () {
+        //     var text = d3.select(this).select(".country-title");
+        //     text.transition().duration(100).style("font-size", 15);
+        // })
 
         d3.selectAll(".no-link").selectAll("svg").on("mouseover", function () {
             var chart = d3.select(this).select("path");
@@ -1008,15 +1010,10 @@ function dendrogram() {
 
 function haiPlot() {
 
-    var width = parseInt((screen.width - (30 + 35)) / 4);
+    // var width = parseInt((screen.width - (30 + 35)) / 4);
     var width = parseInt($("#hai-panel").find(".panel-body").attr("width"));
-    var height = parseInt($("#hai-panel").find(".panel-body").attr("height"));
+    var height = parseInt($("#reach-panel").find(".panel-body").attr("height"));
 
-    // if (width > height) {
-    //     width = height;
-    // } else if (height > width) {
-    //     height = width;
-    // }
 
     var dataset = "data/data4.csv";
 
@@ -1046,8 +1043,6 @@ function haiPlot() {
 
                 maxValue = d3.max(maxValue);
 
-                console.log(haiRange, minValue, maxValue);
-
                 labels = [];
                 for (var i = 0; i < (haiRange + 1); i++) {
                     labels.push(i);
@@ -1057,7 +1052,7 @@ function haiPlot() {
 
                 var svg = d3.select("#hai-plot").append("svg")
                     .attr("preserveAspectRatio", "xMidYMid meet")
-                    .attr("viewBox", "-35 -40 " + width + " " + height)
+                    .attr("viewBox", "-30 -35 " + width + " " + height)
                     .attr("width", width)
                     .attr("height", height);
 
@@ -1081,13 +1076,13 @@ function haiPlot() {
                 // Set up X axis Left
                 svg.append("g")
                     .attr("class", "axis-heatmap")
-                    .attr("transform", "translate(" + -10 + "," + -gridSize + ")")
+                    .attr("transform", "translate(" + -5 + "," + -gridSize + ")")
                     .call(HeatMapxAxisLeft);
 
                 // Set up X axis Top
                 svg.append("g")
                     .attr("class", "axis-heatmap")
-                    .attr("transform", "translate(" + -gridSize + "," + -10 + ")")
+                    .attr("transform", "translate(" + -gridSize + "," + -5 + ")")
                     .call(HeatMapxAxisTop);
 
                 // Define the div for the tooltip
@@ -1105,7 +1100,6 @@ function haiPlot() {
                 data = [].concat.apply([], ndata);
 
                 node = d3.selectAll(".node");
-
 
                 var cards = svg.selectAll(".hour")
                     .data(data);
@@ -1183,6 +1177,8 @@ $("#reach-modal").on("show.bs.modal", function (event) {
     var modalPad = parseInt($(window).innerHeight() * 0.10),
         width = parseInt($(window).innerWidth() - modalPad),
         h = parseInt($(window).innerHeight() - (modalPad * 2));
+
+    modal.find("#full-options").css("max-height", h)
 
     $(".modal-xl").attr("height", h);
     $(".modal-xl").attr("width", width);

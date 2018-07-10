@@ -498,7 +498,7 @@ function drawReach(filename) {
         factor = Math.abs((s[1] - s[0]) / width);
 
         if (Math.abs(s[1] - s[0]) < x3.invert(barWindow)) {
-            return;
+            return false;
         }
 
         let minFactor = (barWindow / barData.raw.length);
@@ -623,6 +623,9 @@ function drawReach(filename) {
         var delta = Math.abs(window[1] - window[0]);
         if (x3(delta) < barWindow) {
             window = [where[0], where[1]];
+            var d = (Math.abs(where[1] - where[0]) / 2) + where[0]
+            window = [where[0], where[1]];
+            window = [d - (delta / 2), d + (delta / 2)];
         }
         context.select(".brush").call(brush.move, window);
     }
