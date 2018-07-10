@@ -95,12 +95,12 @@ function settings() {
     var dLink = settingsDendrogram.find("#linkWidth");
 
     dNode.attr("min", 2).attr("max", 8).attr("step", 0.5).attr("value", nodeSize);
-    dNode.on("change", function () {
+    dNode.on("input", function () {
         d3.selectAll(".node").selectAll("circle").attr("r", this.value)
     })
 
     dLink.attr("min", 1).attr("max", 3).attr("value", 1).attr("step", 0.5)
-    dLink.on("change", function () {
+    dLink.on("input", function () {
         d3.selectAll(".link").style("stroke-width", this.value)
     })
 
@@ -211,14 +211,18 @@ function panelSize() {
 }
 
 
-panelH = panelSize();
+function sizing() {
+    panelH = panelSize();
 
-var panels = $(".panel");
-for (i = 0; i < panels.length; i++) {
-    panel = panels[i];
-    height = setWindow(panel);
+    var panels = $(".panel");
+    for (i = 0; i < panels.length; i++) {
+        panel = panels[i];
+        height = setWindow(panel);
 
+    }
 }
+
+
 
 function setWindow(container) {
     var panel = $(container),
@@ -237,6 +241,8 @@ function setWindow(container) {
     body.attr("height", newH);
 
 }
+
+sizing();
 
 
 function update() {
@@ -602,6 +608,9 @@ function dendrogram() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
         var t = d3.event.transform;
         x3.domain(t.rescaleX(x2).domain());
+
+        var scaling = ((Math.abs(x3.domain()[1] - x3.domain()[0]) / Math.abs(x2.domain()[1] - x2.domain()[0])) * 100).toFixed(2);
+        d3.select("#dendrogramZoom").select("#output").html(scaling + "%")
 
         svg.selectAll(".node").attr("transform", function (d) {
             return "translate(" + x3(d.x) + "," + yScaleInverted(d.data.y) + ")";

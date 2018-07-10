@@ -369,11 +369,20 @@ html {
     width: 48px;
     position: absolute;
     top: 10px;
-    left: 210px;
+    left: 170px;
 }
 
 .panel-clear-header {
     background: none !important;
+    outline: none !important;
+    border: none !important;
+}
+
+/* .panel {
+    border: rgba(9, 123, 68, 0.486) 1px solid;
+} */
+
+.no-border {
     outline: none !important;
     border: none !important;
 }

@@ -99,7 +99,7 @@ footer {
     left: 0;
     position: relative;
     float: right;
-    background-color: #f5f5fa;
+    background-color: #e0e0e0;
 }
 
 #wrapper #sidebar-nav,
@@ -127,7 +127,7 @@ footer {
 }
 
 .layout-fullwidth #wrapper .btn-toggle-fullwidth {
-    color: #00AAFF;
+    color: #097B43;
 }
 
 .offcanvas-active #wrapper .sidebar {
@@ -151,7 +151,7 @@ footer {
         left: 0 !important;
     }
     #wrapper .btn-toggle-fullwidth {
-        color: #00AAFF;
+        color: #097B43;
     }
     .btn-toggle-minified {
         display: none;
@@ -399,7 +399,7 @@ ul.notifications>li>.more:focus {
 .dropdown-menu .active>a,
 .dropdown-menu .active>a:focus,
 .dropdown-menu .active>a:hover {
-    background-color: #00AAFF;
+    background-color: #097B43;
 }
 
 .dropdown-menu>.disabled>a,
@@ -575,7 +575,7 @@ ul.notifications>li>.more:focus {
 
 .sidebar .nav>li>a[aria-expanded="true"],
 .sidebar .nav>li>a.active {
-    border-left-color: #00AAFF;
+    border-left-color: #097B43;
     background-color: #f9f9f9;
 }
 
@@ -688,7 +688,7 @@ ul.notifications>li>.more:focus {
 }
 
 .sidebar .submenu>li>a.active {
-    color: #00aaff;
+    color: #097B43;
 }
 
 .sidebar .submenu .submenu>li>a {
@@ -749,7 +749,7 @@ ul.notifications>li>.more:focus {
 
 .sidebar-minified .sidebar .nav li:hover>a,
 .sidebar-minified .sidebar .nav li:hover>a>.title {
-    color: #00AAFF;
+    color: #097B43;
     background-color: #f7f7f7;
 }
 
@@ -1520,7 +1520,7 @@ ul.activity-list>li .timestamp {
 .custom-tabs-line ul.nav-pills a:hover,
 .custom-tabs-line ul.nav-pills a:focus {
     color: #fff;
-    background-color: #00AAFF;
+    background-color: #097B43;
 }
 
 .custom-tabs-line.tabs-line-bottom {
@@ -1536,7 +1536,7 @@ ul.activity-list>li .timestamp {
 }
 
 .custom-tabs-line.tabs-line-bottom .active a {
-    border-bottom: 2px solid #00AAFF;
+    border-bottom: 2px solid #097B43;
 }
 
 .custom-tabs-line.left-aligned {

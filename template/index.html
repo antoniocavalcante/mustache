@@ -5,7 +5,6 @@
     <title>MustaCHE | Dashboard</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -19,7 +18,7 @@
     <link rel="stylesheet" href="assets/css/animate.css">
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/dashboard.css" />
     <link rel="stylesheet" href="assets/css/sidebar-nav-darkblue.css">
     <link rel="stylesheet" href="assets/css/loader.css" />
     <link rel="stylesheet" href="assets/css/range.css">
@@ -32,10 +31,6 @@
 
 
     <style>
-        /* p {
-            font-size: 12px;
-        } */
-
         .selection {
             border-radius: 10px;
         }
@@ -415,6 +410,20 @@
                         </a>
                         <div id="navHai" class="collapse ">
                             <ul class="submenu">
+                                <li>
+                                    <a>Enable:
+
+
+                                        <input type="radio" id="haiVisible">
+                                        <span class="ti-eye"></span>
+
+
+                                    </a>
+                                </li>
+
+
+
+
                             </ul>
                         </div>
                     </li>
@@ -464,23 +473,24 @@
 
                                     <div class="col-xs-2 pull-left">
                                         <div class="btn-group btn-group-xs dendo-method btn-group-justified" data-toggle="buttons">
-                                            <label class="btn btn-default active btn-xs">
-                                                <input type="radio" name="radio" value="fosc" checked title="FOSC">
+                                            <label class="btn btn-default active btn-xs" title="FOSC">
+                                                <input type="radio" name="radio" value="fosc" checked>
                                                 <span class="ti-wand"></span>
                                             </label>
-                                            <label class="btn btn-default btn-xs">
-                                                <input type="radio" name="radio" value="bar" title="Threshold">
+                                            <label class="btn btn-default btn-xs" title="Threshold">
+                                                <input type="radio" name="radio" value="bar">
                                                 <span class="ti-split-v"></span>
                                             </label>
-                                            <label class="btn btn-default btn-xs">
-                                                <input type="radio" name="radio" value="manual" title="Manual Selection">
+                                            <label class="btn btn-default btn-xs" title="Manual Selection">
+                                                <input type="radio" name="radio" value="manual">
                                                 <span class="ti-hand-point-up"></span>
                                             </label>
                                         </div>
+
                                     </div>
 
 
-                                    <div class="col-xs-2">
+                                    <div class="col-xs-2" id="dendrogramZoom">
 
                                         <div class="btn-group btn-group-xs btn-group-justified" data-toggle="buttons">
                                             <label class="btn btn-default btn-xs">
@@ -496,7 +506,7 @@
                                             </label>
                                             <label class="btn btn-default btn-xs disabled">
                                                 <button type="button" disabled>
-                                                    <span>100%</span>
+                                                    <span id="output">100%</span>
                                                 </button>
                                             </label>
                                         </div>
@@ -528,37 +538,6 @@
 
                                     </div>
                                 </div>
-                                <div class="panel-footer pad-t hidden">
-                                    <div class="row">
-
-                                        <form class="form-inline">
-
-                                            <!-- <div class="form-group col-sm-3">
-
-                                                <div class="btn-group dendo-method btn-group-justified" data-toggle="buttons">
-                                                    <label class="btn btn-default disabled">
-                                                        <input type="radio" name="radio" value="fosc" disabled> FOSC
-                                                    </label>
-                                                    <label class="btn btn-default active">
-                                                        <input type="radio" name="radio" value="bar" checked> Threshold
-                                                    </label>
-                                                    <label class="btn btn-default">
-                                                        <input type="radio" name="radio" value="manual"> Manual
-                                                    </label>
-                                                </div>
-
-                                            </div> -->
-                                            <div class="form-group">
-                                                <label data-inf="param" data-val="yAxes">
-                                                    <i class="fas fa-info-circle"></i>
-                                                </label>
-                                                <input type="range" name="" min="0.05" max="1.0" step="0.05" value="0.5">
-                                            </div>
-
-                                        </form>
-
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <!-- END DENDOGRAM -->
@@ -566,8 +545,8 @@
 
                     <div class="row pad-t" id="row-bottom">
                         <!-- START HAI-->
-                        <div class="col-xs-3 nopadding">
-                            <div class="panel panel-default nopadding grad" id="hai-panel">
+                        <div class="col-xs-3 nopadding" id="hai-panel">
+                            <div class="panel panel-default nopadding grad">
                                 <div class="panel-heading clearfix">
                                     <p class="pull-left">Hai Plot</p>
                                     <div class="right">
@@ -591,12 +570,12 @@
                         <!-- END HAI -->
 
                         <!-- START REACHABILLITY -->
-                        <div class="col-xs-9 nopadding pad-l">
-                            <div class="panel panel-default nopadding grad" id="reach-panel">
+                        <div class="col-xs-9 nopadding pad-l" id="reach-panel">
+                            <div class="panel panel-default nopadding grad">
                                 <div class="panel-heading clearfix">
                                     <p class="pull-left">Multiple Reachabillity Plots</p>
 
-                                    <div class="perpg btn-group pull-right nopadding-b">
+                                    <div class="perpg btn-group pull-right nopadding-b no-border">
                                         <select class="input-sm" id="reach-per-pg">
                                             <option>1</option>
                                             <option>2</option>
