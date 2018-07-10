@@ -82,12 +82,25 @@ $(".brand-logo").hover(function () {
     $(this).animateCss("swing");
 });
 
+w = $(window).width()
+h = $("html").height()
+h2 = $(".navbar").height()
+pdt = parseInt($(".main").css("padding-top")) - h2;
+mainMinH = $('.container-fluid').innerHeight();
+padding = 10;
+console.log("window", h);
+console.log("navbar", h2);
+console.log("panel-delta", pdt);
+console.log("middle-pad", padding);
+console.log("main min", mainMinH);
+
+calc = (h - h2 - pdt - padding - padding) / 2;
+
+console.log(calc);
+
 
 $(window).resize(function () {
-    w = $(window).width()
-    h = $(window).height()
-    w2 = $(document).width()
-    h2 = $(document).height()
-    console.log("window", w, h);
-    console.log("screen", w2, h2);
+
+    console.log("changing");
+
 });

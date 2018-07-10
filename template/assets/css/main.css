@@ -104,13 +104,13 @@ footer {
 
 #wrapper #sidebar-nav,
 #wrapper .main {
-    padding-top: 68px;
+    padding-top: 66px;
 }
 
 @media screen and (max-width: 767px) {
     #wrapper #sidebar-nav,
     #wrapper .main {
-        padding-top: 68px;
+        padding-top: 66px;
     }
 }
 

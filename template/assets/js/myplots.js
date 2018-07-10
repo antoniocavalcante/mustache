@@ -14,6 +14,12 @@ var fullYScale = 0.3;
 var HAicolorScale = d3.scaleSequential(globalColor);
 var MultiReachcolorScale = d3.scaleSequential(globalColor);
 
+
+// dendrogram settings
+var nodeSize = 2.5;
+var linkWidth = 1;
+
+
 var interpolators = [
     // These are from d3-scale.
     "Viridis",
@@ -82,6 +88,22 @@ function settings() {
         // multiple reachabillity
         update();
     })
+
+    var settingsDendrogram = $("#settingsDendrogram");
+    var dYScale = settingsDendrogram.find("#yScale");
+    var dNode = settingsDendrogram.find("#nodeSize");
+    var dLink = settingsDendrogram.find("#linkWidth");
+
+    dNode.attr("min", 2).attr("max", 8).attr("step", 0.5).attr("value", nodeSize);
+    dNode.on("change", function () {
+        d3.selectAll(".node").selectAll("circle").attr("r", this.value)
+    })
+
+    dLink.attr("min", 1).attr("max", 3).attr("value", 1).attr("step", 0.5)
+    dLink.on("change", function () {
+        d3.selectAll(".link").style("stroke-width", this.value)
+    })
+
 
 }
 
@@ -170,6 +192,20 @@ function panelSize() {
 
     panelH = (globalMainHeight / 2);
 
+    w = $(window).width()
+    h = $(document).height()
+    h2 = $(".navbar").height()
+    pdt = parseInt($(".main").css("padding-top")) - h2;
+    mainMinH = $('.container-fluid').innerHeight();
+    padding = 10;
+    console.log("window", h);
+    console.log("navbar", h2);
+    console.log("panel-delta", pdt);
+    console.log("middle-pad", padding);
+    console.log("main min", mainMinH);
+
+    panelH = (h - h2 - pdt - padding - padding) / 2;
+
     return panelH;
 
 }
@@ -195,7 +231,7 @@ function setWindow(container) {
     bodyH = body.outerHeight(true);
     panelW = panel.outerWidth(true);
 
-    newH = parseInt(panelH - bodyH - footerH - headerH - (10));
+    newH = parseInt(panelH - bodyH - footerH - headerH);
     console.log(newH, panelW);
     body.attr("width", panelW);
     body.attr("height", newH);
@@ -225,7 +261,7 @@ function update() {
         },
 
         width = $("#reach-panel").find(".panel-body").attr("width"),
-        height = $("#reach-panel").find(".panel-body").attr("height") - 10;
+        height = $("#reach-panel").find(".panel-body").attr("height");
 
     MultiReachcolorScale.domain([0, v.length]);
 
@@ -648,6 +684,7 @@ function dendrogram() {
             .data(nodes.slice(1))
             .enter().append("path")
             .attr("class", "link")
+            .style("stroke-width", linkWidth)
             .attr("d", elbow)
             .attr("stroke", "grey")
             .style("opacity", 0.3);
@@ -663,7 +700,7 @@ function dendrogram() {
 
         // Adds the shape of the nodes in the dendrogram.
         node.append("circle")
-            .attr("r", 2.5)
+            .attr("r", nodeSize)
             .attr("data-target", "#reach-modal")
             .attr("data-value", function (d) {
                 if (d.children == null) {
@@ -729,7 +766,7 @@ function dendrogram() {
 
             d3.select("#manualThresh").select("input").property("value", function () {
                 return (+currentValue).toFixed(8);
-            });
+            }).attr("step", (ymax / 100).toFixed(8));
 
             var clusters = {}
 
@@ -748,8 +785,6 @@ function dendrogram() {
             return clusters;
 
         }
-
-
 
         var drag = d3.drag()
             .on('drag', function (d) {
@@ -866,8 +901,6 @@ function dendrogram() {
 
             if (a.checked) {
 
-                a1 = Object.keys(clusters);
-
                 option = a.value;
 
                 if (option == 'bar') {
@@ -877,21 +910,11 @@ function dendrogram() {
                     thresholdBar.classed("hidden", false);
                     manualExtract(false);
 
-                    if (b1 == undefined) {
-                        b1 = a1;
-                    }
-
-                    var isEqual = (JSON.stringify(a1.sort()) === JSON.stringify(b1.sort()));
-
-                    // if (!isEqual) {
-
                     thresholdBar.each(function () {
                         value = lineScale.invert(d3.select(this).select("line").attr("y1"))
                         clusters = clusterThresholdExtraction(value);
                         shading(clusters);
                     });
-
-                    // }
 
                     update();
 
@@ -921,8 +944,6 @@ function dendrogram() {
 
                 }
 
-                b1 = Object.keys(clusters);
-
             }
 
         }
@@ -938,6 +959,19 @@ function dendrogram() {
         })
 
         update(clusters);
+
+        $("#manualThresh").find("input").on("change", function () {
+            var value = +this.value;
+            if (value > ymax) {
+                value = ymax;
+            } else if (value < ymin) {
+                value = ymin;
+            }
+            clusters = clusterThresholdExtraction(value);
+            thresholdBar.select("line").attr("y1", yScaleInverted(value)).attr("y2", yScaleInverted(value));
+            shading(clusters);
+            update();
+        })
 
     });
 
@@ -956,11 +990,11 @@ function haiPlot() {
     var width = parseInt($("#hai-panel").find(".panel-body").attr("width"));
     var height = parseInt($("#hai-panel").find(".panel-body").attr("height"));
 
-    if (width > height) {
-        width = height;
-    } else if (height > width) {
-        height = width;
-    }
+    // if (width > height) {
+    //     width = height;
+    // } else if (height > width) {
+    //     height = width;
+    // }
 
     var dataset = "data/data4.csv";
 

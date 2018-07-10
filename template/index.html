@@ -345,7 +345,7 @@
                             <strong>Anuran</strong>
                         </a>
                         <a class="disabled spec">
-                            <strong>Mpts: </strong> 50</a>
+                            <strong>Mpts: </strong> 98</a>
                         <a class="disabled spec">
                             <strong>Distance: </strong> Euclidean</a>
                         <a class="disabled spec">
@@ -382,12 +382,12 @@
                     </li>
                     <li class="menu-group">Panels</li>
                     <li class="panel">
-                        <a href="#navDendrogram" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
+                        <a href="#settingsDendrogram" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
                             <img src="assets/img/diagram.svg" class="side-icon" />
                             <span class="title">Dendrogram</span>
                             <i class="icon-submenu ti-angle-left"></i>
                         </a>
-                        <div id="navDendrogram" class="collapse ">
+                        <div id="settingsDendrogram" class="collapse ">
                             <ul class="submenu">
                                 <li>
                                     <a>Y Scale:
@@ -450,12 +450,12 @@
 
 
         <!-- MAIN -->
-        <div class="main pad-l pad-r">
+        <div class="main pad-l pad-r pad-b">
             <!-- MAIN CONTENT -->
             <div class="main-content">
                 <div class="container-fluid">
 
-                    <div class="row">
+                    <div class="row" id="row-top">
                         <!-- START DENDOGRAM -->
                         <div class="col-xs-12 nopadding">
                             <div class="panel panel-default nopadding grad" id="dendogram-panel">
@@ -464,17 +464,17 @@
 
                                     <div class="col-xs-2 pull-left">
                                         <div class="btn-group btn-group-xs dendo-method btn-group-justified" data-toggle="buttons">
-                                            <label class="btn btn-default btn-xs">
-                                                <input type="radio" name="radio" value="fosc">
-                                                <span class="ti-wand" title="FOSC"></span>
-                                            </label>
                                             <label class="btn btn-default active btn-xs">
-                                                <input type="radio" name="radio" value="bar" checked>
-                                                <span class="ti-split-v" title="Threshold"></span>
+                                                <input type="radio" name="radio" value="fosc" checked title="FOSC">
+                                                <span class="ti-wand"></span>
                                             </label>
                                             <label class="btn btn-default btn-xs">
-                                                <input type="radio" name="radio" value="manual">
-                                                <span class="ti-hand-point-up" title="Manual Selection"></span>
+                                                <input type="radio" name="radio" value="bar" title="Threshold">
+                                                <span class="ti-split-v"></span>
+                                            </label>
+                                            <label class="btn btn-default btn-xs">
+                                                <input type="radio" name="radio" value="manual" title="Manual Selection">
+                                                <span class="ti-hand-point-up"></span>
                                             </label>
                                         </div>
                                     </div>
@@ -507,7 +507,7 @@
                                     <div class="col-xs-2 pull-left">
                                         <div class="input-group input-group-sm" id="manualThresh">
                                             <span class="input-group-addon">Threshold</span>
-                                            <input class="form-control">
+                                            <input class="form-control" type="number">
                                         </div>
                                     </div>
 
@@ -564,7 +564,7 @@
                         <!-- END DENDOGRAM -->
                     </div>
 
-                    <div class="row pad-t">
+                    <div class="row pad-t" id="row-bottom">
                         <!-- START HAI-->
                         <div class="col-xs-3 nopadding">
                             <div class="panel panel-default nopadding grad" id="hai-panel">

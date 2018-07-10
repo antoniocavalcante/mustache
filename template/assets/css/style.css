@@ -189,6 +189,14 @@ html {
     padding-top: 10px;
 }
 
+.pad-b {
+    padding-bottom: 10px;
+}
+
+#row-top {
+    height: calc(50% - 55);
+}
+
 .side-logo {
     width: 80%;
     margin: 0 10%;
