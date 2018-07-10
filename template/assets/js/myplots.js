@@ -18,6 +18,10 @@ var MultiReachcolorScale = d3.scaleSequential(globalColor);
 // dendrogram settings
 var nodeSize = 2.5;
 var linkWidth = 1;
+var dendrogramExponent = 0.3;
+var dendrogramXScale;
+var yScaleInverted;
+var lineScale;
 
 
 var interpolators = [
@@ -88,22 +92,6 @@ function settings() {
         // multiple reachabillity
         update();
     })
-
-    var settingsDendrogram = $("#settingsDendrogram");
-    var dYScale = settingsDendrogram.find("#yScale");
-    var dNode = settingsDendrogram.find("#nodeSize");
-    var dLink = settingsDendrogram.find("#linkWidth");
-
-    dNode.attr("min", 2).attr("max", 8).attr("step", 0.5).attr("value", nodeSize);
-    dNode.on("input", function () {
-        d3.selectAll(".node").selectAll("circle").attr("r", this.value)
-    })
-
-    dLink.attr("min", 1).attr("max", 3).attr("value", 1).attr("step", 0.5)
-    dLink.on("input", function () {
-        d3.selectAll(".link").style("stroke-width", this.value)
-    })
-
 
 }
 
@@ -609,7 +597,7 @@ function dendrogram() {
         var t = d3.event.transform;
         x3.domain(t.rescaleX(x2).domain());
 
-        var scaling = ((Math.abs(x3.domain()[1] - x3.domain()[0]) / Math.abs(x2.domain()[1] - x2.domain()[0])) * 100).toFixed(2);
+        var scaling = ((Math.abs(x3.domain()[1] - x3.domain()[0]) / Math.abs(x2.domain()[1] - x2.domain()[0])) * 100).toFixed(0);
         d3.select("#dendrogramZoom").select("#output").html(scaling + "%")
 
         svg.selectAll(".node").attr("transform", function (d) {
@@ -675,12 +663,6 @@ function dendrogram() {
         lineMove = d3.scaleLinear().range([0, height - 60]).domain([0, height - 60]).clamp(true);
 
         var yAxis = d3.axisLeft().scale(this.yScaleInverted).ticks(5);
-        // var xAxis = d3.axisBottom().scale(this.xScale).tickValues([2, 100])
-
-        // svg.append("g")
-        //     .attr("class", "x axis")
-        //     .attr("transform", "translate(0," + (height - 60) + ")")
-        //     .call(xAxis);
 
         var loadLine = d3.select("#slider").property("value")
         if (typeof (loadLine) == 'float') {
@@ -899,7 +881,7 @@ function dendrogram() {
         // svg.append("rect").attr("width", 40).attr("height", height).style("fill", "white").attr("transform", "translate(" + (width - 60) + ",-15)");
 
         svg.append("g")
-            .attr("class", "y axis")
+            .attr("class", "yAxis")
             .attr("transform", "translate(0,0)")
             .call(yAxis);
 
@@ -982,6 +964,40 @@ function dendrogram() {
             update();
         })
 
+        var settingsDendrogram = $("#settingsDendrogram");
+        var dYScale = settingsDendrogram.find("#yScale");
+        var dNode = settingsDendrogram.find("#nodeSize");
+        var dLink = settingsDendrogram.find("#linkWidth");
+
+        dNode.attr("min", 2).attr("max", 8).attr("step", 0.5).attr("value", nodeSize);
+        dNode.on("input", function () {
+            d3.selectAll(".node").selectAll("circle").attr("r", this.value)
+        })
+
+        dLink.attr("min", 1).attr("max", 3).attr("value", 1).attr("step", 0.5)
+        dLink.on("input", function () {
+            d3.selectAll(".link").style("stroke-width", this.value)
+        })
+
+        dYScale.attr("min", 0.1).attr("max", 1).attr("step", 0.05).attr("value", dendrogramExponent)
+        dYScale.on("input", function () {
+            yScaleInverted.exponent(this.value);
+            lineScale.exponent(this.value);
+            svg.select(".yAxis").call(yAxis);
+
+            if ($('.dendo-method input[value=bar]').parent().hasClass("active")) {
+                clusters = clusterThresholdExtraction(lineScale.invert(svg.select("line").attr("y1")))
+                shading(clusters);
+            }
+
+            svg.selectAll(".node").attr("transform", function (d) {
+                return "translate(" + x3(d.x) + "," + yScaleInverted(d.data.y) + ")";
+            });
+
+            svg.selectAll(".link").attr("d", elbow);
+        })
+
+
     });
 
     // Transform this into a path
@@ -989,7 +1005,6 @@ function dendrogram() {
         return "M" + x3(d.parent.x) + "," + yScaleInverted(d.parent.data.y) +
             "H" + x3(d.x) + "V" + yScaleInverted(d.data.y);
     }
-
 }
 
 
