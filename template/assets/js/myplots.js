@@ -1,5 +1,10 @@
 //globals
 
+var folderRoot = "data/",
+    project = "articles"
+metaHiearchyFile = "",
+    HAIPlotFile = "";
+
 var globalColor = d3.interpolateViridis,
     clusters = {},
     charts = [],
@@ -63,8 +68,15 @@ var interpolators = [
 var floor = Math.floor,
     abs = Math.abs;
 
-d3.text("data/ra/ids", function (data) {
+d3.text(folderRoot + project + "/" + "ids", function (data) {
     ids = d3.csvParseRows(data);
+})
+
+d3.text(folderRoot + project + "/" + "FOSC", function (data) {
+    raw = d3.csvParseRows(data)[0];
+    fosc = raw.map(function (d) {
+        return parseInt(d);
+    })
 })
 
 function settings() {
@@ -308,7 +320,7 @@ function update() {
             return "chart_" + d;
         })
         .text(function (d, i) {
-            d3.text("data/anuran_mustache/" + d + "RNG_anuran.lr", function (d2) {
+            d3.text(folderRoot + project + "/" + "visualization/" + d + "RNG_" + project + ".lr", function (d2) {
                 $('#chart_' + d).hide();
                 reachCharts[d] = createChart(d2, u, i, d);
                 $('#chart_' + d).show("fast");
@@ -352,7 +364,7 @@ function update() {
         var rows = d3.csvParseRows(data);
 
         var chart = new Chart({
-            data: rows[1].map(function (d) {
+            data: rows[2].map(function (d) {
                 return +d;
             }),
             id: id,
@@ -643,7 +655,7 @@ function dendrogram() {
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-    var data = d3.json("data/anuran2.json", function (json) {
+    var data = d3.json(folderRoot + project + "/" + project + "_meta-hierarchy_.json", function (json) {
         var root = d3.hierarchy(json);
 
         clusterLayout(root);
@@ -1035,7 +1047,7 @@ function haiPlot() {
     var height = parseInt($("#reach-panel").find(".panel-body").attr("height"));
 
 
-    var dataset = "data/data4.csv";
+    var dataset = folderRoot + project + "/" + project + "_HAI_tree.out";
 
     var heatmapChart = function (file) {
         d3.text(file,

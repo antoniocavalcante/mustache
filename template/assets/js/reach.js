@@ -10,7 +10,7 @@ function drawReach(filename) {
     var barColoring;
     var globalColor = d3.interpolateRainbow;
     var colorScale = d3.scaleSequential(globalColor);
-    var file = "data/ra/" + filename + "RNG_anuran.lr"
+    var file = folderRoot + project + "/" + "visualization/" + filename + "RNG_" + project + ".lr"
     var barWindow;
     var statElements = $("*").filter(function () {
         return $(this).data("inf") == "stats";
@@ -63,7 +63,7 @@ function drawReach(filename) {
             selection = d3.select(this).select("a").html();
 
             filename = selection;
-            file = "data/ra/" + filename + "RNG_anuran.lr"
+            file = folderRoot + project + "/" + "visualization/" + filename + "RNG_" + project + ".lr"
 
             update();
         })
@@ -76,7 +76,7 @@ function drawReach(filename) {
                 if (+d.data.label == selection) {
 
                     filename = selection;
-                    file = "data/ra/" + filename + "RNG_anuran.lr"
+                    file = folderRoot + project + "/" + "visualization/" + filename + "RNG_" + project + ".lr"
 
                     update()
                 };
@@ -239,22 +239,26 @@ function drawReach(filename) {
                 values = region.selectAll(".tip-values").data([i]);
                 data = region.selectAll(".tip-data").data([i]);
 
-                values.each(function () {
-                    vals = d3.select(this).selectAll("span").data(ids[j]);
+                if (ids != null) {
 
-                    vals.enter().append("span").attr("class", "tip-text").html(function (d) {
-                        return d;
-                    }).append("br");
+                    values.each(function () {
+                        vals = d3.select(this).selectAll("span").data(ids[j]);
 
-                    vals.html(function (d) {
-                        return d;
-                    }).append("br");
+                        vals.enter().append("span").attr("class", "tip-text").html(function (d) {
+                            return d;
+                        }).append("br");
 
-                    vals.exit().remove();
+                        vals.html(function (d) {
+                            return d;
+                        }).append("br");
 
-                })
+                        vals.exit().remove();
 
-                values.exit().remove();
+                    })
+
+                    values.exit().remove();
+
+                }
 
                 data.each(function () {
                     vals = d3.select(this).selectAll("h5").data([{
@@ -390,7 +394,10 @@ function drawReach(filename) {
             focus.append("g")
                 .attr("class", "axis axis--y");
 
-            var sampled = largestTriangleThreeBuckets(barData.chr, width);
+            var sampled = barData.chr;
+            if (barData.raw.length > width) {
+                sampled = largestTriangleThreeBuckets(barData.chr, width);
+            }
 
             context.selectAll("#area-gradient").remove();
 
@@ -404,7 +411,11 @@ function drawReach(filename) {
                 .data(sampled)
                 .enter().append("stop")
                 .attr("offset", function (d, i) {
-                    return ((i / (width)) * 100) + "%";
+
+                    if (barData.raw.length > width) {
+                        return ((i / (width)) * 100) + "%";
+                    }
+                    return ((i / (barData.raw.length)) * 100) + "%";
                 })
                 .attr("stop-color", function (d) {
                     var b = barData.color[d[1]]
@@ -622,10 +633,10 @@ function drawReach(filename) {
         var window = x2.range().map(t.invertX, t);
         var delta = Math.abs(window[1] - window[0]);
         if (x3(delta) < barWindow) {
+            // window = [where[0], where[1]];
+            // var d = (Math.abs(where[1] - where[0]) / 2) + where[0]
             window = [where[0], where[1]];
-            var d = (Math.abs(where[1] - where[0]) / 2) + where[0]
-            window = [where[0], where[1]];
-            window = [d - (delta / 2), d + (delta / 2)];
+            // window = [d - (delta / 2), d + (delta / 2)];
         }
         context.select(".brush").call(brush.move, window);
     }
