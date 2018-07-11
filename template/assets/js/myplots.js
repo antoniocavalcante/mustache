@@ -23,6 +23,10 @@ var dendrogramXScale;
 var yScaleInverted;
 var lineScale;
 
+// reachabillity settings 
+var reachExponent = 0.5;
+var reachCharts = {};
+
 
 var interpolators = [
     // These are from d3-scale.
@@ -92,6 +96,26 @@ function settings() {
         // multiple reachabillity
         update();
     })
+
+    var reachSettings = $("#settingsReach");
+    var reachYScale = reachSettings.find("#yScale");
+    reachYScale.attr("min", 0.05).attr("max", 1).attr("step", 0.05).attr("value", reachExponent);
+    reachYScale.on("input", function () {
+        var reachExponent = this.value;
+        Object.keys(reachCharts).forEach(function (key) {
+            var chart = reachCharts[key];
+            var y = chart.yScale;
+            var container = chart.chartContainer;
+            y.exponent(reachExponent)
+            var area = chart.area
+                .y1(function (d) {
+                    return y(d[1]);
+                });
+            container.select("path").data([chart.data]).attr("d", area);
+            container.select(".yAxis").call(chart.yAxis);
+
+        })
+    });
 
 }
 
@@ -186,12 +210,6 @@ function panelSize() {
     pdt = parseInt($(".main").css("padding-top")) - h2;
     mainMinH = $('.container-fluid').innerHeight();
     padding = 10;
-    console.log("window", h);
-    console.log("navbar", h2);
-    console.log("panel-delta", pdt);
-    console.log("middle-pad", padding);
-    console.log("main min", mainMinH);
-
     panelH = (h - h2 - pdt - padding - padding) / 2;
 
     return panelH;
@@ -292,7 +310,7 @@ function update() {
         .text(function (d, i) {
             d3.text("data/anuran_mustache/" + d + "RNG_anuran.lr", function (d2) {
                 $('#chart_' + d).hide();
-                createChart(d2, u, i, d);
+                reachCharts[d] = createChart(d2, u, i, d);
                 $('#chart_' + d).show("fast");
             });
         });
@@ -333,7 +351,7 @@ function update() {
 
         var rows = d3.csvParseRows(data);
 
-        new Chart({
+        var chart = new Chart({
             data: rows[1].map(function (d) {
                 return +d;
             }),
@@ -346,6 +364,8 @@ function update() {
             container: cont,
             color: 1
         });
+
+        return chart;
 
     }
 
@@ -407,14 +427,14 @@ function update() {
         //     .range([chartYScale, 0])
         //     .domain([0, d3.max(this.chartData)]);
 
-        this.yScale = d3.scalePow().exponent(0.3)
+        this.yScale = d3.scalePow().exponent(reachExponent)
             .range([chartYScale, 0])
             .domain([0, d3.max(this.chartData)]);
 
         var xS = this.xScale;
         var yS = this.yScale;
 
-        this.data = largestTriangleThreeBuckets(chr, Math.floor(chartXScale / 2));
+        this.data = largestTriangleThreeBuckets(chr, Math.floor(chartXScale));
         this.height = chartYScale;
         this.width = chartXScale;
 
@@ -448,7 +468,7 @@ function update() {
         this.yAxis = d3.axisLeft().scale(this.yScale).ticks(5);
 
         this.chartContainer.append("g")
-            .attr("class", "y axis")
+            .attr("class", "yAxis")
             .attr("transform", "translate(-3,0)")
             .call(this.yAxis);
 
