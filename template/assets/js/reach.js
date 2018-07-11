@@ -233,7 +233,9 @@ function drawReach(filename) {
         d3.selectAll(".bar").each(function (d, i) {
 
             if (i == sel) {
-                j = barData.mapping.indexOf(String(d[1]));
+
+                j = barData.mapping.indexOf((d[1]).toString());
+                j = barData.mapping[+d[1]];
 
                 region = d3.select(".tooltip-region")
                 values = region.selectAll(".tip-values").data([i]);
