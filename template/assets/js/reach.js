@@ -234,7 +234,6 @@ function drawReach(filename) {
 
             if (i == sel) {
 
-                j = barData.mapping.indexOf((d[1]).toString());
                 j = barData.mapping[+d[1]];
 
                 region = d3.select(".tooltip-region")
@@ -401,6 +400,8 @@ function drawReach(filename) {
                 sampled = largestTriangleThreeBuckets(barData.chr, width);
             }
 
+            zoom.scaleExtent([1, sampled.length / barWindow])
+
             context.selectAll("#area-gradient").remove();
 
             // set the gradient
@@ -490,13 +491,12 @@ function drawReach(filename) {
             }
         }
 
-        $("#full-domain-in").find("span").html(Math.max(0, start.toFixed(0)))
-        $("#full-domain-out").find("span").html(Math.max(0, end.toFixed(0)))
+        // $("#full-domain-in").find("span").html(Math.max(0, start.toFixed(0)))
+        // $("#full-domain-out").find("span").html(Math.max(0, end.toFixed(0)))
 
     }
 
     var where;
-
 
     function brushed() {
 
@@ -510,19 +510,7 @@ function drawReach(filename) {
         var s = d3.event.selection;
         factor = Math.abs((s[1] - s[0]) / width);
 
-        if (Math.abs(s[1] - s[0]) < x3.invert(barWindow)) {
-            return false;
-        }
-
-        let minFactor = (barWindow / barData.raw.length);
-
         selected = s.map(x2.invert);
-        where = s;
-
-        if (factor < minFactor) {
-            factor = minFactor;
-
-        }
 
         x3.domain([0, barWindow]);
         Swindow = s.map(x3.invert);
@@ -633,13 +621,7 @@ function drawReach(filename) {
         var t = d3.event.transform;
         x2.domain(t.rescaleX(x2).domain());
         var window = x2.range().map(t.invertX, t);
-        var delta = Math.abs(window[1] - window[0]);
-        if (x3(delta) < barWindow) {
-            // window = [where[0], where[1]];
-            // var d = (Math.abs(where[1] - where[0]) / 2) + where[0]
-            window = [where[0], where[1]];
-            // window = [d - (delta / 2), d + (delta / 2)];
-        }
+        where = window;
         context.select(".brush").call(brush.move, window);
     }
 

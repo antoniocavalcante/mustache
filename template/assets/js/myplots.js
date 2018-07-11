@@ -608,7 +608,7 @@ function dendrogram() {
         });
 
     var zoom = d3.zoom()
-        .scaleExtent([1, Infinity])
+        .scaleExtent([1, 100])
         .translateExtent([
             [0, 0],
             [width, height]
