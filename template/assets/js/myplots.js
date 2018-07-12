@@ -30,7 +30,7 @@ var yScaleInverted;
 var lineScale;
 
 // reachabillity settings 
-var reachExponent = 0.5;
+var reachExponent = 1.0;
 var reachCharts = {};
 
 
@@ -532,17 +532,105 @@ function update() {
         //     text.transition().duration(100).style("font-size", 15);
         // })
 
+        var clustersCopy;
+
+        function highlightTree(chart) {
+            clustersCopy = clusters;
+            Object.keys(clusters).forEach(function (key) {
+                var x = clusters[key].data.medoid == chart.attr("val")
+                if (x) {
+                    clusters = {}
+                    clusters[key] = clustersCopy[key];
+                    highlightShading(clusters, medoids[chart.attr("val")], clustersCopy);
+                }
+            })
+
+        }
+
         d3.selectAll(".no-link").selectAll("svg").on("mouseover", function () {
             var chart = d3.select(this).select("path");
-            chart.transition().duration(100).attr("fill", d3.color(MultiReachcolorScale(medoids[chart.attr("val")])).brighter(1))
+            chart.attr("fill", d3.color(MultiReachcolorScale(medoids[chart.attr("val")])).brighter(1))
+            highlightTree(chart);
         }).on("mouseout", function () {
             var chart = d3.select(this).select("path");
-            chart.transition().duration(100).attr("fill", MultiReachcolorScale(medoids[chart.attr("val")]))
+            clusters = clustersCopy;
+            chart.attr("fill", MultiReachcolorScale(medoids[chart.attr("val")]))
+            shading(clusters)
         })
 
     }
 
 }
+
+function highlightShading(clusters, counter, clustersCopy) {
+
+    var colorScale = d3.scaleSequential(globalColor);
+
+    var colouring = {};
+
+    Object.keys(clusters).forEach(function (key) {
+        try {
+            childs = clusters[key].descendants();
+            for (y = 0; y < childs.length; y++) {
+                colouring[childs[y].data.name] = counter + 1;
+            }
+            clusters[key].data['color'] = counter;
+        } catch (error) {}
+        counter++;
+    });
+
+    // adjust color scale to match number of selection
+    colorScale.domain([1, Object.keys(clustersCopy).length + 1]);
+
+    node = d3.selectAll(".node");
+    link = d3.selectAll(".link");
+
+    // fill node circles with color
+    node
+        .attr("fill", function (d, i) {
+            val = colouring[d.data.name];
+
+            if (val) {
+                return colorScale(val);
+            }
+            return "grey"
+
+        }).style("opacity", function (d, i) {
+            val = colouring[d.data.name];
+            if (val) {
+                return 1;
+            }
+            return 0.3
+        });
+
+    // change node link colors
+    link
+        .attr("stroke", function (d, i) {
+
+            if (clusters[d.data.name]) {
+                return "grey";
+            }
+
+            val = colouring[d.data.name];
+            if (val) {
+                return colorScale(val);
+            }
+            return "grey";
+        }).style("opacity", function (d, i) {
+
+            if (clusters[d.data.name]) {
+                return 0.3;
+            }
+
+            val = colouring[d.data.name];
+            if (val) {
+                return 1;
+            }
+            return 0.3
+        });
+
+}
+
 
 
 function shading(clusters) {
@@ -554,11 +642,13 @@ function shading(clusters) {
     // label nodes with the color colors
     counter = 1;
     Object.keys(clusters).forEach(function (key) {
-        childs = clusters[key].descendants();
-        for (y = 0; y < childs.length; y++) {
-            colouring[childs[y].data.name] = counter;
-        }
-        clusters[key].data['color'] = counter;
+        try {
+            childs = clusters[key].descendants();
+            for (y = 0; y < childs.length; y++) {
+                colouring[childs[y].data.name] = counter;
+            }
+            clusters[key].data['color'] = counter;
+        } catch (error) {}
         counter++;
     });
 
