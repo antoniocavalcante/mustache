@@ -333,11 +333,13 @@ function drawReach(filename) {
     function settingsFull() {
         settings = d3.select("#full-settings");
 
+
+        minBarWidth = Math.ceil(width / barData.raw.length);
         settings.select("#full-bar-width").on("input", function () {
             barWidth = +this.value;
             d3.selectAll(".bar").remove();
             update();
-        })
+        }).attr("min", minBarWidth);
 
         settings.select("#full-y-scale").on("input", function () {
             fullYScale = +this.value;
@@ -390,9 +392,7 @@ function drawReach(filename) {
                 });
 
             barWindow = (width / barWidth);
-            if (barWindow < barData.raw.length) {
 
-            }
 
             xtip.range([0, barWindow]);
 
