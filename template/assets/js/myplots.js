@@ -6,6 +6,7 @@ metaHiearchyFile = "",
     HAIPlotFile = "";
 
 var globalColor = d3.interpolateViridis,
+    haiColor = d3.interpolateBuPu,
     clusters = {},
     charts = [],
     medoids = {},
@@ -16,7 +17,7 @@ var globalColor = d3.interpolateViridis,
 var barWidth = 6;
 var barPadding = 1.5;
 var fullYScale = 0.3;
-var HAicolorScale = d3.scaleSequential(globalColor);
+var HAicolorScale = d3.scaleSequential(haiColor);
 var MultiReachcolorScale = d3.scaleSequential(globalColor);
 
 
@@ -45,24 +46,28 @@ var interpolators = [
     "CubehelixDefault"
 ];
 
-// "Blues",
-// "Greens",
-// "Greys",
-// "Oranges",
-// "Purples",
-// "Reds",
-// "BuGn",
-// "BuPu",
-// "GnBu",
-// "OrRd",
-// "PuBuGn",
-// "PuBu",
-// "PuRd",
-// "RdPu",
-// "YlGnBu",
-// "YlGn",
-// "YlOrBr",
-// "YlOrRd"
+var monoInterpolators = [
+
+    "Blues",
+    "Greens",
+    "Greys",
+    "Oranges",
+    "Purples",
+    "Reds",
+    "BuGn",
+    "BuPu",
+    "GnBu",
+    "OrRd",
+    "PuBuGn",
+    "PuBu",
+    "PuRd",
+    "RdPu",
+    "YlGnBu",
+    "YlGn",
+    "YlOrBr",
+    "YlOrRd"
+
+];
 
 
 var floor = Math.floor,
@@ -93,13 +98,13 @@ function settings() {
     colorTheme.on("change", function () {
         globalColor = d3.scaleSequential(d3["interpolate" + this.value])
 
-        // hai plot
-        var last = HAicolorScale.domain();
-        HAicolorScale = d3.scaleSequential(globalColor).domain(last)
-        var cards = d3.select("#hai-plot").selectAll("rect")
-        cards.transition().duration(500).style("fill", function (d, i) {
-            return HAicolorScale(+d[0]);
-        })
+        // // hai plot
+        // var last = HAicolorScale.domain();
+        // HAicolorScale = d3.scaleSequential(globalColor).domain(last.invert())
+        // var cards = d3.select("#hai-plot").selectAll("rect")
+        // cards.style("fill", function (d, i) {
+        //     return HAicolorScale(+d[0]);
+        // })
 
         // dendrogram
         MultiReachcolorScale = d3.scaleSequential(globalColor);
@@ -128,6 +133,34 @@ function settings() {
 
         })
     });
+
+    var haiSettings = $("#settingsHai");
+    var haiColorTheme = haiSettings.find("#colorTheme").find("select");
+    var haiInvert = haiSettings.find("#haiInvert");
+    $.each(monoInterpolators, function (i, item) {
+        haiColorTheme.append($('<option>', {
+            value: monoInterpolators[i],
+            text: monoInterpolators[i]
+        }));
+    });
+    haiColorTheme.on("change", function () {
+        haiColor = d3.scaleSequential(d3["interpolate" + this.value]);
+        var last = HAicolorScale.domain();
+        HAicolorScale = d3.scaleSequential(haiColor).domain(last)
+        var cards = d3.select("#hai-plot").selectAll("rect")
+        cards.style("fill", function (d, i) {
+            return HAicolorScale(+d[0]);
+        })
+    })
+    haiInvert.click(function () {
+        var last = HAicolorScale.domain();
+        last = last.reverse();
+        HAicolorScale = d3.scaleSequential(haiColor).domain(last)
+        var cards = d3.select("#hai-plot").selectAll("rect")
+        cards.style("fill", function (d, i) {
+            return HAicolorScale(+d[0]);
+        })
+    })
 
 }
 
@@ -1083,6 +1116,10 @@ function haiPlot() {
                 }
 
                 HAicolorScale.domain([minValue, maxValue]);
+                var inverted = $("#settingsHai").find("#haiInvert");
+                if (inverted.prop("checked")) {
+                    HAicolorScale.domain([maxValue, minValue]);
+                }
 
                 var svg = d3.select("#hai-plot").append("svg")
                     .attr("preserveAspectRatio", "xMidYMid meet")
