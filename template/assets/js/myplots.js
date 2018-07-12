@@ -1027,6 +1027,8 @@ function dendrogram() {
             });
 
             svg.selectAll(".link").attr("d", elbow);
+        }).on("change", function () {
+            update();
         })
 
 

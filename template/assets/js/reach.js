@@ -55,7 +55,7 @@ function drawReach(filename) {
                     .html(label);
             }
             if (label in medoids) {
-                item.classed("bg-success", "true")
+                item.classed("bg-primary", "true")
                 item.select("a").style("color", "white")
             }
         })
