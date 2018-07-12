@@ -150,7 +150,7 @@ function drawReach(filename) {
         x5 = d3.scaleLinear().range([0, width]),
         y = d3.scaleLinear().range([height, 0]),
         y2 = d3.scaleLinear().range([height2, 0]),
-        xtip = d3.scaleLinear().domain([0, width]);
+        xtip = d3.scaleLinear().domain([0, width]).clamp(true);
 
 
     var xAxis = d3.axisBottom(x).ticks(0),
@@ -216,7 +216,7 @@ function drawReach(filename) {
             .attr("y2", y + margin.top)
             .attr("class", "crosshair2")
 
-        if (highlighted) {
+        if (highlighted != null) {
             sel = highlighted;
             var x = xtip.invert(sel) + margin.left + (barWidth / 2) + barPadding - (2 / 2);
             crosshair.attr("x1", x)
@@ -303,6 +303,8 @@ function drawReach(filename) {
 
     }
 
+    var crossPos;
+
     svg.append("rect")
         .attr("class", "zoom")
         .attr("width", width)
@@ -322,6 +324,7 @@ function drawReach(filename) {
 
         }).on("click", function () {
             v = d3.mouse(this);
+            crossPos = v[0];
             highlighted = Math.floor(xtip(v[0]));
             highlight(v)
         }).on("contextmenu", function () {
@@ -329,6 +332,33 @@ function drawReach(filename) {
             highlighted = null;
             highlight(v)
         })
+
+    function move(x) {
+        if (highlighted != null) {
+            var n = (x * ((barPadding * 2) + (barWidth / 2)))
+            crossPos = crossPos + n;
+            if (crossPos <= 0) {
+                crossPos = 0;
+            }
+            if (crossPos > width) {
+                crossPos = width;
+            }
+            highlighted = Math.floor(xtip(crossPos))
+            if (highlighted > xtip.range()[1] - 1) return;
+            highlight([crossPos, 0]);
+        }
+
+    }
+
+    d3.select("body").on("keydown", function () {
+        var key = d3.event.keyCode;
+        if (key == 37) {
+            move(-1);
+        } else if (key == 39) {
+            move(1)
+        }
+    })
+
 
     function settingsFull() {
         settings = d3.select("#full-settings");

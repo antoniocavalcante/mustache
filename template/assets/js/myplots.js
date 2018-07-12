@@ -1122,7 +1122,7 @@ function haiPlot() {
                 }
 
                 var svg = d3.select("#hai-plot").append("svg")
-                    .attr("preserveAspectRatio", "xMidYMid meet")
+                    .attr("preserveAspectRatio", "xMidYMid Slice")
                     .attr("viewBox", "-30 -35 " + width + " " + height)
                     .attr("width", width)
                     .attr("height", height);
