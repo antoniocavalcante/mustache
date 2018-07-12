@@ -531,9 +531,6 @@ function drawReach(filename) {
             }
         }
 
-        // $("#full-domain-in").find("span").html(Math.max(0, start.toFixed(0)))
-        // $("#full-domain-out").find("span").html(Math.max(0, end.toFixed(0)))
-
     }
 
     function brushed() {
