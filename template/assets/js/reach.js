@@ -334,12 +334,12 @@ function drawReach(filename) {
         settings = d3.select("#full-settings");
 
 
-        minBarWidth = Math.ceil(width / barData.raw.length);
+        var minBarWidth = Math.ceil(width / barData.raw.length);
         settings.select("#full-bar-width").on("input", function () {
             barWidth = +this.value;
             d3.selectAll(".bar").remove();
             update();
-        }).attr("min", minBarWidth);
+        });
 
         settings.select("#full-y-scale").on("input", function () {
             fullYScale = +this.value;
@@ -391,8 +391,14 @@ function drawReach(filename) {
                     return y4(+d[0]);
                 });
 
-            barWindow = (width / barWidth);
+            var minBarWidth = Math.ceil(width / barData.raw.length);
+            if (barWidth < minBarWidth) {
+                barWidth = minBarWidth + 1;
+                d3.select("#full-settings").select("#full-bar-width").attr("value", barWidth)
+                d3.select("#full-settings").select("#full-bar-width").attr("min", minBarWidth)
+            }
 
+            barWindow = Math.floor(width / barWidth);
 
             xtip.range([0, barWindow]);
 
