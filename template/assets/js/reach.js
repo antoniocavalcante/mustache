@@ -7,6 +7,7 @@ function drawReach(filename) {
     barData.color;
     barData.mapping;
     var bars;
+    var where = [0, 0]
     var barColoring;
     var globalColor = d3.interpolateRainbow;
     var colorScale = d3.scaleSequential(globalColor);
@@ -332,13 +333,13 @@ function drawReach(filename) {
     function settingsFull() {
         settings = d3.select("#full-settings");
 
-        settings.select("#full-bar-width").on("change", function () {
+        settings.select("#full-bar-width").on("input", function () {
             barWidth = +this.value;
             d3.selectAll(".bar").remove();
             update();
         })
 
-        settings.select("#full-y-scale").on("change", function () {
+        settings.select("#full-y-scale").on("input", function () {
             fullYScale = +this.value;
             y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
             mini = context.selectAll(".area")
@@ -389,6 +390,9 @@ function drawReach(filename) {
                 });
 
             barWindow = (width / barWidth);
+            if (barWindow < barData.raw.length) {
+
+            }
 
             xtip.range([0, barWindow]);
 
@@ -495,8 +499,6 @@ function drawReach(filename) {
         // $("#full-domain-out").find("span").html(Math.max(0, end.toFixed(0)))
 
     }
-
-    var where;
 
     function brushed() {
 
