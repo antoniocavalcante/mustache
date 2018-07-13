@@ -1,8 +1,11 @@
 //globals
 
+try {
+    project = "anuran"
+} catch (error) {}
+
 var folderRoot = "data/",
-    project = "articles"
-metaHiearchyFile = "",
+    metaHiearchyFile = "",
     HAIPlotFile = "";
 
 var globalColor = d3.interpolateViridis,
@@ -84,6 +87,8 @@ d3.text(folderRoot + project + "/" + "FOSC", function (data) {
     })
 })
 
+$("#projectTitle").text(project)
+
 function settings() {
 
     var globalSettings = $("#globalSettings");
@@ -118,7 +123,7 @@ function settings() {
     var reachYScale = reachSettings.find("#yScale");
     reachYScale.attr("min", 0.05).attr("max", 1).attr("step", 0.05).attr("value", reachExponent);
     reachYScale.on("input", function () {
-        var reachExponent = this.value;
+        reachExponent = this.value;
         Object.keys(reachCharts).forEach(function (key) {
             var chart = reachCharts[key];
             var y = chart.yScale;
@@ -130,7 +135,6 @@ function settings() {
                 });
             container.select("path").data([chart.data]).attr("d", area);
             container.select(".yAxis").call(chart.yAxis);
-
         })
     });
 

@@ -440,7 +440,7 @@ function drawReach(filename) {
                 sampled = largestTriangleThreeBuckets(barData.chr, width);
             }
 
-            zoom.scaleExtent([1, sampled.length / barWindow])
+            zoom.scaleExtent([1, barData.raw.length / barWindow])
 
             context.selectAll("#area-gradient").remove();
 
