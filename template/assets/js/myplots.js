@@ -1356,7 +1356,7 @@ $("#reach-modal").on("show.bs.modal", function (event) {
 });
 
 $('#reach-modal').on('hidden.bs.modal', function () {
-    d3.select("#full-reach").select("svg").remove();
+    d3.select("#full-reach").selectAll("svg").remove();
 })
 
 

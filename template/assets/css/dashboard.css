@@ -483,8 +483,8 @@ html {
 .tip-values {}
 
 .scroller {
-    overflow-y: scroll;
-    overflow-x: hidden;
+    /* overflow-y: scroll;
+    overflow-x: hidden; */
 }
 
 .cap {
@@ -527,4 +527,10 @@ html {
 
 #colorTheme {
     vertical-align: top;
+}
+
+#full-context {
+    overflow-x: scroll;
+    top: 3px;
+    bottom: auto;
 }
