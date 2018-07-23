@@ -415,14 +415,17 @@ function drawReach(filename) {
                 return i;
             }));
 
-            // x3.range([0, barData.raw.length])
+            var minBarWidth = 1;
+            if (barData.raw.length < width) {
+                var miniBarWidth = Math.ceil(width / barData.raw.length)
+            }
 
-            x4 = d3.scaleLinear().range([0, barData.raw.length]);
-            svg2.attr("width", barData.raw.length + 10);
-            x6.range([0, barData.raw.length]).domain(x2.domain());
+            x4 = d3.scaleLinear().range([0, barData.raw.length * miniBarWidth]);
+            svg2.attr("width", (barData.raw.length * miniBarWidth) + 10);
+            x6.range([0, barData.raw.length * minBarWidth]).domain(x2.domain());
             brush.extent([
                 [0, 0],
-                [barData.raw.length, height2]
+                [barData.raw.length * miniBarWidth, height2]
             ])
 
             y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
@@ -495,7 +498,7 @@ function drawReach(filename) {
                 });
 
             mini.attr("x", function (d, i) {
-                    return x4(i) + barPadding;
+                    return x4(i);
                 })
                 // .transition().duration(250)
                 .attr("y", function (d) {
@@ -517,11 +520,11 @@ function drawReach(filename) {
                     return colorScale(barColoring[b]);
                 })
                 .attr("x", function (d, i) {
-                    return x4(i) + barPadding;
+                    return x4(i);
                 })
                 .attr("y", function (d) {
                     return height2;
-                }).attr("width", 1)
+                }).attr("width", minBarWidth)
                 // .transition().duration(250)
                 .attr("y", function (d) {
                     return y4(+d[0]);
