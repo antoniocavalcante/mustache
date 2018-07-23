@@ -415,17 +415,17 @@ function drawReach(filename) {
                 return i;
             }));
 
-            var minBarWidth = 1;
+            var miniBarWidth = 1;
             if (barData.raw.length < width) {
                 var miniBarWidth = Math.ceil(width / barData.raw.length)
             }
 
             x4 = d3.scaleLinear().range([0, barData.raw.length * miniBarWidth]);
             svg2.attr("width", (barData.raw.length * miniBarWidth) + 10);
-            x6.range([0, barData.raw.length * minBarWidth]).domain(x2.domain());
+            x6.range([0, 800]).domain(x2.domain());
             brush.extent([
                 [0, 0],
-                [barData.raw.length * miniBarWidth, height2]
+                [800, height2]
             ])
 
             y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);

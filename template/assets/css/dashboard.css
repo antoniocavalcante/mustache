@@ -438,6 +438,10 @@ html {
     pointer-events: none;
 }
 
+.tip-text {
+    font-size: 18px;
+}
+
 .scrollable-menu {
     height: auto;
     max-height: 400px;
