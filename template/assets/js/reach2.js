@@ -415,17 +415,18 @@ function drawReach(filename) {
                 return i;
             }));
 
+            var mWidth = parseInt($(".modal-xl").attr("width"));
             var miniBarWidth = 1;
-            if (barData.raw.length < width) {
-                var miniBarWidth = Math.ceil(width / barData.raw.length)
+            if (barData.raw.length < mWidth) {
+                var miniBarWidth = mWidth / barData.raw.length
             }
 
             x4 = d3.scaleLinear().range([0, barData.raw.length * miniBarWidth]);
-            svg2.attr("width", (barData.raw.length * miniBarWidth) + 10);
-            x6.range([0, 800]).domain(x2.domain());
+            svg2.attr("width", (barData.raw.length * miniBarWidth) + miniBarWidth + 10);
+            x6.range([0, (barData.raw.length * miniBarWidth) + miniBarWidth]).domain(x2.domain());
             brush.extent([
                 [0, 0],
-                [800, height2]
+                [(barData.raw.length * miniBarWidth) + miniBarWidth, height2]
             ])
 
             y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
@@ -524,7 +525,7 @@ function drawReach(filename) {
                 })
                 .attr("y", function (d) {
                     return height2;
-                }).attr("width", minBarWidth)
+                }).attr("width", miniBarWidth)
                 // .transition().duration(250)
                 .attr("y", function (d) {
                     return y4(+d[0]);
@@ -547,11 +548,12 @@ function drawReach(filename) {
 
             var middle = x2.domain()[1] / 2;
             var middleWindow = [(middle - barWindow / 2), middle + (barWindow / 2)]
+
             context.append("g")
                 .attr("class", "brush")
                 .call(brush)
-                // .call(brush.move, x6.range());
-                .call(brush.move, middleWindow)
+                .call(brush.move, x6.range());
+            // .call(brush.move, middleWindow)
 
             $("#full-context").scrollLeft(function () {
                 return x2.domain()[1] / 2;
