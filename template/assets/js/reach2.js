@@ -415,10 +415,12 @@ function drawReach(filename) {
                 return i;
             }));
 
+            var middle = x6.domain()[1] / 2;
             var mWidth = parseInt($(".modal-xl").attr("width"));
             var miniBarWidth = 1;
             if (barData.raw.length < mWidth) {
                 var miniBarWidth = mWidth / barData.raw.length
+                var middle = x6.range()[1] / 2;
             }
 
             x4 = d3.scaleLinear().range([0, barData.raw.length * miniBarWidth]);
@@ -546,17 +548,22 @@ function drawReach(filename) {
 
             context.selectAll(".brush").remove();
 
-            var middle = x2.domain()[1] / 2;
-            var middleWindow = [(middle - barWindow / 2), middle + (barWindow / 2)]
+            var middle = x6.domain()[1] / 2;
+            if (barData.raw.length < mWidth) {
+                var middle = x6.range()[1] / 2;
+            }
+
+
+            var middleWindow = [middle - (x6(barWindow) / 2), middle + (x6(barWindow) / 2)]
 
             context.append("g")
                 .attr("class", "brush")
                 .call(brush)
-                .call(brush.move, x6.range());
-            // .call(brush.move, middleWindow)
+                // .call(brush.move, x6.range());
+                .call(brush.move, middleWindow)
 
             $("#full-context").scrollLeft(function () {
-                return x2.domain()[1] / 2;
+                return x6.domain()[1] / 2;
             })
 
             context.select(".brush").selectAll(".handle").remove();
@@ -623,15 +630,8 @@ function drawReach(filename) {
         x3.domain([0, barWindow]);
         Swindow = s.map(x3.invert)
 
-        threshold = Math.floor(barWindow / factor);
-
-        if (threshold < barData.raw.length) {
-            data = largestTriangleThreeBuckets(barData.chr.slice(selected), threshold);
-            points = data.length;
-        } else {
-            data = barData.chr;
-            points = data.length;
-        }
+        data = barData.chr;
+        points = data.length;
 
         start = x2(Swindow[0] / factor)
 
