@@ -335,19 +335,9 @@
                             <span class="title">Datasets</span>
                             <i class="icon-submenu ti-angle-left"></i>
                         </a>
-                        <div id="dashboards" class="collapse">
-                            <ul class="submenu">
-                                <li>
-                                    <a href="index.html">Anuran</a>
-                                </li>
-                                <li>
-                                    <a href="index2.html">Articles</a>
-                                </li>
-                            </ul>
-                        </div>
                     </li>
                     <li class="panel">
-                        <a href="#globalSettings" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
+                        <a href="#" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
                             <img src="assets/img/settings.svg" class="side-icon" />
                             <span class="title">Global Settings</span>
                             <i class="icon-submenu ti-angle-left"></i>
@@ -445,6 +435,19 @@
                                         <input type="range" id="yScale">
                                     </a>
                                 </li>
+                                <li>
+                                    <a>
+                                        <p>Plots / page: </p>
+                                        <select class="input-sm form-control" id="reach-per-pg">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option selected>4</option>
+                                            <option>6</option>
+                                            <option>12</option>
+                                        </select>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -454,7 +457,7 @@
                             <new id="projectTitle"></new>
                         </a>
                         <a class="disabled spec">
-                            <strong>Min mpts: </strong>0</a>
+                            <strong>Min mpts: </strong>2</a>
                         <a class="disabled spec">
                             <strong>Max mpts: </strong>50</a>
                         <a class="disabled spec">
@@ -592,7 +595,7 @@
                                     <div class="panel-heading clearfix">
                                         <p class="pull-left">Reachabillity Plots</p>
 
-                                        <div class="perpg btn-group pull-right nopadding-b no-border">
+                                        <div class="perpg btn-group pull-right nopadding-b no-border hidden">
                                             <select class="input-sm" id="reach-per-pg">
                                                 <option>1</option>
                                                 <option>2</option>

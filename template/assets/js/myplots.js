@@ -1263,6 +1263,8 @@ function haiPlot() {
                     .attr("width", width)
                     .attr("height", height + 20);
 
+                labels = [2, 50];
+
                 var HeatMapxScale = d3.scaleLinear()
                     .range([gridSize + (gridSize / 2), (haiRange + 0.5) * gridSize])
                     .domain([d3.min(labels), d3.max(labels)]);
