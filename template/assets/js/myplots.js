@@ -1175,6 +1175,8 @@ function haiPlot() {
     var width = parseInt($("#hai-panel").find(".panel-body").attr("width"));
     var height = parseInt($("#reach-panel").find(".panel-body").attr("height"));
 
+    height = height - 20;
+
 
     var dataset = folderRoot + project + "/" + project + "_HAI_tree.out";
 
@@ -1217,9 +1219,9 @@ function haiPlot() {
 
                 var svg = d3.select("#hai-plot").append("svg")
                     .attr("preserveAspectRatio", "xMidYMid Slice")
-                    .attr("viewBox", "-30 -35 " + width + " " + height)
+                    .attr("viewBox", "-20 -20 " + width + " " + height)
                     .attr("width", width)
-                    .attr("height", height);
+                    .attr("height", height + 20);
 
                 var HeatMapxScale = d3.scaleLinear()
                     .range([gridSize / 2, (haiRange + 0.5) * gridSize])
@@ -1317,6 +1319,70 @@ function haiPlot() {
                             .duration(500)
                             .style("opacity", 0);
                     });
+
+                // Scale for workingtime
+                var countScale = d3.scaleLinear()
+                    .domain([minValue, maxValue])
+                    .range([0, width]);
+
+                // Calculate variables for the temp gradient
+                var numStops = 10;
+                var countRange = countScale.domain();
+                // index 2 is the substraction between max and min
+                countRange[2] = countRange[1] - countRange[0];
+                var countPoint = [];
+
+                for (var i = 0; i < numStops; i++) {
+                    countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
+                }
+
+                // Create the gradient
+                svg.append("defs")
+                    .append("linearGradient")
+                    .attr("id", "legend-traffic")
+                    .attr("x1", "0%").attr("y1", "0%")
+                    .attr("x2", "100%").attr("y2", "0%")
+                    .selectAll("stop")
+                    .data(d3.range(numStops))
+                    .enter().append("stop")
+                    .attr("offset", function (d, i) {
+                        return countScale(countPoint[i]) / width;
+                    })
+                    .attr("stop-color", function (d, i) {
+                        return HAicolorScale(countPoint[i]);
+                    });
+
+                var legendWidth = gridSize * haiRange
+
+                // Color Legend container
+                var legendsvg = svg.append("g")
+                    // .attr("class", "legendWrapper")
+                    .attr("transform", "translate(" + legendWidth / 2 + "," + (height - 100) + ")");
+
+                // Draw the Rectangle
+                legendsvg.append("rect")
+                    .attr("class", "legendRect")
+                    .attr("x", -legendWidth / 2)
+                    .attr("y", 50)
+                    .attr("width", legendWidth)
+                    .attr("height", 10)
+                    .style("fill", "url(#legend-traffic)");
+
+                // Set scale for x-axis
+                var xScale = d3.scaleLinear()
+                    .range([-legendWidth / 2, legendWidth / 2])
+                    .domain([minValue, maxValue]);
+
+                // Define x-axis
+                var xAxis = d3.axisBottom()
+                    .ticks(5)
+                    .scale(xScale);
+
+                // Set up X axis
+                legendsvg.append("g")
+                    .attr("class", "axis")
+                    .attr("transform", "translate(0," + 60 + ")")
+                    .call(xAxis);
 
             });
 
