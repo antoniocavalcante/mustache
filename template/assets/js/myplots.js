@@ -1185,8 +1185,13 @@ function dendrogram() {
             svg.select(".yAxis").call(yAxis);
 
             if ($('.dendo-method input[value=bar]').parent().hasClass("active")) {
-                clusters = clusterThresholdExtraction(lineScale.invert(svg.select("line").attr("y1")))
-                shading(clusters);
+                var line = svg.select("line");
+                var value = $("#manualThresh").find("input").val()
+                line.attr("y1", yScaleInverted(value));
+                line.attr("y2", yScaleInverted(value));
+
+
+                // shading(clusters);
             }
 
             svg.selectAll(".node").attr("transform", function (d) {
@@ -1266,11 +1271,11 @@ function haiPlot() {
                 labels = [2, 50];
 
                 var HeatMapxScale = d3.scaleLinear()
-                    .range([gridSize + (gridSize / 2), (haiRange + 0.5) * gridSize])
+                    .range([gridSize + (gridSize / 2), (haiRange * gridSize) + (gridSize / 2)])
                     .domain([d3.min(labels), d3.max(labels)]);
 
                 var HeatMapxScaleY = d3.scaleLinear()
-                    .range([gridSizeY + (gridSizeY / 2), (haiRange + 0.5) * gridSizeY])
+                    .range([gridSizeY + (gridSizeY / 2), (haiRange * gridSizeY) + (gridSizeY / 2)])
                     .domain([d3.min(labels), d3.max(labels)]);
 
                 // Define x-axis
