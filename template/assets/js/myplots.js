@@ -1259,16 +1259,16 @@ function haiPlot() {
 
                 var svg = d3.select("#hai-plot").append("svg")
                     .attr("preserveAspectRatio", "xMidYMid Slice")
-                    .attr("viewBox", "-20 -20 " + width + " " + height)
+                    .attr("viewBox", "-30 -20 " + (width + 20) + " " + height)
                     .attr("width", width)
                     .attr("height", height + 20);
 
                 var HeatMapxScale = d3.scaleLinear()
-                    .range([gridSize / 2, (haiRange + 0.5) * gridSize])
+                    .range([gridSize + (gridSize / 2), (haiRange + 0.5) * gridSize])
                     .domain([d3.min(labels), d3.max(labels)]);
 
                 var HeatMapxScaleY = d3.scaleLinear()
-                    .range([gridSizeY / 2, (haiRange + 0.5) * gridSizeY])
+                    .range([gridSizeY + (gridSizeY / 2), (haiRange + 0.5) * gridSizeY])
                     .domain([d3.min(labels), d3.max(labels)]);
 
                 // Define x-axis
@@ -1282,14 +1282,14 @@ function haiPlot() {
 
                 // Set up X axis Left
                 svg.append("g")
-                    .attr("class", "axis-heatmap")
-                    .attr("transform", "translate(" + -5 + "," + -gridSize + ")")
+                    .attr("class", "axis-heatmap-l")
+                    .attr("transform", "translate(" + -gridSize + "," + -gridSize + ")")
                     .call(HeatMapxAxisLeft);
 
                 // Set up X axis Top
                 svg.append("g")
-                    .attr("class", "axis-heatmap")
-                    .attr("transform", "translate(" + -gridSize + "," + -5 + ")")
+                    .attr("class", "axis-heatmap-t")
+                    .attr("transform", "translate(" + -gridSize + "," + -gridSize + ")")
                     .call(HeatMapxAxisTop);
 
                 // Define the div for the tooltip
