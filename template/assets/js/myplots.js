@@ -1189,9 +1189,6 @@ function dendrogram() {
                 var value = $("#manualThresh").find("input").val()
                 line.attr("y1", yScaleInverted(value));
                 line.attr("y2", yScaleInverted(value));
-
-
-                // shading(clusters);
             }
 
             svg.selectAll(".node").attr("transform", function (d) {
@@ -1412,7 +1409,7 @@ function haiPlot() {
                     .attr("x", -legendWidth / 2)
                     .attr("y", 50)
                     .attr("width", legendWidth)
-                    .attr("height", 10)
+                    .attr("height", 15)
                     .style("fill", "url(#legend-traffic)");
 
                 // Set scale for x-axis
@@ -1428,7 +1425,7 @@ function haiPlot() {
                 // Set up X axis
                 legendsvg.append("g")
                     .attr("class", "axis")
-                    .attr("transform", "translate(0," + 60 + ")")
+                    .attr("transform", "translate(0," + 65 + ")")
                     .call(xAxis);
 
             });

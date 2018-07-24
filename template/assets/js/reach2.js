@@ -383,11 +383,14 @@ function drawReach(filename) {
         settings.select("#full-y-scale").on("input", function () {
             fullYScale = +this.value;
             y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
-            mini = context.selectAll(".area")
-            area2.y1(function (d) {
-                return y4(+d[0]);
-            });
-            mini.transition().duration(500).attr("d", area2);
+            mini = context.selectAll(".mini")
+            mini.transition().duration(500)
+                .attr("y", function (d) {
+                    return y4(+d[0]);
+                })
+                .attr("height", function (d) {
+                    return height2 - y4(+d[0])
+                });
         })
 
     }
@@ -524,9 +527,6 @@ function drawReach(filename) {
                 })
                 .attr("x", function (d, i) {
                     return x4(i);
-                })
-                .attr("y", function (d) {
-                    return height2;
                 }).attr("width", miniBarWidth)
                 // .transition().duration(250)
                 .attr("y", function (d) {
