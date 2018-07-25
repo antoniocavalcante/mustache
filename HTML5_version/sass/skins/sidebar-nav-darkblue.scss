@@ -1,0 +1,70 @@
+$bg-color: #2B333E;
+$sidebar-font-color: #d6e1f1;
+
+@import "sidebar-nav";
+
+.sidebar {
+	border-right-color: $bg-color;
+}
+
+.right-sidebar {
+	background-color: $bg-color;
+	color: #fff;
+
+	.widget-header {
+		background-color: darken($bg-color, 2%);
+		border-color: darken($bg-color, 4%);
+
+		.show-all {
+			color: #7d93b3;
+		}
+	}
+
+	.icon-transparent-area .badge{
+		border-color: $bg-color;
+	}
+
+	.list-project-progress {
+		.project-name,
+		.percentage {
+			color: #fff;
+		}
+	}
+
+	.list-file-simple {
+		a {
+			&,
+			&:hover,
+			&:focus{
+				color: #fff;
+			}
+		}
+
+		span {
+			color: #fff;
+		}
+	}
+
+	.btn-default {
+		background-color: darken($bg-color, 4%);
+		border-color: darken($bg-color, 6%);
+		color: #fff;
+
+		&:hover,
+		&:focus {
+			background-color: darken($bg-color, 6%);
+			border-color: darken($bg-color, 8%);
+		}
+
+		&.active,
+		&:active {
+			&:hover,
+			&:focus {
+				border-color: darken($bg-color, 8%);
+				color: #fff;
+			}
+		}
+	}
+}
+
+

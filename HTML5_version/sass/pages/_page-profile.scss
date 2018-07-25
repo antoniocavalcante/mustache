@@ -1,0 +1,322 @@
+/********************
+ * PAGE: PROFILE
+ ********************/
+
+.panel-profile {
+	position: relative;
+}
+
+.profile-left {
+	padding-left: 0;
+	float: left;
+	width: 35%;
+	height: 100%;
+	position: absolute;
+	background-color: #fcfcfc;
+}
+
+.profile-right {
+	float: right;
+	width: 65%;
+	padding: 20px 25px;
+
+	.heading {
+		margin-top: 0;
+	}
+}
+
+@include max-screen($break-medium) {
+	.profile-left,
+	.profile-right {
+		float: none;
+		width: 100%;
+	}
+
+	.profile-left {
+		position: relative;
+		margin-bottom: 30px;
+	}
+}
+
+.profile-header {
+	position: relative;
+	text-align: center;
+	color: #fff;
+
+	.overlay {
+		display: block;
+		content: "";
+		position: absolute;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(#000, .2);
+	}
+
+	.profile-main {
+		position: relative;
+		padding: 20px;
+
+		background: {
+			image: url('#{$assets_dir}img/profile-bg.png');
+			repeat: no-repeat;
+			size: cover;
+		}
+	}
+
+	.name {
+		margin: 8px 0 0 0;
+		font-size: 22px;
+	}
+
+	.online-status {
+		font-size: 13px;
+		position: relative;
+		top: -2px;
+
+		&:before {
+			@include border-radius(50%);
+			@include inline-block;
+
+			content: '';
+			width: 8px;
+			height: 8px;
+			margin-right: 3px;
+		}
+
+		&.status-available:before {
+			background-color: $color-success;
+		}
+	}
+
+	.profile-stat {
+		position: relative;
+		background-color: $color-accent;
+
+		.stat-item {
+			padding: 20px;
+			position: relative;
+
+			&:after {
+				content: "";
+				display: block;
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 1px;
+				height: 100%;
+				background-color: lighten($color-accent, 10%);
+			}
+
+			&:last-child:after {
+				display: none;
+			}
+		}
+
+		.stat-item span {
+			display: block;
+		}
+	}
+
+	@include max-screen($break-1024 - 1px) {
+		.profile-stat .stat-item:after {
+			display: none;
+		}
+	}
+}
+
+.profile-detail {
+	padding-bottom: 30px;
+}
+
+.profile-info {
+	padding: 0 20px;
+	margin: 40px 0;
+
+	.heading {
+		margin: 0 0 10px 0;
+		font-weight: 600;
+	}
+	
+	ul > li {
+		margin-bottom: 8px;
+	}
+
+}
+
+.social-icons {
+	margin-bottom: 0;
+
+	> li {
+		padding: 0 2px 5px 2px;
+
+		> a {
+			@include inline-block;
+			@include border-radius(3px);
+
+			width: 40px;
+			height: 40px;
+			line-height: 42px;
+			text-align: center;
+			background-color: #4d4d4d;
+			color: #fff;
+
+			i {
+				font-size: 18px;
+			}
+
+			&:hover, &:focus {
+				background-color: darken(#4d4d4d, 5%);
+			}
+		}
+	}
+}
+
+/* colored background */
+@each $social-name, $bg-color in $social-colors {
+	.#{$social-name}-bg {
+		background-color: $bg-color !important;
+
+		&:hover, &:focus {
+			background-color: darken($bg-color, 5%) !important;
+		}
+	}
+}
+
+.profile-right {
+	.heading {
+		padding-bottom: 10px;
+		margin-bottom: 20px;
+		border-bottom: 1px solid #eaeaea;
+	}
+}
+
+.awards {
+	margin-bottom: 50px;
+
+	div[class^="col-"] {
+		text-align: center;
+	}
+}
+
+.award-item {
+	@include inline-block;
+
+	text-align: center;
+	margin-bottom: 30px;
+
+	.hexagon {
+		margin: 35px 0;
+	}
+}
+
+.hexagon { 
+	width: 100px; 
+	height: 55px; 
+	background: #ececec; 
+	position: relative;
+
+	&:before {
+		content: ""; 
+		position: absolute; 
+		top: -25px; 
+		left: 0; 
+		width: 0; 
+		height: 0; 
+		border-left: 50px solid transparent; 
+		border-right: 50px solid transparent; 
+		border-bottom: 25px solid #ececec;
+	}
+
+	&:after {
+		content: ""; 
+		position: absolute; 
+		bottom: -25px; 
+		left: 0; 
+		width: 0; 
+		height: 0; 
+		border-left: 50px solid transparent; 
+		border-right: 50px solid transparent; 
+		border-top: 25px solid #ececec;
+	}
+}
+
+.award-icon {
+	font-size: 36px;
+	line-height: 1.5em;
+}
+
+// timeline activity list
+ul.activity-timeline {
+	> li {
+		margin-bottom: 45px;
+		position: relative;
+		z-index: 0;
+
+		.activity-icon {
+			@include inline-block;
+			@include border-radius(30px);
+
+			float: left;
+			width: 34px;
+			height: 34px;
+			background-color: $color-accent;
+			font-size: 16px;
+			color: #fff;
+			line-height: 34px;
+			text-align: center;
+			margin-right: 10px;
+		}
+
+		> p {
+			margin-bottom: 0;
+			padding-left: 40px;
+		}
+
+		.timestamp {
+			display: block;
+			font-size: .85em;
+			color: $muted-color;
+		}
+
+		&:after {
+			content: "";
+			display: block;
+			border-left: 1px dashed #d2dbe2;
+			width: 1px;
+			height: 25px;
+			position: absolute;
+			top: 45px;
+			left: 16px;
+			z-index: -1;
+		}
+
+		&:last-child:after {
+			display: none;
+		}
+	}
+}
+
+.project-table {
+	.progress {
+		margin-bottom: 0;
+	}
+
+	.progress-bar {
+		font-size: 10px;
+	}
+
+	> tbody > tr > td {
+		padding: 12px 8px;
+
+		.avatar {
+			width: 22px;
+			border: 1px solid #CCC;
+		}
+	}
+}
+
+
+
+
+

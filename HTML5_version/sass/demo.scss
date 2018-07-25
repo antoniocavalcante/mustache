@@ -1,0 +1,109 @@
+/* All styles created for demo purposes only, you may not need this for your project */
+
+@import "base/variables";
+@import "mixins/css3";
+
+.demo-button {
+	.btn,
+	button {
+		margin-bottom: 5px;
+	}
+}
+
+.demo-icons {
+	li {
+		margin-bottom: 50px;
+		text-align: center;
+	}
+
+	[class^="ti"], 
+	.fa {
+		font-size: 28px;
+	}
+
+	.cssclass {
+		display: block;
+		margin-top: 5px;
+		margin-left: 5px;
+	}
+}
+
+.demo-layout {
+	.layout-item {
+		text-align: center;
+		margin-bottom: 30px;
+
+		> a {
+			display: block;
+			position: relative;
+		}
+	}
+
+	.layout-active {
+		@include border-radius(50%);
+
+		width: 50px;
+		height: 50px;
+		line-height: 58px;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		margin-top: -25px;
+		margin-right: -25px;
+		background-color: $color-success;
+
+		i {
+			font-size: 28px;
+			color: #fff;
+		}
+	}
+}
+
+/* flot chart */
+.demo-flot-chart {
+	width: 100%;
+	height: 350px;
+}
+
+/* grid demo */
+.show-grid {
+	margin: 15px 0;
+
+	[class^=col-] {
+		padding-top: 10px;
+		padding-bottom: 10px;
+		background-color: #eee;
+		background-color: rgba(208,208,208,.15);
+		border: 1px solid #ddd;
+		border: 1px solid rgba(130,130,130,.2);
+	}
+}
+
+.responsive-utilities td.is-visible {
+	color: #468847;
+	background-color: #dff0d8!important;
+}
+
+#last-campaign-metric {
+	.widget-metric_2 {
+		margin: 41px 0;
+	}
+}
+
+#growth-vertical-metric {
+	.widget-metric_2 {
+		margin: 25px 0;
+	}
+}
+
+/* social buttons demo */
+.social-button-class {
+	> li {
+		margin-bottom: 19px;
+
+		.social-hex {
+			float: right;
+		}
+	}
+}
+

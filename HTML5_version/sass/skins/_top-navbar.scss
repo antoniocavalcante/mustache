@@ -1,0 +1,39 @@
+@import '../mixins/css3';
+
+.navbar-default,
+.layout-topnav .top-bar {
+	background: $navbar-color-left;
+	background: -moz-linear-gradient(left, $navbar-color-left 0%, $navbar-color-right 100%);
+	background: -webkit-linear-gradient(left, $navbar-color-left 0%,$navbar-color-right 100%);
+	background: linear-gradient(to right, $navbar-color-left 0%,$navbar-color-right 100%);
+}
+
+.navbar-form.search-form {
+	.form-control {
+		&,
+		&:focus {
+			background-color: $search-form-bgcolor;
+			border-color: $search-form-bordercolor;
+		}
+	}
+
+	.btn {
+		color: $search-form-color;
+	}
+
+	::-webkit-input-placeholder {
+		color: rgba($search-form-color, .5);
+	}
+	:-moz-placeholder {
+		color: rgba($search-form-color, .5);
+	}
+	::-moz-placeholder {
+		color: rgba($search-form-color, .5);
+	}
+	:-ms-input-placeholder {
+		color: rgba($search-form-color, .5);
+	}
+}
+
+
+

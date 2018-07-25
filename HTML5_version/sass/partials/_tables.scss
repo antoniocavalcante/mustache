@@ -1,0 +1,382 @@
+/********************
+ * TABLES
+ ********************/
+
+.table {
+	> thead > tr {
+		font-size: 13px;
+		background-color: #f2f4f7;
+		color: #a1a7af;
+
+		> th {
+			border-bottom: none;
+		}
+	}
+
+	> tbody > tr {
+		font-size: 14px;
+
+		> td {
+			border-color: $list-separator-color;
+		}
+	}
+
+	&.table-minimal {
+		> thead > tr {
+			background-color: transparent;
+
+			> th {
+				padding-top: 10px;
+				padding-bottom: 10px;
+				color: $muted-color;
+				border-bottom: none;
+				font-size: 12px;
+			}
+		}
+
+		> tbody > tr {
+			> td {
+				padding-top: 15px;
+				padding-bottom: 15px;
+				border-top: none;
+				border-bottom: 1px solid $list-separator-color;
+				vertical-align: middle;
+			}
+
+			&:last-child > td {
+				border-bottom: none;
+			}
+		}
+	}
+
+	&.table-no-border {
+		> thead > tr > th {
+			padding: 15px 0;
+			border-bottom: 1px solid $list-separator-color;
+		}
+
+		> tbody > tr {
+			> td {
+				padding: 7px 0;
+				border: none;
+			}
+
+			&:first-child > td {
+				padding-top: 15px;
+			}
+		}
+	}
+}
+
+.table-striped >tbody > tr{
+	&:nth-of-type(odd) {
+		background-color: #fafbfc;
+	}
+	&:nth-of-type(even) {
+		background-color: #f5f8fc;
+	}
+}
+
+.table-bordered > thead > tr > th {
+	border-color: $list-separator-color;
+}
+
+.table-hover > tbody > tr:hover {
+	background-color: #f5f8fc;
+}
+
+.panel-body {
+	.table-fullwidth {
+		margin-bottom: 0;
+	}
+	
+	.table-fullwidth > thead > tr > th,
+	.table-fullwidth > tbody > tr > td {
+		&:first-child,
+		&:last-child {
+			padding-left: 25px;
+			padding-right: 25px;
+		}
+	}
+}
+
+/* datatables */
+table.dataTable {
+	border-color: $list-separator-color;
+
+	thead th,
+	thead td {
+		border-bottom: none;
+	}
+
+	thead,
+	tfoot {
+		th {
+			font-weight: normal;
+		}
+	}
+
+	&.no-footer {
+		border-bottom-color: $list-separator-color;
+	}
+
+	thead {
+		> tr > th {
+			padding-left: 8px;
+			padding-right: 15px;
+		}
+
+		.sorting,
+		.sorting_asc,
+		.sorting_desc,
+		.sorting_asc_disabled,
+		.sorting_desc_disabled {
+			background: none;
+
+			&:after {
+				font-family: FontAwesome;
+				content: "";
+			}
+		}
+
+		.sorting_asc,
+		.sorting_asc_disabled {
+			&:after {
+				content: '\f0de';
+			}
+		}
+
+		.sorting_desc,
+		.sorting_desc_disabled {
+			&:after {
+				content: '\f0dd';
+			}
+		}
+
+		.sorting {
+			&:after {
+				content: '\f0dc';
+			}
+		}
+
+		.sorting_asc_disabled,
+		.sorting_desc_disabled {
+			color: lighten($font-color, 40%);
+		}
+
+		.row-filter input {
+			width: 100%;
+			font-weight: normal;
+		}
+	}
+}
+
+.dataTables_wrapper {
+	.dataTables_paginate .paginate_button {
+		padding: 0;
+		margin-left: 0;
+		border: none;
+		font-size: 12px;
+
+		&:hover,
+		&:active {
+			border: none;
+			background: none;
+			box-shadow: none;
+		}
+
+		&.current,
+		&.current:hover {
+			background: $color-accent;
+		}
+
+		&.disabled {
+			&,
+			&:hover,
+			&:active {
+				border: none;
+			}
+		}
+	}
+
+	&.no-footer div.dataTables_scrollBody {
+		border-bottom-color: #ddd;
+	}
+
+	.dataTables_length, 
+	.dataTables_filter, 
+	.dataTables_paginate, 
+	.dataTables_processing {
+		color: $font-color;
+		font-size: 13px;
+	}
+
+	.dataTables_info{
+		color: $muted-color;
+		font-size: 12px;
+	}
+}
+
+/* dragged header column, datatable column reorder extension */
+.DTCR_clonedTable th {
+	padding: 10px;
+	vertical-align: middle;
+	background-color: #ebebeb;
+}
+
+.DTCR_pointer {
+	border: 1px solid $color-warning;
+}
+
+.dataTables_scroll .table {
+	margin-bottom: 0;
+}
+
+/* top products */
+.top-products {
+	thead {
+		display: none;
+	}
+
+	tbody {
+		font-size: 18px;
+
+		> tr > td {
+			padding-top: 30px;
+			padding-bottom: 30px;
+			vertical-align: middle;
+		}
+
+		> tr:first-child > td {
+			border-top: none;
+			padding-top: 0;
+		}
+
+		> tr:last-child > td {
+			padding-bottom: 0;
+		}
+	}
+
+	.product-logo {
+		float: left;
+	}
+
+	.product-name {
+		padding-left: 65px;
+		margin: 0;
+	}
+
+	.product-version {
+		display: block;
+		font-size: 13px;
+		color: $muted-color;
+	}
+
+	.icon {
+		margin-right: 10px;
+		color: $muted-color;
+	}
+}
+
+
+/* project list */
+.project-list {
+	.progress {
+		margin-bottom: 0;
+	}
+
+	.progress-bar {
+		font-size: 10px;
+	}
+
+	> tbody > tr > td {
+		padding: 12px 8px;
+
+		.avatar {
+			width: 22px;
+			border: 1px solid #CCC;
+		}
+
+		&.leader {
+			a {
+				font-size: 13px;
+				color: $font-color;
+
+				&:hover,
+				&:focus {
+					span {
+						text-decoration: underline;
+					}
+
+					img {
+						text-decoration: none;
+					}
+				}
+			}
+			
+			img:hover + a {
+				text-decoration: underline;
+			}
+		}
+	}
+}
+
+/* table chat support */
+.table-chat-support {
+	.popover-profile {
+		&:hover {
+			cursor: pointer;
+		}
+
+		i {
+			margin-right: 5px;
+		}
+	}
+
+	> tbody > tr > td {
+		font-size: 14px;
+
+		.fa-mobile {
+			font-size: 21px;
+		}
+
+		.tooltip-inner {
+			max-width: none;
+		}
+	}
+}
+
+/* table with icon and value only */
+.table-icons-stat {
+	> tbody > tr > td {
+		color: #90a3b3;
+		font-size: 13px;
+
+		&:first-child {
+			color: $font-color;
+			font-size: 14px;
+		}
+
+		i {
+			margin-right: 5px;
+		}
+	}
+}
+
+/* table without head and border */
+.table-invisible {
+	thead {
+		display: none;
+	}
+
+	tbody {
+		> tr > td {
+			border: none;
+			padding: 0 0 5px 0;
+		}
+	}
+}
+
+
+
+

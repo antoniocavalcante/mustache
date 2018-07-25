@@ -1,0 +1,75 @@
+/********************
+ * TYPOGRAPHY
+ ********************/
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
+
+.heading-border {
+	@include inline-block;
+
+	margin-bottom: 30px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #777;
+	font-size: 24px;
+	font-weight: normal;
+
+}
+
+.text-primary {
+	color: $color-accent;
+}
+
+.text-success {
+	color: $color-success;
+}
+
+.text-warning {
+	color: $color-warning;
+}
+
+.text-danger {
+	color: $color-danger;
+}
+
+.text-indicator-green {
+	color: $color-indicator-green;
+}
+
+.text-indicator-red {
+	color: $color-indicator-red;
+}
+
+.text-muted {
+	color: $muted-color;
+}
+
+.font-13 {
+	font-size: 13px;
+}
+
+.font-12 {
+	font-size: 12px;
+}
+
+.font-11 {
+	font-size: 11px;
+}
+
+.help-block {
+	color: $muted-color;
+	font-size: 13px;
+}
+
+ul.list-justify > li {
+	margin-bottom: 10px;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+
+	span {
+		float: right;
+	}
+}
+
+

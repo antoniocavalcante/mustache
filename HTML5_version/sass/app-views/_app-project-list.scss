@@ -1,0 +1,126 @@
+/************************
+ * APP: PROJECT LIST
+ ************************/
+
+.project-item {
+	.left {
+		float: left;
+	}
+
+	.right {
+		float: right;
+	}
+
+	.panel-title {
+		a {
+			color: $panel-title-color;
+
+			&:hover,
+			&:focus {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	.label-pending {
+		background-color: #e9edf1;
+		border: 1px solid #ced7df;
+		color: #8b97a6;
+	}
+
+	.info {
+		margin-bottom: 25px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		.title,
+		.value {
+			display: block;
+			margin-bottom: 3px;
+		}
+
+		.title {
+			color: $muted-color;
+			font-size: 12px;
+		}
+
+		.value {
+			font-size: 13px;
+		}
+
+		.leader-picture {
+			@include border-radius(50%);
+
+			width: 30px;
+			margin-right: 8px;
+			margin-top: 2px;
+		}
+	}
+
+	.progress-chart {
+		margin-bottom: 3px;
+
+		.percent {
+			font-size: 18px;
+			line-height: 110px;
+			color: $muted-color;
+		}
+	}
+	
+	.task {
+		text-align: center;
+
+		.task-progress {
+			margin-bottom: 8px;
+			font-size: 12px;
+			color: $muted-color;
+		}
+	}
+
+	.controls {
+		margin-top: 30px;
+
+		a {
+			margin-right: 15px;
+			font-size: 13px;
+			color: $muted-color;
+
+			&:hover,
+			&:focus {
+				text-decoration: underline;
+
+				i {
+					text-decoration: none;
+				}
+			}
+
+			i {
+				margin-right: 5px;
+				font-size: 14px;
+				color: $color-accent;
+			}
+		}
+	}
+
+	@include max-screen($break-xsmall) {
+		.panel-body .right {
+			float: left;
+			margin-top: 20px;
+		}
+
+		.controls {
+			a {
+				display: block;
+				margin-bottom: 10px;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+}
+
+

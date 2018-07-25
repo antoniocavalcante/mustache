@@ -1,0 +1,227 @@
+/********************
+ * APP: INBOX
+ ********************/
+
+ul.inbox-list-message {
+	list-style: none;
+	padding-left: 0;
+
+	li {
+		position: relative;
+		padding: 20px 15px;
+		border-bottom: 1px solid #e9eef2;
+		color: $muted-color;
+
+		&:hover,
+		&:focus {
+			background-color: #fafbfc;
+		}
+
+		a {
+			text-decoration: none;
+			color: inherit;
+		}
+		
+		&.unread {
+			color: $font-color;
+
+			.title, .sender {
+				font-weight: 600;
+			}
+		}
+
+		&.active {
+			background-color: #f6f8fb;
+		}
+	}
+
+	img {
+		@include border-radius(5px);
+		
+		float: left;
+		width: 48px;
+	}
+
+	.text {
+		padding-left: 65px;
+	}
+
+	.sender {
+		font-size: 13px;
+	}
+
+	.title {
+		font-size: 14px;
+		margin: 0;
+		margin-bottom: 5px;
+	}
+
+	.preview {
+		margin: 0;
+		width: 90%;
+		font-size: 13px;
+	}
+
+	.attachment {
+		float: right;
+		position: relative;
+		top: -40px;
+	}
+
+	.timestamp {
+		float: right;
+		font-size: 12px;
+		color: $muted-color;
+	}
+}
+
+.view-message {
+	.header {
+		@include border-top-radius(3px);
+
+		background-color: #fff;
+		padding: 20px 30px 30px 30px;
+		border-bottom: 1px solid #e9eef2;
+
+		.top {
+			margin-bottom: 20px;
+		}
+
+		.title {
+			@include inline-block;
+
+			margin: 0;
+			font-weight: 300;
+		}
+
+		.timestamp {
+			float: right;
+			color: $muted-color;
+		}
+
+		.contact-info {
+			float: left;
+			width: auto;
+			max-width: 75%;
+		}
+
+		.btn-group {
+			float: right;
+		}
+
+		@include max-screen($break-small - 1px) {
+			.contact-info,
+			.btn-group {
+				float: none;
+			}
+
+			.contact-info {
+				width: 100%;
+				max-width: 100%;
+			}
+
+			.btn-group {
+				margin-top: 20px;
+				display: block;
+			}
+		}
+	}
+
+	.user-image {
+		@include border-radius(6px);
+
+		float: left;
+		margin-right: 15px;
+	}
+
+	.contact-info {
+		.sender,
+		.receiver {
+			font-weight: 600;
+		}
+
+		.receiver {
+			border-bottom: 1px dashed #777;
+		}
+
+		.email {
+			font-weight: normal;
+			color: $muted-color;
+		}
+	}
+
+	.content {
+		padding: 30px;
+		background-color: #fff;
+	}
+
+	.content-separator {
+		margin: 30px 0 20px 0;
+	}
+
+	.footer {
+		padding: 30px;
+		border-top: 1px solid #e9eef2;
+	}
+
+	@include max-screen($break-small - 1px) {
+		.attachment-list {
+			li {
+				margin-bottom: 10px;
+			}
+		}
+	}
+}
+
+.file-type {
+	@include border-radius(6px);
+	@include inline-block;
+
+	border: 1px solid #e4e8ec;
+	background: #fff;
+
+	i {
+		float: left;
+		padding: 20px;
+		font-size: 24px;
+		background-color: #c2ccd4;
+		color: #fff;
+	}
+
+	.text {
+		float: right;
+		padding: 10px 12px;
+	}
+
+	.filesize {
+		font-size: 13px;
+		color: $muted-color;
+	}
+}
+
+.reply-message {
+	.user-image {
+		@include border-radius(3px);
+
+		float: left;
+		width: 30px;
+	}
+
+	.reply-box {
+		@include border-radius(3px);
+
+		padding: 15px 20px;
+		margin-left: 40px;
+		border: 1px solid #e9eef2;
+		background-color: #fafafa;
+
+		&:hover {
+			cursor: pointer;
+		}
+	}
+}
+
+
+
+
+

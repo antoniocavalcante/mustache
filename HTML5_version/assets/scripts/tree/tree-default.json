@@ -1,0 +1,24 @@
+[
+	{"id":"root","text":"Root", "children":
+		[
+			{"id":"child1","text":"Child 1", "children" :
+				[
+					{"id":"child11", "text":"Child 1.1"},
+					{"id":"child12", "text":"Child 1.2"},
+					{"id":"child13", "text":"Child 1.3"}
+				]
+
+			},
+			{"id":"child2","text": "Child 2", "children" :
+				[
+					{"id":"child21", "text":"Child 2.1"},
+					{"id":"child22", "text":"Child 2.2"}
+				]
+			},
+			{"id":"child3","text": "Child 3"},
+			{"id":"child4","text": "Child 4"},
+			{"id":"child5","text": "Child 5"},
+			{"id":"child6","text": "Child 6"}
+		]
+	}
+]

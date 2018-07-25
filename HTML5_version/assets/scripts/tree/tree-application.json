@@ -1,0 +1,35 @@
+[
+	{"id":"root","text":"My Localhost (127.0.0.1)", "type" : "root", "children":
+		[
+			{"id":"maindb","text":"Main Database", "type" : "database", "children":
+				[
+					{"id":"main-tablefolder","text":"Tables", "type" : "table-folder", "children":
+						[
+							{"id":"main-table1","text":"main_tusers", "type" : "table"},
+							{"id":"main-table2","text":"main_taddress", "type" : "table"},
+							{"id":"main-table3","text":"main_ttransactions", "type" : "table"}
+						]
+					},
+					{"id":"main-viewfolder","text":"Views", "type" : "view-folder", "children":
+						[
+							{"id":"main-view1","text":"main_vuserhasitem", "type" : "view"},
+							{"id":"main-view2","text":"main_vuserdoubleaddress", "type" : "view"}
+						]
+					},
+					{"id":"main-procedurefolder","text":"Procedures", "type" : "procedure-folder", "children":
+						[
+							{"id":"main-proc1","text":"main_procweeklyreport", "type" : "procedure"},
+							{"id":"main-proc2","text":"main_procmonthlyreport", "type" : "procedure"},
+							{"id":"main-proc3","text":"main_procannualreport", "type" : "procedure"}
+						]
+					},
+					{"id":"main-keyfolder","text":"Keys", "type" : "key-folder"}
+				]
+
+			},
+			{"id":"backupdb","text":"Backup Database", "type" : "database"},
+			{"id":"testdb","text":"Test Database", "type" : "database"}
+
+		]
+	}
+]

@@ -1,0 +1,389 @@
+/********************
+ * BUTTONS
+ ********************/
+
+.btn {
+	@include border-radius(3px);
+
+	padding: 6px 22px;
+
+	&:active,
+	&.active {
+		@include box-shadow(none);
+	}
+
+	&:focus,
+	&:active,
+	&.active {
+		&,
+		&:focus{
+			outline: none;
+		}
+	}
+
+	i:first-child {
+		margin-right: 5px;
+	}
+
+	span:first-child {
+		margin-right: 5px;
+	}
+}
+
+.btn-group-lg > .btn, 
+.btn-lg {
+	padding: 10px 28px;
+}
+
+.btn-group-sm > .btn, 
+.btn-sm {
+	padding: 5px 18px;
+}
+
+.btn-group-xs > .btn, 
+.btn-xs {
+	padding: 2px 8px;
+	font-size: 11px;
+}
+
+.btn-group.open .dropdown-toggle {
+	@include box-shadow(none);
+}
+
+.btn-primary {
+	background-color: $color-accent;
+	border-color: darken($color-accent, 3%);
+
+	&:hover,
+	&:focus {
+		background-color: darken($color-accent, 3%);
+		border-color: darken($color-accent, 3%);
+	}
+
+	&:active,
+	&.active {
+		&,
+		&:hover,
+		&:focus {
+			background-color: darken($color-accent, 3%);
+			border-color: darken($color-accent, 3%);
+		}
+	}
+
+	.disabled,
+	&[disabled] {
+		&.focus,
+		&:focus,
+		&:hover {
+			background-color: $color-accent;
+			border-color: darken($color-accent, 3%);
+		}
+	}
+}
+
+.open > .dropdown-toggle.btn-primary {
+	&.focus,
+	&:focus,
+	&:hover {
+		background-color: darken($color-accent, 3%);
+		border-color: darken($color-accent, 3%);
+	}
+}
+
+
+.btn-warning {
+	background-color: $color-warning;
+	border-color: darken($color-warning, 3%);
+
+	&:hover,
+	&:focus {
+		background-color: darken($color-warning, 3%);
+		border-color: darken($color-warning, 3%);
+	}
+
+	&:active,
+	&.active {
+		&,
+		&:hover,
+		&:focus {
+			background-color: darken($color-warning, 3%);
+			border-color: darken($color-warning, 3%);
+		}
+	}
+
+	.disabled,
+	&[disabled] {
+		&.focus,
+		&:focus,
+		&:hover {
+			background-color: $color-warning;
+			border-color: darken($color-warning, 3%);
+		}
+	}
+}
+
+.open > .dropdown-toggle.btn-warning {
+	&.focus,
+	&:focus,
+	&:hover {
+		background-color: darken($color-warning, 3%);
+		border-color: darken($color-warning, 3%);
+	}
+}
+
+.btn-danger {
+	background-color: $color-danger;
+	border-color: darken($color-danger, 3%);
+
+	&:hover,
+	&:focus {
+		background-color: darken($color-danger, 3%);
+		border-color: darken($color-danger, 3%);
+	}
+
+	&:active,
+	&.active {
+		&,
+		&:hover,
+		&:focus {
+			background-color: darken($color-danger, 3%);
+			border-color: darken($color-danger, 3%);
+		}
+	}
+
+	.disabled,
+	&[disabled] {
+		&.focus,
+		&:focus,
+		&:hover {
+			background-color: $color-danger;
+			border-color: darken($color-danger, 3%);
+		}
+	}
+}
+
+.open > .dropdown-toggle.btn-danger {
+	&.focus,
+	&:focus,
+	&:hover {
+		background-color: darken($color-danger, 3%);
+		border-color: darken($color-danger, 3%);
+	}
+}
+
+
+.btn-default {
+	color: $font-color;
+	border-color: #e4e4e4;
+	background-color: #fafbfc;
+
+	&:hover,
+	&:focus {
+		color: $font-color;
+		background-color: darken(#fafbfc, 2%);
+		border-color: darken(#e4e4e4, 3%);
+	}
+
+	&:active,
+	&.active {
+		&,
+		&:hover,
+		&:focus {
+			color: $font-color;
+			background-color: darken(#fafbfc, 3%);
+			border-color: darken(#e4e4e4, 3%);
+		}
+	}
+}
+
+.open > .dropdown-toggle.btn-default {
+	&.focus,
+	&:focus,
+	&:hover {
+		color: $font-color;
+		background-color: darken(#fafbfc, 3%);
+		border-color: darken(#e4e4e4, 3%);
+	}
+}
+
+.btn-success {
+	background-color: $color-success;
+	border-color: darken($color-success, 3%);
+
+	&:hover,
+	&:focus {
+		background-color: darken($color-success, 3%);
+		border-color: darken($color-success, 3%);
+	}
+
+	&:active,
+	&.active {
+		&,
+		&:hover,
+		&:focus {
+			background-color: darken($color-success, 3%);
+			border-color: darken($color-success, 3%);
+		}
+	}
+
+	.disabled,
+	&[disabled] {
+		&.focus,
+		&:focus,
+		&:hover {
+			background-color: $color-success;
+			border-color: darken($color-success, 3%);
+		}
+	}
+}
+
+.open > .dropdown-toggle.btn-success {
+	&.focus,
+	&:focus,
+	&:hover {
+		background-color: darken($color-success, 3%);
+		border-color: darken($color-success, 3%);
+	}
+}
+
+.btn-info {
+	background-color: $color-info;
+	border-color: darken($color-info, 3%);
+
+	&:hover,
+	&:focus {
+		background-color: darken($color-info, 3%);
+		border-color: darken($color-info, 3%);
+	}
+
+	&:active,
+	&.active {
+		&,
+		&:hover,
+		&:focus {
+			background-color: darken($color-info, 3%);
+			border-color: darken($color-info, 3%);
+		}
+	}
+
+	.disabled,
+	&[disabled] {
+		&.focus,
+		&:focus,
+		&:hover {
+			background-color: $color-info;
+			border-color: darken($color-info, 3%);
+		}
+	}
+}
+
+.open > .dropdown-toggle.btn-info {
+	&.focus,
+	&:focus,
+	&:hover {
+		background-color: darken($color-info, 3%);
+		border-color: darken($color-info, 3%);
+	}
+}
+
+.btn-custom-orange {
+	$custom-orange: map-get($custom-colors, 'orange');
+	background-color: $custom-orange;
+	border-color: darken($custom-orange, 3%);
+	color: #fff;
+
+	&:hover,
+	&:focus {
+		background-color: darken($custom-orange, 3%);
+		border-color: darken($custom-orange, 3%);
+		color: #fff;
+	}
+
+	&:active,
+	&.active {
+		&:hover,
+		&:focus {
+			background-color: darken($custom-orange, 5%);
+			border-color: darken($custom-orange, 5%);
+		}
+	}
+}
+
+.btn.disabled, 
+.btn[disabled], 
+fieldset[disabled] .btn {
+	@include opacity(.4);
+}
+
+.btn-link {
+	@include box-shadow(none);
+}
+
+.right-sidebar {
+	.btn {
+		margin-bottom: 25px;
+	}
+	
+	.btn-default {
+		background-color: lighten($sidebar-bg-color, 5%);
+		color: #727b86;
+
+		&:hover,
+		&:focus {
+			background-color: lighten($sidebar-bg-color, 3%);
+		}
+	}
+}
+
+.btn-icon {
+	@include box-shadow(none);
+
+	border: none;
+	color: $color-default;
+	background-color: transparent;
+
+	&:hover,
+	&:focus {
+		color: darken($color-default, 8%);
+	}
+}
+
+.btn-outline {
+	background: transparent;
+	border-color: #C4D6E3;
+
+	&:hover,
+	&:focus {
+		background: transparent;
+		border-color: darken(#C4D6E3, 10%);
+	}
+
+	&.btn-default {
+		color: darken(#C4D6E3, 20%);
+	}
+
+	&.btn-primary {
+		color: $color-accent;
+	}
+
+	&.btn-info {
+		color: $color-info;
+	}
+
+	&.btn-warning {
+		color: $color-warning;
+	}
+
+	&.btn-danger {
+		color: $color-danger;
+	}
+
+	&.btn-success {
+		color: $color-success;
+	}
+}
+
+
+
+
+

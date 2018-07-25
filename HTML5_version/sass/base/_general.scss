@@ -1,0 +1,93 @@
+/********************
+ * GENERAL STYLES
+ ********************/
+
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	background-color: #fff;
+	font-family: $font-family;
+	font-size: $font-size;
+	color: $font-color;
+}
+
+a {
+	color: $link-color;
+
+	&:hover,
+	&:focus {
+		color: $link-color-hover;
+		text-decoration: none;
+	}
+}
+
+th {
+	font-weight: normal;
+}
+
+.screen-overlay {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	background-color: rgba(#000, .8);
+	z-index: 9999;
+
+	@include max-screen($break-small - 1px) {
+		z-index: 0;
+	}
+}
+
+footer {
+	bottom: 0;
+	right: 0;
+	padding-top: 15px;
+	padding-bottom: 10px;
+	background-color: #F5F6F9;
+	color: $muted-color;
+
+	@include max-screen($break-small - 1px) {
+		position: relative;
+	}
+}
+
+.copyright {
+	margin-bottom: 0;
+	margin-right: 10px;
+	text-align: right;
+	font-size: 13px;
+
+	@include max-screen($break-small - 1px) {
+		width: 100%;
+		text-align: center;
+		position: relative !important;
+	}
+}
+
+body {
+	::-webkit-scrollbar {
+		position: absolute;
+		width: 12px;
+		margin-left: -10px;
+		-webkit-appearance: none;
+	}
+
+	::-webkit-scrollbar-track {
+		background-color: transparent;
+		border-right: none;
+		border-left: none;
+	}
+
+	::-webkit-scrollbar-thumb {
+		height: 50px;
+		background-color: rgba(#A0AEBA, .2);
+		background-clip: content-box;
+		border-color: rgba(0, 0, 0, 0);
+		border-style: solid;
+		border-width: 1px 2px;
+		border-radius: 7px;
+	}
+}
+

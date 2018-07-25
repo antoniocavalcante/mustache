@@ -1,0 +1,60 @@
+body {
+	margin-bottom: 0;
+}
+
+#demo-panel {
+	position: fixed;
+	top: 50%;
+	margin-top: -250px;
+	right: 0;
+	margin-right: -182px;
+	z-index: 9999;
+	border: 1px solid #ccc;
+	
+	-webkit-border-radius: 0 0 2px 0;
+	-moz-border-radius: 0 0 2px 0;
+	border-radius: 0 0 2px 0;
+
+	-webkit-transition: all ease 0.25s;
+	-moz-transition: all ease 0.25s;
+	-o-transition: all ease 0.25s;
+	transition: all ease 0.25s;
+}
+
+#demo-panel.active {
+	margin-right: 0;
+}
+
+#demo-panel > a {
+	display: block;
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	top: -1px;
+	right: 100%;
+	border-radius: 0 2px 2px 0;
+	border: 1px solid #ccc;
+	border-right: none;
+	background-color: #fff;
+	font-size: 24px;
+	line-height: 50px;
+	text-align: center;
+	z-index: -1;
+}
+
+#demo-panel i {
+	line-height: 50px;
+}
+
+#demo-panel iframe {
+	display: block;
+	width: 180px;
+	height: 420px;
+	overflow: hidden;
+	border: none;
+}
+
+@media screen and ( max-width: 991px ) {
+	#demo-panel { display: none; }
+}
+

@@ -1,0 +1,824 @@
+/********************
+ * WIDGETS
+ ********************/
+
+.widget {
+	@include border-radius(3px);
+
+	padding: 20px 25px;
+	margin-bottom: 30px;
+	border: 1px solid $border-panel-color;
+	background: #fff;
+}
+
+.widget-task-progress {
+	padding-top: 30px;
+	padding-bottom: 30px;
+
+	.top {
+		margin-bottom: 10px;
+	}
+
+	.percentage {
+		float: right;
+		font-size: 36px;
+		font-weight: 300;
+		line-height: 1;
+	}
+
+	.title {
+		margin-bottom: 5px;
+		color: $font-color;
+		line-height: 2.4;
+	}
+
+	.progress {
+		margin-bottom: 0;
+	}
+
+	.bottom {
+		margin-top: 8px;
+		font-size: 13px;
+		color: $muted-color;
+
+		a {
+			color: $muted-color;
+			text-decoration: underline;
+
+			&:hover,
+			&:focus {
+				text-decoration: none;
+			}
+		}
+
+		.note {
+			float: right;
+		}
+	}
+}
+
+.widget-mini-bar {
+	text-align: center;
+
+	.mini-bar-chart {
+		margin-bottom: 5px;
+	}
+
+	span {
+		font-size: 15px;
+		color: $muted-color;
+		line-height: 1;
+	}
+}
+
+.quick-note {
+	@include border-radius(3px);
+
+	background: #fff;
+	padding: 20px;
+	cursor: pointer;
+	margin-bottom: 30px;
+	border: 1px solid #e6e6e6;
+
+	.quick-note-title {
+		margin-top: 0;
+		font-size: 16px;
+	}
+}
+
+.quick-note-create {
+	.panel-footer {
+		display: none;
+	}
+}
+
+.quick-note-edit {
+	margin-bottom: 0;
+}
+
+/* widget stat */
+.widget-stat {
+	padding: 25px 30px;
+
+	.media-left {
+		padding-right: 15px;
+
+		i {
+			@include border-radius(3px);
+
+			display: block;
+			width: 50px;
+			height: 50px;
+			line-height: 50px;
+			text-align: center;
+			font-size: 18px;
+		}
+	}
+
+	.title {
+		color: $muted-color;
+	}
+
+	.value {
+		display: block;
+		font-size: 26px;
+	}
+
+	.footer {
+		margin-top: 15px;
+		margin-bottom: 0;
+		padding-top: 12px;
+		border-top: 1px solid #f0f0f0;
+
+		span {
+			color: $muted-color;
+			font-size: 13px;
+			margin-left: 8px;
+		}
+	}
+}
+
+.widget-metric_1 {
+	.icon-wrapper {
+		@include border-radius(50%);
+
+		display: block;
+		position: relative;
+		width: 50px;
+		height: 50px;
+		float: left;
+		text-align: center;
+		color: #fff;
+		overflow: hidden;
+
+		i {
+			font-size: 17px;
+			line-height: 50px;
+		}
+
+		&:after {
+			display: block;
+			position: absolute;
+			top: 23px;
+			left: 4px;
+			content: "";
+			background-color: rgba(#fff, .2);
+			width: 130%;
+			height: 100%;
+
+			-webkit-transform: rotate(-30deg);
+			-moz-transform: rotate(-30deg);
+			transform: rotate(-30deg);
+		}
+	}
+
+	.right {
+		padding-left: 65px
+	}
+
+	.value {
+		margin-right: 5px;
+		font-size: 24px;
+		font-weight: 300;
+	}
+
+	.change-icon {
+		position: relative;
+		left: 2px;
+		font-size: 18px;
+	}
+
+	.fa-sort-down {
+		top: -6px;
+	}
+
+	.title {
+		display: block;
+		font-size: 12px;
+		color: $muted-color;
+	}
+
+	&.animate:hover {
+		.icon-wrapper {
+			@include animate(pulse, .3s, 2);
+		}
+
+		.change-up {
+			@include animate(fadeOutUp, 1s, infinite);
+		}
+
+		.change-down {
+			@include animate(fadeOutDown, 1s, infinite);
+		}
+	}
+}
+
+.widget-metric_2 {
+	.icon {
+		float: left;
+		font-size: 30px;
+		color: $muted-color;
+	}
+
+	.right {
+		padding-left: 60px;
+
+		span {
+			display: block;
+		}
+	}
+
+	.title {
+		font-size: 13px;
+		color: $muted-color;
+	}
+
+	.value {
+		margin: 8px 0;
+		font-size: 28px;
+		font-weight: 300;
+		line-height: 1;
+	}
+
+	.percentage {
+		font-size: 15px;
+	}
+
+	.menu {
+		line-height: 2.2;
+	}
+
+	&.animate:hover {
+		.icon {
+			@include animate(bounceIn, 1s, 1);
+		}
+	}
+}
+
+.list-widget-vertical .widget-metric_2 {
+	margin: 35px 0;
+	padding: 0 25px;
+}
+
+.widget-metric_3 {
+	text-align: center;
+
+	.value {
+		font-size: 46px;
+		font-weight: 300;
+		display: block;
+	}
+
+	.note {
+		font-size: 13px;
+		color: $muted-color;
+	}
+}
+
+.widget-metric_4 {
+	text-align: center;
+
+	.chart {
+		display: block;
+		margin: 12px 0;
+	}
+
+	.note {
+		font-size: 13px;
+		color: $muted-color;
+	}
+}
+
+.widget-metric_5 {
+	text-align: center;
+
+	.list-value {
+		margin: 8px 0;
+
+		> li {
+			margin: 0 10px;
+		}
+	}
+
+	i {
+		font-size: 28px;
+		color: $muted-color;
+	}
+
+	.percentage {
+		display: block;
+		font-size: 13px;
+	}
+
+	.note {
+		font-size: 13px;
+		color: $muted-color;
+	}
+}
+
+.widget-metric_6 {
+	.icon-wrapper {
+		@include border-radius(8px);
+
+		display: block;
+		position: relative;
+		width: 50px;
+		height: 50px;
+		float: left;
+		text-align: center;
+		color: #fff;
+		overflow: hidden;
+
+		i {
+			font-size: 20px;
+			line-height: 50px;
+		}
+	}
+
+	.right {
+		padding-left: 65px
+	}
+
+	.value {
+		margin-right: 5px;
+		font-size: 24px;
+		font-weight: 300;
+	}
+
+	.title {
+		display: block;
+		font-size: 12px;
+		color: $muted-color;
+	}
+
+	&.animate:hover {
+		.icon-wrapper {
+			@include animate(tada, 1s, 1);
+		}
+	}
+
+	@include max-screen($break-xsmall) {
+		margin-bottom: 15px;
+	}
+}
+
+.widget-metric_7 {
+	.icon {
+		float: left;
+		font-size: 22px;
+	}
+
+	.right {
+		padding-left: 40px;
+
+		span {
+			display: block;
+		}
+	}
+
+	.title {
+		font-size: 13px;
+		color: $muted-color;
+	}
+
+	.value {
+		margin-bottom: 5px;
+		font-size: 15px;
+		line-height: 1;
+	}
+}
+
+.widget-metric_8 {
+	.heading {
+		margin-bottom: 15px;
+	}
+
+	.title {
+		float: left;
+		line-height: 1.8;
+	}
+
+	.dropdown {
+		@include inline-block;
+
+		float: right;
+	}
+
+	.toggle-dropdown {
+		@include border-radius(50%);
+
+		width: 23px;
+		height: 23px;
+		line-height: 20px;
+		display: block;
+		border: 1px solid #c6d2dd;
+		text-align: center;
+		font-size: 16px;
+		color: #c6d2dd;
+
+		&:hover,
+		&:focus {
+			background-color: #f9fafb;
+		}
+
+		i {
+			margin: 0;
+			font-size: 14px;
+		}
+	}
+
+	i {
+		margin-right: 5px;
+		font-size: 21px;
+	}
+
+	.value {
+		font-size: 23px;
+		font-weight: 300;
+	}
+
+	.progress {
+		margin-top: 5px;
+		margin-bottom: 15px;
+	}
+
+	.info {
+		margin: 0;
+		color: $muted-color;
+		font-size: 12px;
+	}
+
+	.icon-change {
+		font-size: 12px;
+	}
+}
+
+.widget-metric_9 {
+	.title {
+		display: block;
+		line-height: 1;
+		font-size: 28px;
+		font-weight: 300;
+		color: $muted-color;
+	}
+
+	.value {
+		display: block;
+		line-height: 1.6;
+		font-size: 48px;
+		font-weight: 300;
+	}
+
+	.percentage {
+		display: block;
+		font-size: 15px;
+		margin-bottom: 3px;
+
+		i {
+			font-size: 24px;
+			position: relative;
+			top: 4px;
+			vertical-align: middle;
+		}
+
+		.icon-down {
+			top: -8px;
+		}
+	}
+}
+
+.widget-metric_10 {
+	text-align: center;
+
+	.title {
+		display: block;
+		font-size: 16px;
+	}
+
+	.value {
+		display: block;
+		margin: 3px 0;
+	}
+
+	.number {
+		font-size: 24px;
+	}
+
+	.symbol {
+		font-size: 15px;
+		color: $muted-color;
+	}
+}
+
+.widget-metric_11 {
+	.bottom {
+		margin-top: 10px; 
+	}
+
+	.left {
+		float: left;
+	}
+
+	.right {
+		float: right;
+		line-height: 4.3;
+		text-align: right;
+	}
+
+	.value {
+		display: block;
+		font-size: 28px;
+		font-weight: 300;
+	}
+
+	.change {
+		color: $muted-color;
+	}
+}
+
+.list-widget-vertical {
+	margin: 0;
+
+	> li {
+		border-bottom: 1px solid $list-separator-color;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	&.no-border {
+		> li {
+			border-bottom: none;
+			margin-bottom: 40px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		&.spacing-25 {
+			> li {
+				margin-bottom: 25px;
+			}
+		}
+	}
+}
+
+
+.list-widget-horizontal {
+	margin: 0;
+
+	> li {
+		border-right: 1px solid $list-separator-color;
+
+		&:last-child {
+			border-right: none;
+		}
+	}
+
+	&.no-border {
+		> li {
+			border-right: none;
+		}
+	}
+
+	@include max-screen($break-small) {
+		> li {
+			border-right: none;
+			border-bottom: 1px solid $list-separator-color;
+			padding: 25px 0;
+
+			&:last-child {
+				border-bottom: none;
+			}
+		}
+	}
+}
+
+.widget-mini-realtime-usage {
+	.chart {
+		height: 60px;
+	}
+
+	.usage-info {
+		margin-top: 10px;
+
+		.title,
+		.value {
+			display: block;
+		}
+
+		.title {
+			font-size: 11px;
+			color: $muted-color;
+		}
+
+		.value {
+			font-size: 14px;
+		}
+	}
+
+	.left {
+		float: left;
+	}
+
+	.right {
+		float: right;
+	}
+}
+
+.widget-system-load {
+	padding-top: 30px;
+	padding-bottom: 30px;
+
+	.chart {
+		width: 130px;
+		position: absolute;
+		float: left;
+	}
+
+	.info {
+		padding-left: 170px;
+
+		.heading-title {
+			margin-top: 0;
+			margin-bottom: 20px; 
+			font-size: 16px;
+			font-weight: normal;
+		}
+
+		.title {
+			display: block;
+			color: $muted-color;
+			font-size: 13px;
+		}
+
+		.value {
+			display: block;
+			font-size: 22px;
+		}
+	}
+
+	.controls {
+		margin-top: 20px;
+	}
+
+	@include max-screen($break-xsmall) {
+		.chart {
+			float: none;
+			position: relative
+		}
+
+		.info {
+			padding-left: 0;
+		}
+	}
+}
+
+.widget-resume {
+	.resume-header,
+	.resume-footer {
+		border-color: #e9eef2;
+	}
+
+	.resume-header {
+		@include clearfix;
+
+		border-bottom-width: 1px;
+		border-bottom-style: solid;
+
+		.left {
+			float: left;
+		}
+
+		.right {
+			float: right;
+		}
+	}
+
+	.profile-image {
+		@include border-radius(3px);
+
+		width: 50px;
+		height: 50px;
+		float: left;
+	}
+
+	.bio-text {
+		padding-left: 65px;
+		margin-bottom: 30px;
+
+		.name {
+			display: block;
+			font-size: 18px;
+			color: inherit;
+
+			&:hover,
+			&:focus {
+				color: inherit;
+				text-decoration: underline;
+			}
+		}
+
+		.title {
+			color: $muted-color;
+			font-weight: 300;
+		}
+	}
+
+	.resume-footer {
+		border-top-width: 1px;
+		border-top-style: solid;
+		padding-top: 25px;
+	}
+
+	.skills {
+		.label-text {
+			font-size: 15px;
+			color: $muted-color;
+			line-height: 2;
+		}
+	}
+
+	@include max-screen($break-xsmall) {
+		.resume-header .right .btn {
+			span {
+				display: none;
+			}
+		}
+	}
+}
+
+.list-resume-experience {
+	@include clearfix;
+
+	margin: 0;
+	
+	.experience {
+		@include clearfix;
+
+		margin: 30px 0;
+		position: relative;
+
+		.company-logo {
+			@include border-radius(50%);
+
+			float: left;
+
+			width: 50px;
+			height: 50px;
+			line-height: 4;
+			text-align: center;
+
+			i {
+				font-size: 22px;
+				color: #fff;
+			}
+		}
+
+		.detail {
+			padding-left: 65px;
+		}
+
+		.company-name {
+			display: block;
+			font-size: 17px;
+		}
+
+		.title {
+			color: $muted-color;
+			font-weight: 300;
+		}
+
+		&:after {
+			content: "";
+			display: block;
+			border-left: 1px dashed #d2dbe2;
+			width: 1px;
+			height: 25px;
+			position: relative;
+			top: 15px;
+			left: 25px;
+		}
+
+		&:last-child:after {
+			border: none;
+			height: 0;
+		}
+	}
+
+	.left {
+		float: left;
+	}
+
+	.period {
+		float: right;
+		position: relative;
+		top: 15px;
+		font-size: 13px;
+		font-weight: 300;
+		color: $muted-color;
+	}
+}
+

@@ -1,0 +1,249 @@
+/************************
+ * APP: PROJECT DETAIL
+ ************************/
+
+.project-heading {
+	padding: 25px;
+
+	.project-logo {
+		width: 50px;
+		border: 1px solid #eaeff2;
+	}
+
+	.project-title {
+		margin-top: 0;
+		margin-bottom: 5px;
+		font-size: 20px;
+		font-weight: normal;
+	}
+
+	@include max-screen($break-xsmall) {
+		.media {
+			margin-bottom: 10px;
+		}
+
+		.project-title {
+			font-size: 16px;
+		}
+
+		.text-right {
+			text-align: left;
+		}
+	}
+
+}
+
+.project-subheading {
+	background-color: #fafbfc;
+	margin: 25px -20px 0 -20px;
+	padding: 25px;
+	border-top: 1px solid #eaeff2;
+	border-bottom: 1px solid #eaeff2;
+}
+
+.project-metrics {
+	.main-info-item {
+		.title,
+		.value {
+			display: block;
+		}
+
+		.title {
+			margin-bottom: 5px;
+			font-size: 13px;
+			color: #a0aeba;
+		}
+	}
+
+	&.milestone-section {
+		.main-info-item {
+			.title {
+				font-size: 12px;
+			}
+
+			.value {
+				font-size: 13px;
+			}
+		}
+	}
+}
+
+.project-info {
+	margin-bottom: 30px;
+
+	.info-heading {
+		margin: 0 0 15px 0;
+		font-size: 13px;
+		color: $muted-color;
+	}
+
+	.project-description {
+		line-height: 1.7;
+	}
+}
+
+.project-accordion {
+	color: #7b8186;
+
+	.panel-heading {
+		padding: 0;
+		background-color: #f8f9fa;
+
+		.panel-title {
+			display: block;
+			font-size: 15px;
+			font-weight: normal;
+
+			> a {
+				display: block;
+				padding: 15px 12px;
+				color: #717d84;
+
+				&:hover,
+				&:focus {
+					color: #717d84
+				}
+
+				> .icon-indicator {
+					min-width: 18px;
+				}
+			}
+
+			.toggle-icon {
+				float: right;
+				color: #c6d2dd;
+			}
+		}
+
+		+ .panel-collapse > .panel-body {
+			border-top: none;
+			background-color: #fafbfc;
+		}
+
+		.label {
+			margin-left: 10px;
+		}
+
+		.note {
+			margin-left: 10px;
+			font-size: 12px;
+			color: $muted-color;
+		}
+	}
+}
+
+.project-milestone {
+	.milestone-section {
+		margin-bottom: 45px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.milestone-heading {
+		margin: 0 0 12px 0;
+		font-size: 12px;
+		color: $muted-color;
+	}
+
+	.milestone-description {
+		margin-bottom: 0;
+		font-size: 14px;
+	}
+
+	.panel-footer {
+		padding-top: 25px;
+		padding-bottom: 25px;
+		background-color: #f2f5f8;
+
+		.btn {
+			padding-top: 8px;
+			padding-bottom: 8px;
+		}
+	}
+
+	@include max-screen($break-xsmall) {
+		.panel-heading {
+			.milestone-title {
+				display: block;
+			}
+
+			.label,
+			.note {
+				@include inline-block;
+
+				margin-top: 5px;
+				margin-left: 20px;
+			}
+
+			.panel-title .toggle-icon {
+				position: absolute;
+				right: 12px;
+				top: 50%;
+				margin-top: -7.5px;
+			}
+		}
+
+		.panel-footer .btn {
+			display: block;
+			margin-bottom: 8px;
+		}
+	}
+}
+
+.table-project-tasks {
+	> thead > tr {
+		font-size: 12px;
+	}
+
+	> tbody > tr {
+		font-size: 13px;
+
+		> td.divider {
+			background-color: #fff;
+			text-align: center;
+		}
+	}
+
+	.task-indicator {
+		@include border-radius(50%);
+		@include inline-block;
+
+		width: 10px;
+		height: 10px;
+		margin-right: 3px;
+		background-color: #7b8186;
+		position: relative;
+		top: -1px;
+
+		&.success {
+			background-color: $color-indicator-green;
+		}
+
+		&.warning {
+			background-color: $color-indicator-yellow;
+		}
+
+		&.danger {
+			background-color: $color-indicator-red;
+		}
+	}
+
+	.actions {
+		a {
+			color: $muted-color;
+			margin-right: 5px;
+
+			i {
+				font-size: 14px;
+			}
+		}
+	}
+
+
+}
+
+
+
+

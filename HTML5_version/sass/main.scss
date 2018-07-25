@@ -1,0 +1,45 @@
+/*	
+*	############################################################################################
+*	
+*	KLOROFIL PRO - Bootstrap Admin Dashboard Template
+*	---------------------------------------------------------------------
+*
+*	Version: 	1.6
+*	Author: 	The Develovers
+*	Website: 	https://www.themeineed.com
+*	Copyright: 	Copyright 2017 The Develovers
+*	
+*	############################################################################################
+*/
+
+@import "mixins/responsive";
+@import "mixins/elements-color-custom";
+@import "mixins/clearfix";
+@import "mixins/css3";
+
+@import "base/variables";
+@import "base/general";
+
+@import "partials/layout";
+@import "partials/navigation";
+@import "partials/typography";
+@import "partials/inputs";
+@import "partials/buttons";
+@import "partials/panels";
+@import "partials/widgets";
+@import "partials/elements";
+@import "partials/elements-bootstrap";
+@import "partials/charts";
+@import "partials/authentication";
+@import "partials/social-brands";
+@import "partials/forms";
+@import "partials/tables";
+@import "partials/helpers";
+@import "partials/custom-colors";
+
+@import "vendor/bootstrap-social/bootstrap-social";
+
+@import "app-views/app-views";
+@import "pages/pages";
+
+

@@ -1,0 +1,79 @@
+/********************
+ * FORMS
+ ********************/
+
+legend {
+	font-size: 18px;
+	color: $font-color;
+}
+
+.control-label {
+	color: $control-label-color;
+	font-weight: normal;
+}
+
+.form-horizontal.label-left .control-label {
+	text-align: left;
+}
+
+/* parsley js */
+.parsley-errors-list {
+	margin-top: 8px;
+	
+	li {
+		color: $color-danger;
+		font-size: 0.9em;
+		margin-top: 3px;
+	}
+}
+
+.search-form {
+	position: relative;
+
+	.btn {
+		@include box-shadow(none);
+
+		position: absolute;
+		top: 7px;
+		right: 12px;
+		padding: 0;
+		border: none;
+		background-color: transparent;
+
+		i {
+			margin-right: 0;
+		}
+
+		&:hover,
+		&:focus {
+			background-color: inherit;
+			border-left: none;
+			border-color: inherit;
+		}
+	}
+}
+
+/* profile completeness meter */
+.list-complete-profile {
+	margin-bottom: 0;
+
+	> li {
+		margin: 20px 0;
+
+		&.done {
+			color: $muted-color;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		.editable-click, 
+		a.editable-click, 
+		a.editable-click:hover {
+			border-bottom: none;
+		}
+	}
+}
+
+

@@ -1,0 +1,230 @@
+/********************************
+ * AUTHENTICATION FORMS, PAGE
+ ********************************/
+
+.auth-box {
+	@include box-shadow(1px 2px 10px 0 rgba(#000, .1));
+	@include border-radius(5px);
+
+	width: 70%;
+	height: 450px;
+	margin: 0 auto;
+	background-color: #fff;
+
+	&:before {
+		@include inline-block;
+
+		content: ' ';
+		vertical-align: middle;
+		height: 100%;
+	}
+
+	.content {
+		@include inline-block;
+
+		width: 99%;
+		vertical-align: middle;
+	}
+
+	.left {
+		float: left;
+		width: 42%;
+		height: 100%;
+		padding: 0 30px;
+		text-align: center;
+
+		&:before {
+			@include inline-block;
+
+			content: ' ';
+			vertical-align: middle;
+			height: 100%;
+		}
+	}
+
+	.right {
+		float: right;
+		width: 58%;
+		height: 100%;
+		position: relative;
+		background: {
+			image: url('#{$assets_dir}img/login-bg.jpg');
+			repeat: no-repeat;
+			size: cover;
+		}
+
+		&:before {
+			@include inline-block;
+
+			content: ' ';
+			vertical-align: middle;
+			height: 100%;
+		}
+		
+		.text {
+			position: relative;
+			padding: 0 30px;
+			color: #fff;
+		}
+
+		.heading {
+			margin-top: 0;
+			margin-bottom: 5px;
+			font-size: 26px;
+			font-weight: 300;
+		}
+
+		p {
+			margin: 0;
+			font-size: 18px;
+			font-weight: 300;
+		}
+
+		.overlay {
+			position: absolute;
+			top: 0;
+			display: block;
+			width: 100%;
+			height: 100%;
+			background: rgba(99,156,185,0.92);
+		}
+	}
+
+	.header {
+		margin-bottom: 30px;
+	}
+
+	.lead {
+		margin-top: 5px;
+		font-size: 18px;
+		text-align: center;
+	}
+
+	.form-auth-small {
+		.btn {
+			margin-top: 20px;
+		}
+
+		.element-left {
+			float: left;
+		}
+
+		.element-right {
+			float: right;
+		}
+
+		.bottom {
+			margin-top: 20px;
+			text-align: center;
+		}
+	}
+
+	.helper-text {
+		font-size: 13px;
+		color: $muted-color;
+	}
+
+	.element-right.helper-text {
+		line-height: 2;
+	}
+
+	.btn-signin-social {
+		display: block;
+		margin-bottom: 15px;
+		padding: 10px 22px;
+		width: 100%;
+		background-color: #fff;
+		border-color: #e4ecf0;
+
+		&:hover,
+		&:focus {
+			background-color: #fafafa;
+		}
+
+		i {
+			font-size: 16px;
+			margin: 5px;
+		}
+	}
+
+	&.lockscreen {
+		width: 50%;
+		padding: 40px 60px;
+
+		.logo {
+			margin-bottom: 30px;
+		}
+
+		.user {
+			margin-bottom: 30px;
+
+			.name {
+				font-size: 18px;
+				margin-top: 10px;
+			}
+		}
+	}
+
+	&.register,
+	&.forgot-password {
+		width: 600px;
+		height: auto;
+
+		.content {
+			padding: 30px;
+		}
+	}
+
+	@include min-screen($break-xlarge) {
+		&.lockscreen {
+			width: 35%;
+		}
+	}
+
+	@include max-screen($break-1280 - 1px) {
+		width: 90%;
+
+		.left {
+			top: 3.3em;
+		}
+	}
+
+	@include max-screen($break-1024 - 1px) {
+		.left {
+			width: 100%;
+			position: inherit;
+			padding: 30px;
+		}
+
+		.right {
+			display: none;
+		}
+	}
+
+	@include max-screen($break-medium) {
+		width: 70%;
+
+		&.lockscreen {
+			width: 50%;
+			padding: 40px 20px;
+		}
+	}
+
+	@include max-screen($break-xsmall) {
+		width: 90%;
+
+		.content {
+			width: 95%;
+		}
+
+		&.lockscreen {
+			width: 90%;
+		}
+
+		&.register,
+		&.forgot-password {
+			width: 90%;
+		}
+	}
+}
+

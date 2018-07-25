@@ -1,0 +1,452 @@
+/********************
+ * LAYOUT
+ ********************/
+
+#wrapper {
+	overflow-x: hidden;
+	
+	.sidebar {
+		width: $sidebar-width;
+		height: 100%;
+		float: left;
+		background-color: $sidebar-bg-color;
+		position: fixed;
+		left: 0;
+		overflow-y: auto;
+	}
+
+	.main {
+		@include transition(all .3s ease-in-out);
+
+		width: calc(100% - #{$sidebar-width});
+		position: relative;
+		float: right;
+		left: 0;
+		background-color: #fff;
+	}
+	
+	#sidebar-nav,
+	.main {
+		padding-top: 55px;
+	}
+
+	#sidebar-nav {
+		padding-bottom: 30px;
+	}
+}
+
+.layout-fullwidth #wrapper {
+	.sidebar {
+		left: -$sidebar-width;
+	}
+
+	.main {
+		width: 100%;
+	}
+
+	.navbar {
+		left: 0 !important;
+	}
+}
+
+.layout-topnav {
+	#wrapper {
+		.main {
+			width: 100%;
+			padding-top: 100px;
+			background-color: #F5F6F9;
+		}
+
+		.main-content {
+			margin: 0 auto;
+		}
+
+		.content-heading {
+			padding-left: 0;
+			padding-right: 0;
+			margin-left: 0;
+			margin-right: 0;
+			background: transparent;
+			border: none;
+		}
+	}
+
+	footer .copyright {
+		text-align: center;
+	}
+}
+
+.offcanvas-active {
+	#wrapper {
+		.sidebar {
+			left: 0;
+		}
+		
+		.main {
+			width: 100%;
+			position: relative;
+			left: $sidebar-width;
+		}
+	}
+}
+
+.sidebar-minified {
+	&.layout-fullwidth #wrapper .main {
+		width: 100%;
+	}
+
+	#wrapper {
+		.sidebar {
+			width: $minified-sidebar-width;
+			height: 100%;
+			overflow-y: visible;
+		}
+
+		.main {
+			width: calc(100% - #{$minified-sidebar-width});
+		}
+	}
+}
+
+@include max-screen($break-1024) {
+	#wrapper {
+		.sidebar {
+			left: -$sidebar-width;
+		}
+
+		.main {
+			width: 100%;
+		}
+
+		.navbar {
+			left: 0 !important;
+		}
+	}
+
+	.btn-toggle-minified {
+		display: none;
+	}
+}
+
+.content-heading {
+	margin: 0 -10px 30px -10px;
+	padding: 20px 25px;
+	border-bottom: 1px solid #e3e3e3;
+	background-color: #fff;
+
+	.heading-left {
+		float: left;
+	}
+
+	.page-title {
+		margin: 0 0 3px 0;
+		font-size: 18px;
+		font-weight: normal;
+	}
+
+	.page-subtitle {
+		margin: 0;
+		font-size: 14px;
+		font-weight: 300;
+		color: $muted-color;
+	}
+
+	.breadcrumb {
+		float: right;
+		margin-bottom: 0;
+		padding: 12px 0;
+	}
+
+	@include max-screen($break-small) {
+		.heading-left,
+		.breadcrumb {
+			float: none;
+		}
+
+		.breadcrumb {
+			padding-bottom: 0;
+		}
+	}
+}
+
+.main-content {
+	padding: 0 10px 28px 10px;
+	margin: 0;
+	background-color: #F5F6F9;
+
+	@include max-screen($break-small - 1px) {
+		padding-bottom: 0;
+	}
+}
+
+.navbar + .main-content {
+	padding: 105px 0 28px 5px;
+
+	@include max-screen($break-small - 1px) {
+		padding-top: 155px;
+	}
+}
+
+html.fullscreen-bg, 
+html.fullscreen-bg body,
+html.fullscreen-bg #wrapper {
+	height: 100%;
+}
+
+.vertical-align-wrap {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	display: table;
+}
+
+.vertical-align-middle {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.layout-table {
+	display: table;
+	width: 100%;
+
+	.cell {
+		display: table-cell;
+
+		&.valign-top {
+			vertical-align: top;
+		}
+
+		&.valign-middle {
+			vertical-align: middle;
+		}
+
+		&.valign-bottom {
+			vertical-align: bottom;
+		}
+	}
+
+	@include max-screen($break-xsmall) {
+		&, .cell {
+			display: block;
+		}
+
+		.cell {
+			margin-bottom: 10px;
+
+			&.text-right {
+				text-align: left;
+			}
+		}
+	}
+}
+
+.right-sidebar {
+	@include transition(all .3s ease-in-out);
+	@include box-shadow(-5px 0 10px rgba(0,0,0,.08));
+
+	position: fixed;
+	top: 0;
+	padding-top: 5px;
+	padding-bottom: 50px;
+	overflow-y: auto;
+	right: -360px;
+	width: 350px;
+	height: 100%;
+	z-index: 99;
+	background: $sidebar-bg-color;
+	color: $font-color;
+
+	&.active {
+		right: 0;
+	}
+
+	.widget-heading {
+		@include inline-block;
+		
+		margin: 0 0 10px 0;
+		font-size: 12px;
+		font-weight: 600;
+
+		i {
+			margin-right: 5px;
+			font-size: 16px;
+		}
+	}
+
+	.widget-header {
+		padding: 15px 25px;
+		margin: 0 -25px 30px -25px;
+		background-color: #f8f9fa;
+		border-top: 1px solid #eaeff2;
+		border-bottom: 1px solid #eaeff2;
+
+		.widget-heading {
+			margin: 0;
+		}
+
+		.show-all {
+			float: right;
+			font-size: 12px;
+			line-height: 1.8;
+			color: #a0aeba;
+			text-decoration: underline;
+
+			&:hover,
+			&:focus {
+				text-decoration: none;
+			}
+		}
+	}
+
+	.date {
+		margin-bottom: 0;
+		font-size: 20px;
+		font-weight: 300;
+	}
+}
+
+.sidebar-widget {
+	padding: 15px 25px;
+}
+
+.has-content-menu {
+	.navbar + .main-content,
+	.main-content .container-fluid {
+		padding: 0;
+	}
+
+	.content-menu {
+		background-color: #fff;
+		margin-bottom: 30px;
+		
+		.right {
+			padding-right: 0;
+		}
+
+		.content-menu-left {
+			@include transition(all .3s ease-in-out);
+
+			width: 100%;
+			height: 100%;
+			padding: 30px 15px;
+			background-color: #fff;
+		}
+
+		.content-menu-right {
+			@include transition(all .3s ease-in-out);
+
+			height: 100%;
+			padding: 30px 0;
+			border-left: 1px solid #e9eef2;
+			border-right: 1px solid #e9eef2;
+			background-color: #fff;
+		}
+	}
+
+	.content-right {
+		@include transition(all .3s ease-in-out);
+
+		padding-bottom: 20px;
+	}
+
+	.content-panel {
+		@include border-radius(3px);
+
+		background-color: #fff;
+		border: 1px solid #e9eef2;
+	}
+
+	.btn-open-content-menu,
+	.btn-close-content-menu,
+	.btn-close-content-right {
+		display: none;
+	}
+}
+
+.row-panel {
+	margin-left: -25px;
+	margin-right: -25px;
+
+	> div[class^="col-"] {
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+}
+
+.page-inbox {
+	@include max-screen($break-1280 - 1px) {
+		.content-right {
+			display: none;
+			width: 96%;
+			position: absolute;
+			top: -44em;
+			z-index: 9;
+		}
+
+		.content-menu {
+			position: relative;
+			background: transparent;
+
+			.right {
+				padding-right: 15px;
+			}
+
+			.content-menu-left {
+				@include box-shadow(0 2px 6px rgba(0,0,0,.08));
+
+				position: fixed;
+				left: -300px;
+				width: 250px;
+				z-index: 8;
+			}
+
+			.content-menu-right {
+				width: 100%;
+				top: 0;
+				z-index: 9;
+
+				/* disable scrolling */
+				.slimScrollDiv,
+				.sidebar-scroll {
+					overflow: visible !important;
+				}
+
+				.slimScrollBar {
+					display: none !important;
+				}
+			}
+		}
+
+		.btn-open-content-menu {
+			display: block;
+			float: left;
+			position: relative;
+			top: -4px;
+			margin-right: 8px;
+		}
+
+		.btn-close-content-menu {
+			display: block;
+			position: absolute;
+			top: 5px;
+			right: 15px;
+			font-size: 18px;
+			color: #9fa9b5;
+		}
+
+		.btn-close-content-right {
+			display: block;
+			float: right;
+			font-size: 18px;
+			color: #9fa9b5;
+
+			&:after {
+				display: block;
+				content: '';
+			}
+		}
+	}
+}
+
+
+

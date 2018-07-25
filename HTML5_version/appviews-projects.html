@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<title>Projects | Klorofil Pro - Bootstrap Admin Dashboard Template</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<!-- VENDOR CSS -->
+	<link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="assets/vendor/linearicons/style.css">
+	<link rel="stylesheet" href="assets/vendor/themify-icons/css/themify-icons.css">
+	<link rel="stylesheet" href="assets/vendor/pace/themes/orange/pace-theme-minimal.css">
+	<link rel="stylesheet" href="assets/vendor/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css">
+	<link rel="stylesheet" href="assets/vendor/parsleyjs/css/parsley.css">
+	<link rel="stylesheet" href="assets/vendor/sweetalert2/sweetalert2.css">
+	<link rel="stylesheet" href="assets/vendor/dropify/css/dropify.min.css">
+	<!-- MAIN CSS -->
+	<link rel="stylesheet" href="assets/css/main.css">
+	<link rel="stylesheet" href="assets/css/style.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:700" rel="stylesheet">
+	<!-- ICONS -->
+	<link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="assets/img/favicon.png">
+</head>
+
+<body class="layout-fullwidth">
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title text-center" id="exampleModalLongTitle">Load Dataset</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body no-padding">
+						<div id="demo-wizard" class="wizard hidden">
+							<div class="steps-container">
+								<ul class="steps">
+									<li data-step="1" class="active">
+										<span class="badge badge-info">1</span>Account Type
+										<span class="chevron"></span>
+									</li>
+									<li data-step="2">
+										<span class="badge">2</span>User Account
+										<span class="chevron"></span>
+									</li>
+									<li data-step="3">
+										<span class="badge">3</span>Options
+										<span class="chevron"></span>
+									</li>
+									<li data-step="4" class="last">
+										<span class="badge">4</span>Create Account</li>
+								</ul>
+							</div>
+							<div class="step-content">
+								<div class="step-pane active" data-step="1">
+									<form id="form1" data-parsley-validate novalidate>
+										<p>Choose your account type:</p>
+										<div class="fancy-radio">
+											<label>
+												<input type="radio" name="account-type" value="personal" required data-parsley-errors-container="#error-step1">
+												<span>
+													<i></i>Personal</span>
+											</label>
+										</div>
+										<div class="fancy-radio">
+											<label class="fancy-radio">
+												<input type="radio" name="account-type" value="business">
+												<span>
+													<i></i>Business</span>
+											</label>
+										</div>
+										<div class="fancy-radio">
+											<label class="fancy-radio">
+												<input type="radio" name="account-type" value="enterprise">
+												<span>
+													<i></i>Enterprise</span>
+											</label>
+										</div>
+										<p id="error-step1"></p>
+									</form>
+								</div>
+								<div class="step-pane" data-step="2">
+									<form id="form2" data-parsley-validate novalidate>
+										<p>Please provide email, username and password
+											<br/>
+											<em>
+												<small>Field marked * is required</small>
+											</em>
+										</p>
+										<div class="row">
+											<div class="col-md-3">
+												<div class="form-group">
+													<label class="control-label" for="email">Email *</label>
+													<input type="email" id="email" class="form-control" required>
+												</div>
+												<div class="form-group">
+													<label class="control-label" for="password">Password *</label>
+													<input type="password" id="password" name="password" class="form-control" required>
+												</div>
+												<div class="form-group">
+													<label class="control-label" for="password2">Repeat Password *</label>
+													<input type="password" id="password2" name="password2" class="form-control" required data-parsley-equalto="#password" data-parsley-equalto-message="Password doesn't match.">
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+								<div class="step-pane" data-step="3">
+									<form id="form3" data-parsley-validate novalidate>
+										<div class="fancy-checkbox">
+											<label>
+												<input type="checkbox" name="newsletter">
+												<span>Subscribe to monthly newsletter</span>
+											</label>
+										</div>
+										<div class="fancy-checkbox">
+											<label>
+												<input type="checkbox" name="terms">
+												<span>I accept the
+													<a href="#">Terms &amp; Agreements</a>
+												</span>
+											</label>
+										</div>
+									</form>
+								</div>
+								<div class="step-pane" data-step="4">
+									<p class="lead">
+										<i class="fa fa-check-circle text-success"></i> All is well! Click "Create My Account" to complete.</p>
+								</div>
+							</div>
+							<div class="actions">
+								<button type="button" class="btn btn-default btn-prev">
+									<i class="fa fa-arrow-left"></i> Prev</button>
+								<button type="button" class="btn btn-primary btn-next">Next
+									<i class="fa fa-arrow-right"></i>
+								</button>
+							</div>
+						</div>
+						<div class="container-fluid">
+							<div class="row padding-25 no-padding-bottom no-margin-top">
+								<div>
+									<p>
+										<strong class="text-primary">Step 1: </strong>Load a CSV file of data. </p>
+								</div>
+
+								<div class="col-md-6">
+									<p>load yourself some really good data!</p>
+									<div class="well well-sm">
+										<code>
+											0.1\t0.2\t0.5\t0.9
+											<br>0.2\t0.1\t5.0\t0.2
+											<br>0.4\t0.1\t7.0\t0.8
+										</code>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<input type="file" class="dropify" data-allowed-file-extensions="txt">
+								</div>
+							</div>
+							<div class="row padding-25 no-padding-top no-margin-top">
+								<div>
+									<p>
+										<strong class="text-primary">Step 2: </strong>Load a CSV file of labels. </p>
+								</div>
+								<div class="col-md-6">
+									<p>load yourself some really good data!</p>
+									<div class="well well-sm">
+										<code>
+											Pokémon\tSpecies
+											<br>Wartortle\tTurtle
+											<br>Venusaur\tSeed
+											<br>Charmeleon\tFlame
+										</code>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<input type="file" class="dropify" data-allowed-file-extensions="txt">
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Save changes</button> -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- NAVBAR -->
+		<nav class="navbar navbar-default navbar-fixed-top grad">
+			<div class="text-center clearfix">
+				<div class="navbar-btn no-margin pad-l">
+					<button type="button" class="btn-toggle-fullwidth">
+						<i class="lnr lnr-menu"></i>
+					</button>
+				</div>
+				<div class="branding">
+					<h1 class="text-center brand-block">
+						MustaCHE</h1>
+					<img src="assets/img/Mustache_Logo_SVG_black.svg" class="brand-logo">
+				</div>
+
+				<div id="navbar-menu" class="pad-r">
+					<ul class="nav navbar-nav navbar-right">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
+								<i class="lnr lnr-alarm"></i>
+								<span class="badge bg-warning"></span>
+							</a>
+							<ul class="dropdown-menu notifications">
+								<li>
+									<a href="#" class="notification-item">
+										<span class="dot bg-warning"></span>System space is almost full</a>
+								</li>
+								<li>
+									<a href="#" class="notification-item">
+										<span class="dot bg-danger"></span>You have 9 unfinished tasks</a>
+								</li>
+								<li>
+									<a href="#" class="notification-item">
+										<span class="dot bg-success"></span>Monthly report is available</a>
+								</li>
+								<li>
+									<a href="#" class="notification-item">
+										<span class="dot bg-warning"></span>Weekly meeting in 1 hour</a>
+								</li>
+								<li>
+									<a href="#" class="notification-item">
+										<span class="dot bg-success"></span>Your request has been approved</a>
+								</li>
+								<li>
+									<a href="#" class="more">See all notifications</a>
+								</li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<span></span>
+								<i class="lnr lnr-chevron-down"></i>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="#">Basic Use</a>
+								</li>
+								<li>
+									<a href="#">Working With Data</a>
+								</li>
+								<li>
+									<a href="#">Security</a>
+								</li>
+								<li>
+									<a href="#">Troubleshooting</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- END NAVBAR -->
+
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="main-content padding-top-30">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-6 col-lg-3">
+							<div class="panel project-item">
+								<div class="panel-heading grad">
+									<p class="panel-title">Anuran</p>
+									<div class="right">
+										<span class="label label-info">PROCESSING</span>
+										<!-- <span class="label label-success">PROCESSED</span> -->
+									</div>
+								</div>
+								<div class="panel-body">
+									<div class="left">
+										<div class="info">
+											<span class="title">DATE ADDED</span>
+											<span class="value">7/25/2018</span>
+										</div>
+										<div class="info">
+											<span class="title">DISTANCE</span>
+											<span class="value">EUCLIDEAN</span>
+										</div>
+										<div class="info">
+											<span class="title">RNG</span>
+											<span class="value">FILTERED</span>
+										</div>
+										<div class="info">
+											<span class="title">MPTS MIN/MAX</span>
+											<span class="value">2/50</span>
+										</div>
+									</div>
+									<div class="right">
+										<div class="progress-chart easy-pie-chart" data-percent="65">
+											<span class="percent">65%</span>
+										</div>
+										<div class="task">
+											<div class="task-progress">35m Remaing...</div>
+											<!-- <a href="#" class="btn btn-default btn-xs">
+												<i class="fa fa-plus"></i> Add Task</a> -->
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="controls">
+										<a href="#">
+											<i class="fa fa-eye"></i>View Details</a>
+										<a href="#">
+											<i class="fa fa-cloud-download"></i>Download Project File</a>
+										<a href="#">
+											<i class="fa fa-trash"></i>Delete</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-lg-3">
+							<div class="panel">
+								<div class="panel-body">
+									<a href="#" class="btn btn-default col-md-12" data-toggle="modal" data-target="#exampleModalCenter">
+										<i class="fa fa-plus"></i> ADD DATASET</a>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+
+							<!-- <input type="file" class="dropify" data-allowed-file-extensions="txt"> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+		<footer class="hidden">
+			<div class="container-fluid">
+				<p class="copyright">&copy; 2017
+					<a href="https://www.themeineed.com" target="_blank">Theme I Need</a>. All Rights Reserved.</p>
+			</div>
+		</footer>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script src="assets/vendor/jquery/jquery.min.js"></script>
+	<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="assets/vendor/pace/pace.min.js"></script>
+	<script src="assets/vendor/bootstrap-progressbar/js/bootstrap-progressbar.min.js"></script>
+	<script src="assets/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
+	<script src="assets/vendor/dropify/js/dropify.min.js"></script>
+	<script src="assets/vendor/fuelux/wizard/wizard.js"></script>
+	<script src="assets/vendor/parsleyjs/js/parsley.min.js"></script>
+	<script src="assets/vendor/sweetalert2/sweetalert2.js"></script>
+	<script src="assets/scripts/klorofilpro-common.js"></script>
+	<script>
+		$(function () {
+			$('.progress-chart').easyPieChart({
+				size: 110,
+				barColor: '#45AEEF',
+				trackColor: 'rgba(160, 174, 186, .2)',
+				scaleColor: false,
+				lineWidth: 6,
+				lineCap: "round",
+				animate: 800
+			});
+		});
+	</script>
+	<script>
+		$(function () {
+			$('.dropify').dropify();
+			var drEvent = $('#dropify-event').dropify();
+			drEvent.on('dropify.beforeClear', function (event, element) {
+				return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+			});
+			drEvent.on('dropify.afterClear', function (event, element) {
+				alert('File deleted');
+			});
+			$('.dropify-fr').dropify({
+				messages: {
+					default: 'Glissez-déposez un fichier ici ou cliquez',
+					replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+					remove: 'Supprimer',
+					error: 'Désolé, le fichier trop volumineux'
+				}
+			});
+		});
+	</script>
+	<script>
+		$(function () {
+			$('#demo-wizard').wizard()
+				.on('actionclicked.fu.wizard', function (e, data) {
+					//validation
+					if ($('#form' + data.step).length) {
+						var parsleyForm = $('#form' + data.step).parsley();
+						parsleyForm.validate();
+						if (!parsleyForm.isValid())
+							return false;
+					}
+					//last step button
+					$btnNext = $(this).parents('.wizard-wrapper').find('.btn-next');
+					if (data.step === 3 && data.direction == 'next') {
+						$btnNext.text(' Create My Account')
+							.prepend('<i class="fa fa-check-circle"></i>')
+							.removeClass('btn-primary').addClass('btn-success');
+					} else {
+						$btnNext.text('Next ')
+							.append('<i class="fa fa-arrow-right"></i>')
+							.removeClass('btn-success').addClass('btn-primary');
+					}
+				}).on('finished.fu.wizard', function () {
+					swal(
+						'Awesome!',
+						'Your account has been created',
+						'success'
+					).catch(swal.noop);
+				});
+		});
+	</script>
+</body>
+
+</html>

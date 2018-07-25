@@ -1,0 +1,158 @@
+// Variables
+
+$color-accent: #00AAFF;
+$color-success: #41B314;
+$color-warning: #e4cb10;
+$color-danger: #F9354C;
+$color-info: #5bc0de;
+$color-default: #777;
+$color-indicator-green: #53c265;
+$color-indicator-yellow: #F3BB23;
+$color-indicator-red: #ff4402;
+
+// Fonts
+$font-family: 'Roboto', sans-serif;
+$font-size: 14px;
+$font-color: #5e6773;
+
+$link-color: #00aaff;
+$link-color-hover: darken($link-color, 8%);
+$muted-color: #a0aeba;
+$border-panel-color: #d1d6e6;
+$panel-title-color: #717d84;
+
+$sidebar-bg-color: #fff;
+$list-separator-color: #e9eef2;
+$input-border-color: #e1e3ea;
+$control-label-color: #a0aeba;
+
+$sidebar-width: 240px;
+$minified-sidebar-width: 60px;
+
+// navigation
+$nav-font-color: #5e6773;
+
+// breakpoints
+$break-xsmall: 640px;
+$break-small: 768px;
+$break-medium: 992px;
+$break-1024: 1024px;
+$break-large: 1200px;
+$break-1280: 1280px;
+$break-xlarge: 1440px;
+
+// assets directory
+$assets_dir: '../../assets/';
+
+// custom colors
+$custom-colors: (
+	"blue": #0E9BE2,
+	"blue2": #4A90E2,
+	"blue3": #45AEEF,
+	"blue4": #85B5EA,
+	"green": #7CAC25,
+	"green2": #1DBB8E,
+	"green3": #5BD37E,
+	"orange": #FF4402,
+	"orange2": #F89B03,
+	"purple": #AB7DF6,
+	"yellow": #F3BB23,
+	"lightseagreen": #20B2AA,
+	"red": #ff4402
+);
+
+// Social media brand colors
+$social-colors : (
+	z500px: #0099e5,
+	about-me: #00405d,
+	airbnb: #fd5c63,
+	alphabet: #ed1c24,
+	amazon: #ff9900,
+	american-express: #002663,
+	aol: #ff0b00,
+	behance: #1769ff,
+	bing: #ffb900,
+	bitbucket: #205081,
+	bitly: #ee6123,
+	blogger: #f57d00,
+	booking-com: #003580,
+	buffer: #168eea,
+	code-school: #616f67,
+	codecademy: #f65a5b,
+	creative-market: #8ba753,
+	delicious: #3399ff,
+	deviantart: #05cc47,
+	digg: #005be2,
+	disqus: #2e9fff,
+	django: #092e20,
+	dribbble: #ea4c89,
+	dropbox: #007ee5,
+	drupal: #0077c0,
+	elance: #0d69af,
+	envato: #82b541,
+	etsy: #d5641c,
+	facebook: #3b5998,
+	feedly: #2bb24c,
+	flattr: #f67c1a,
+	flickr: #0063dc,
+	flipboard: #e12828,
+	flixster: #2971b2,
+	foursquare: #0732a2,
+	github: #333333,
+	google: #4285f4,
+	google-plus: #dc4e41,
+	instagram: #3f729b,
+	kickstarter: #2bde73,
+	kik: #82bc23,
+	lastfm: #d51007,
+	line: #00c300,
+	linkedin: #0077b5,
+	mail-ru: #168de2,
+	mailchimp: #2c9ab7,
+	myspace: #000000,
+	netflix: #e50914,
+	ning: #75af42,
+	path: #ee3423,
+	patreon: #e6461a,
+	paypal: #003087,
+	photobucket: #0ea0db,
+	pinterest: #bd081c,
+	product-hunt: #da552f,
+	quora: #a82400,
+	rdio: #007dc3,
+	reddit: #ff4500,
+	rss: #f26522,
+	salesforce: #1798c1,
+	scribd: #1a7bba,
+	shopify: #96bf48,
+	skype: #00aff0,
+	slack: #6ecadc,
+	slideshare: #0077b5,
+	soundcloud: #ff8800,
+	spotify: #2ebd59,
+	squarespace: #222222,
+	stackoverflow: #fe7a15,
+	stripe: #00afe1,
+	stumbleupon: #eb4924,
+	telegram: #0088cc,
+	tumblr: #35465c,
+	twitch-tv: #6441a5,
+	twitter: #55acee,
+	vimeo: #162221,
+	vine: #00b488,
+	wechat: #7bb32e,
+	whatsapp: #43d854,
+	wordpress: #21759b,
+	yahoo: #410093,
+	youtube: #cd201f,
+	firefox: #e66000,
+	chrome: #fbbc05,
+	edge: #00aaff,
+	safari: #4165c8,
+	opera: #cc0f16
+);
+
+
+
+
+

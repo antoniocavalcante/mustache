@@ -1,0 +1,428 @@
+/********************
+ * PANELS
+ ********************/
+
+.panel {
+	@include border-radius(3px);
+	@include box-shadow(none);
+
+	margin-bottom: 30px;
+	border: 1px solid $border-panel-color;
+	background: #fff;
+
+	.panel-heading,
+	.panel-body,
+	.panel-footer {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	.panel-heading {
+		padding-top: 12px;
+		padding-bottom: 12px;
+		position: relative;
+		line-height: 1;
+		border-bottom: 1px solid #eaeff2;
+		background-color: #f8f9fa;
+
+		&.no-divider {
+			border-bottom: none;
+			background-color: transparent;
+		}
+
+		.panel-title {
+			@include inline-block;
+
+			margin: 0;
+			font-size: 14px;
+			font-weight: 500;
+			color: $panel-title-color;
+		}
+
+		.panel-subtitle {
+			margin-top: 8px;
+			margin-bottom: 0;
+			font-size: 13px;
+			color: $muted-color;
+		}
+
+		.link {
+			i {
+				margin-right: 3px;
+				font-size: 13px;
+				color: $muted-color;
+			}
+
+			a {
+				color: $muted-color;
+				font-size: 12px;
+
+				&:hover,
+				&:focus {
+					text-decoration: underline;
+				}
+			}
+		}
+
+		.heading-controls {
+			margin-top: 35px;
+		}
+
+		.btn-toggle-collapse,
+		.btn-remove {
+			padding: 0;
+			margin-left: 5px;
+			background-color: transparent;
+			border: none;
+			outline: none;
+
+			i {
+				font-size: 14px;
+				color: #c6d2dd;
+			}
+		}
+
+		.toggle-dropdown {
+			padding: 0 10px;
+			margin-right: -10px;
+
+			i {
+				display: inline;
+				font-size: 16px;
+				color: #c6d2dd;
+			}
+		}
+
+		.panel-info {
+			font-size: 12px;
+			color: $muted-color;
+			line-height: 1.6;
+		}
+
+		.right {
+			float: right;
+
+			.btn {
+				padding: 4px 10px;
+				position: relative;
+				top: -0.4em;
+				font-size: 11px;
+			}
+		}
+
+		@include max-screen($break-xsmall) {
+			.panel-info {
+				font-size: 10px;
+				line-height: 2.2;
+			}
+		}
+	}
+
+	.panel-body {
+		padding-top: 30px;
+		padding-bottom: 30px;
+		position: relative;
+	}
+
+	.panel-note {
+		font-size: 13px;
+		line-height: 2.6;
+		color: #777777;
+
+		i {
+			font-size: 16px;
+			margin-right: 3px;
+		}
+	}
+
+	&.panel-headline {
+		.panel-heading {
+			border-bottom: none;
+			background-color: transparent;
+
+			.panel-title {
+				font-size: 16px;
+			}
+		}
+	}
+
+	&.panel-scrolling {
+		.btn-bottom {
+			margin-bottom: 30px;
+		}
+	}
+
+	&.panel-tab {
+		.nav-tabs {
+			position: absolute;
+			right: 0;
+			top: 0;
+			border-bottom: none;
+
+			> li > a {
+				@include border-radius(0);
+				
+				margin-right: 0;
+				color: #a0aeba;
+
+				&:hover {
+					background-color: #f0f2f4;
+					border-color: #eaeff2;
+					border-bottom-color: transparent;
+				}
+			}
+
+			> li.active > a {
+				@include border-radius(0);
+
+				color: $font-color;
+				border-top: 0;
+				border-color: #eaeff2;
+				border-bottom-color: transparent;
+
+				&:hover {
+					background-color: #fff;
+					border-color: #eaeff2;
+					border-bottom-color: transparent;
+				}
+
+				&:after {
+					border-bottom: 1px solid #fff !important;
+					content: "";
+					width: 100%;
+					height: 1px;
+					display: block;
+					position: absolute;
+					bottom: -2px;
+					left: -0;
+				}
+			}
+
+			> li:last-child > a {
+				border-right: 0;
+			}
+		}
+
+		.tab-pane {
+			padding: 0;
+		}
+
+		@include max-screen($break-small - 1px) {
+			.panel-heading {
+				padding-bottom: 0;
+				border-bottom: 0;
+			}
+
+			.panel-title {
+				display: block;
+				margin-bottom: 15px;
+			}
+
+			.nav-tabs {
+				float: none !important;
+				position: relative;
+
+				> li {
+					margin-bottom: 0;
+				}
+
+				> li > a {
+					padding: 5px 10px;
+					border-top: 1px solid #ddd;
+					border-right: 1px solid #ddd;
+					border-left: 1px solid #ddd;
+				}
+
+				> li.active > a {
+					border-top: 1px solid #ddd;
+				}
+
+				> li:last-child > a {
+					border-right: 1px solid #ddd;
+				}
+			}
+		}
+	}
+
+	&.panel-quick-note {
+		.panel-body {
+			padding: 0;
+		}
+
+		input.title,
+		textarea {
+			@include box-shadow(none);
+
+			border: none;
+			resize: none;
+			padding-left: 25px;
+			padding-right: 25px;
+		}
+
+		input.title {
+			font-weight: 700;
+		}
+
+		textarea {
+			&:focus {
+				outline: none;
+			}
+		}
+
+		.btn-group {
+			margin-left: -20px;
+		}
+	}
+}
+
+.panel-layout {
+	@include clearfix;
+
+	margin-left: -30px;
+	margin-right: -30px;
+
+	.panel-cols-2 {
+		width: 50%;
+		float: left;
+		position: relative;
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+
+	&.dashed-separator {
+		div[class^="panel-cols"]:after {
+			content: "";
+			border: 1px dashed $list-separator-color;
+			position: absolute;
+			right: 0;
+			height: 100%;
+			top: 0;
+		}
+
+		div[class^="panel-cols"]:last-child:after {
+			border: none;
+		}
+	}
+
+	@include max-screen($break-xsmall) {
+		div[class^="panel-cols"] {
+			float: none;
+			width: 100%;
+			margin-bottom: 50px;
+		}
+	}
+}
+
+.panel-content-title {
+	margin-top: 0;
+	margin-bottom: 25px;
+	font-size: 16px;
+	font-weight: normal;
+}
+
+.panel-footer {
+	background-color: #fff;
+	border-color: #eaeff2;
+}
+
+.overlay-refresh {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	font-size: 18px;
+	text-align: center;
+	background: rgba(246, 246, 246, .88);
+
+	i {
+		display: block;
+	}
+}
+
+// solid colored panel
+.panel-solid-blue {
+	.panel-heading {
+		background-color: #4286C9;
+
+		.panel-title {
+			color: #fff;
+		}
+	}
+
+	.panel-content-wrapper {
+		background-color: #5894D1;
+	}
+}
+
+.panel-content-wrapper {
+	padding: 25px;
+}
+
+// panel with sidebar
+.panel-sidebar {
+	.panel-body {
+		padding: 0;
+	}
+
+	.left,
+	.right {
+		padding: 25px;
+	}
+
+	.left {
+		float: left;
+	}
+
+	.right {
+		float: right;
+	}
+
+	&.sidebar-right {
+		.left {
+			width: 66.66666667%;
+			border-right: 1px solid #eaeff2;
+		}
+
+		.right {
+			width: 33.33333333%;
+		}
+	}
+
+	&.sidebar-left {
+		.left {
+			width: 33.33333333%;
+		}
+
+		.right {
+			width: 66.66666667%;
+			border-left: 1px solid #eaeff2;
+		}
+	}
+
+	.sidebar-section {
+		margin-bottom: 30px;
+	}
+
+	.section-title {
+		margin: 0 0 15px 0;
+		font-size: 15px;
+		font-weight: 600;
+	}
+
+	@include max-screen($break-xsmall) {
+		&.sidebar-right,
+		&.sidebar-left {
+			.left,
+			.right {
+				float: none;
+				width: 100%;
+			}
+		}
+	}
+
+}
+
+
+

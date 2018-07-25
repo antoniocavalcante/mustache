@@ -1,0 +1,73 @@
+@import "../base/variables";
+
+#wrapper .sidebar {
+	background-color: $bg-color;
+}
+
+.sidebar .nav li > a {
+	color: $sidebar-font-color;
+
+	&:hover,
+	&.active {
+		background-color: darken($bg-color, 2%);
+	}
+
+	&[aria-expanded="true"],
+	&.active {
+		background-color: transparent;
+		color: $color-accent;
+	}
+
+	&.active:hover {
+		background-color: darken($bg-color, 2%);
+	}
+
+	&:focus {
+		background-color: transparent;
+	}
+}
+
+.sidebar .nav .nav {
+	background-color: $bg-color;
+
+	> li > a.active {
+		background-color: darken($bg-color, 2%);
+		color: $sidebar-font-color;
+	}
+}
+
+.sidebar-minified {
+	.sidebar .nav > li:hover,
+	.sidebar .nav > li:hover .collapse li:hover {
+		> a {
+			background-color: $bg-color;
+			color: $color-accent;
+		}
+	}
+
+	.sidebar {
+		.collapse {
+			background: $bg-color;
+		}
+
+		.nav > li:hover > a,
+		.nav li:hover > a > .title {
+			background: darken($bg-color, 1%);
+		}
+	}
+}
+
+.btn-toggle-minified {
+	background: darken($bg-color, 3%);
+	color: $sidebar-font-color;
+	border-color: darken($bg-color, 5%);
+
+	&:hover {
+		color: $sidebar-font-color;
+		background: darken($bg-color, 4%);
+	}
+
+}
+
+
+

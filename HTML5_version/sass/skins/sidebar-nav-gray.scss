@@ -1,0 +1,39 @@
+$bg-color: #fdfdfd;
+$sidebar-font-color: #72767b;
+
+@import "sidebar-nav";
+
+.right-sidebar {
+	background-color: $bg-color;
+	color: $sidebar-font-color;
+
+	.widget-header {
+		background-color: darken($bg-color, 4%);
+		border-color: darken($bg-color, 6%);
+	}
+
+	.icon-transparent-area .badge{
+		border-color: $bg-color;
+	}
+
+	.btn-default {
+		background-color: darken($bg-color, 4%);
+		border-color: darken($bg-color, 6%);
+
+		&:hover,
+		&:focus {
+			background-color: darken($bg-color, 6%);
+			border-color: darken($bg-color, 8%);
+		}
+
+		&.active,
+		&:active {
+			&:hover,
+			&:focus {
+				border-color: darken($bg-color, 8%);
+			}
+		}
+	}
+}
+
+

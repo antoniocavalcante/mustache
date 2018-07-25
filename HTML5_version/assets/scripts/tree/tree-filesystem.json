@@ -1,0 +1,23 @@
+[
+	{"id":"root","text":"My Projects", "type" : "root", "children":
+		[
+			{"id":"01","text":"Project 123GO", "children" :
+				[
+					{"id":"011", "text": "Media"},
+					{"id":"012", "text": "Legal"},
+					{"id":"013", "text": "Proposal.docx", "type": "word"},
+					{"id":"014", "text": "Proposal_FINAL.pdf", "type": "pdf"},
+					{"id":"015", "text": "Presentation.ppt", "type": "ppt"},
+					{"id":"016", "text": "Statistic.xlsx", "type": "excel"}
+				]
+
+			},
+			{"id":"02", "text": "Web Redesign"},
+			{"id":"03", "text": "Spot Media"},
+			{"id":"04", "text": "Fast E-Commerce"},
+			{"id":"05", "text": "SEO"},
+			{"id":"06", "text": "Review.pdf", "type": "pdf"},
+			{"id":"07", "text": "CompanyLogo.jpg", "type": "img"}
+		]
+	}
+]
