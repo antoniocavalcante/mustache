@@ -19,6 +19,7 @@
 	<!-- MAIN CSS -->
 	<link rel="stylesheet" href="assets/css/main.css">
 	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="../template/assets/css/dashboard.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:700" rel="stylesheet">
 	<!-- ICONS -->
 	<link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
@@ -33,7 +34,7 @@
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title text-center" id="exampleModalLongTitle">Load Dataset</h5>
+						<h5 class="modal-title text-center panel-title-extra" id="exampleModalLongTitle">Load Dataset</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -189,8 +190,7 @@
 
 					</div>
 					<div class="modal-footer">
-						<!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Save changes</button> -->
+						<button type="button" class="btn btn-sm btn-primary" disabled>Next</button>
 					</div>
 				</div>
 			</div>
@@ -199,7 +199,7 @@
 		<nav class="navbar navbar-default navbar-fixed-top grad">
 			<div class="text-center clearfix">
 				<div class="navbar-btn no-margin pad-l">
-					<button type="button" class="btn-toggle-fullwidth">
+					<button type="button" class="btn-toggle-fullwidth" disabled>
 						<i class="lnr lnr-menu"></i>
 					</button>
 				</div>
@@ -213,7 +213,7 @@
 					<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
-								<i class="lnr lnr-alarm"></i>
+								<i class="lnr lnr-cog"></i>
 								<span class="badge bg-warning"></span>
 							</a>
 							<ul class="dropdown-menu notifications">
@@ -242,26 +242,6 @@
 								</li>
 							</ul>
 						</li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<span></span>
-								<i class="lnr lnr-chevron-down"></i>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="#">Basic Use</a>
-								</li>
-								<li>
-									<a href="#">Working With Data</a>
-								</li>
-								<li>
-									<a href="#">Security</a>
-								</li>
-								<li>
-									<a href="#">Troubleshooting</a>
-								</li>
-							</ul>
-						</li>
 					</ul>
 				</div>
 			</div>
@@ -274,12 +254,12 @@
 			<div class="main-content padding-top-30">
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-md-6 col-lg-3">
-							<div class="panel project-item">
-								<div class="panel-heading grad">
+						<div class="col-md-4">
+							<div class="panel panel-default project-item grad">
+								<div class="panel-heading">
 									<p class="panel-title">Anuran</p>
 									<div class="right">
-										<span class="label label-info">PROCESSING</span>
+										<span class="label label-primary">PROCESSING</span>
 										<!-- <span class="label label-success">PROCESSED</span> -->
 									</div>
 								</div>
@@ -324,7 +304,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6 col-lg-3">
+						<div class="col-md-4">
 							<div class="panel">
 								<div class="panel-body">
 									<a href="#" class="btn btn-default col-md-12" data-toggle="modal" data-target="#exampleModalCenter">
