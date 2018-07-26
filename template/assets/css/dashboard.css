@@ -9,6 +9,10 @@ svg {
     background: linear-gradient(to bottom, white, #eeeeee);
 }
 
+.grad2 {
+    background: linear-gradient(to bottom, #eeeeee, #cccccc);
+}
+
 .axis path,
 .axis line {
     fill: none;

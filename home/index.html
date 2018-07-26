@@ -16,6 +16,7 @@
 	<link rel="stylesheet" href="assets/vendor/parsleyjs/css/parsley.css">
 	<link rel="stylesheet" href="assets/vendor/sweetalert2/sweetalert2.css">
 	<link rel="stylesheet" href="assets/vendor/dropify/css/dropify.min.css">
+	<link rel="stylesheet" href="assets/css/mfb.css">
 	<!-- MAIN CSS -->
 	<link rel="stylesheet" href="assets/css/main.css">
 	<link rel="stylesheet" href="assets/css/style.css">
@@ -27,8 +28,21 @@
 </head>
 
 <body class="layout-fullwidth">
+	<ul class="mfb-component--br mfb-slidein effects-slidein" data-mfb-hover>
+		<!-- the menu content -->
+		<li class="mfb-component__wrap">
+			<!-- the main menu button -->
+			<a data-mfb-label="Add new dataset" class="mfb-component__button--main grad" data-toggle="modal" data-target="#exampleModalCenter">
+				<!-- the main button icon visibile by default -->
+				<i class="mfb-component__main-icon--resting ti ti-plus text-primary"></i>
+				<!-- the main button icon visibile when the user is hovering/interacting with the menu -->
+				<i class="mfb-component__main-icon--active ti ti-plus text-success"></i>
+			</a>
+		</li>
+	</ul>
 	<!-- WRAPPER -->
 	<div id="wrapper">
+
 		<!-- Modal -->
 		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
@@ -39,159 +53,58 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body no-padding">
-						<div id="demo-wizard" class="wizard hidden">
-							<div class="steps-container">
-								<ul class="steps">
-									<li data-step="1" class="active">
-										<span class="badge badge-info">1</span>Account Type
-										<span class="chevron"></span>
-									</li>
-									<li data-step="2">
-										<span class="badge">2</span>User Account
-										<span class="chevron"></span>
-									</li>
-									<li data-step="3">
-										<span class="badge">3</span>Options
-										<span class="chevron"></span>
-									</li>
-									<li data-step="4" class="last">
-										<span class="badge">4</span>Create Account</li>
-								</ul>
-							</div>
-							<div class="step-content">
-								<div class="step-pane active" data-step="1">
-									<form id="form1" data-parsley-validate novalidate>
-										<p>Choose your account type:</p>
-										<div class="fancy-radio">
-											<label>
-												<input type="radio" name="account-type" value="personal" required data-parsley-errors-container="#error-step1">
-												<span>
-													<i></i>Personal</span>
-											</label>
-										</div>
-										<div class="fancy-radio">
-											<label class="fancy-radio">
-												<input type="radio" name="account-type" value="business">
-												<span>
-													<i></i>Business</span>
-											</label>
-										</div>
-										<div class="fancy-radio">
-											<label class="fancy-radio">
-												<input type="radio" name="account-type" value="enterprise">
-												<span>
-													<i></i>Enterprise</span>
-											</label>
-										</div>
-										<p id="error-step1"></p>
-									</form>
-								</div>
-								<div class="step-pane" data-step="2">
-									<form id="form2" data-parsley-validate novalidate>
-										<p>Please provide email, username and password
-											<br/>
-											<em>
-												<small>Field marked * is required</small>
-											</em>
-										</p>
-										<div class="row">
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label" for="email">Email *</label>
-													<input type="email" id="email" class="form-control" required>
-												</div>
-												<div class="form-group">
-													<label class="control-label" for="password">Password *</label>
-													<input type="password" id="password" name="password" class="form-control" required>
-												</div>
-												<div class="form-group">
-													<label class="control-label" for="password2">Repeat Password *</label>
-													<input type="password" id="password2" name="password2" class="form-control" required data-parsley-equalto="#password" data-parsley-equalto-message="Password doesn't match.">
-												</div>
-											</div>
-										</div>
-									</form>
-								</div>
-								<div class="step-pane" data-step="3">
-									<form id="form3" data-parsley-validate novalidate>
-										<div class="fancy-checkbox">
-											<label>
-												<input type="checkbox" name="newsletter">
-												<span>Subscribe to monthly newsletter</span>
-											</label>
-										</div>
-										<div class="fancy-checkbox">
-											<label>
-												<input type="checkbox" name="terms">
-												<span>I accept the
-													<a href="#">Terms &amp; Agreements</a>
-												</span>
-											</label>
-										</div>
-									</form>
-								</div>
-								<div class="step-pane" data-step="4">
-									<p class="lead">
-										<i class="fa fa-check-circle text-success"></i> All is well! Click "Create My Account" to complete.</p>
-								</div>
-							</div>
-							<div class="actions">
-								<button type="button" class="btn btn-default btn-prev">
-									<i class="fa fa-arrow-left"></i> Prev</button>
-								<button type="button" class="btn btn-primary btn-next">Next
-									<i class="fa fa-arrow-right"></i>
-								</button>
-							</div>
-						</div>
-						<div class="container-fluid">
-							<div class="row padding-25 no-padding-bottom no-margin-top">
-								<div>
-									<p>
-										<strong class="text-primary">Step 1: </strong>Load a CSV file of data. </p>
-								</div>
+					<form id="submitDataForm">
+						<div class="modal-body no-padding">
+							<div class="container-fluid">
 
-								<div class="col-md-6">
-									<p>load yourself some really good data!</p>
-									<div class="well well-sm">
-										<code>
-											0.1\t0.2\t0.5\t0.9
-											<br>0.2\t0.1\t5.0\t0.2
-											<br>0.4\t0.1\t7.0\t0.8
-										</code>
+								<div class="row padding-25 no-padding-bottom no-margin-top">
+									<div>
+										<p>
+											<strong class="text-primary">Step 1: </strong>Load a CSV file of data. </p>
+									</div>
+
+									<div class="col-md-6">
+										<p>load yourself some really good data!</p>
+										<div class="well well-sm">
+											<code>
+												0.1\t0.2\t0.5\t0.9
+												<br>0.2\t0.1\t5.0\t0.2
+												<br>0.4\t0.1\t7.0\t0.8
+											</code>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<input type="file" name="dataset-file" class="dropify" id="file-dataset">
 									</div>
 								</div>
-
-								<div class="col-md-6">
-									<input type="file" class="dropify" data-allowed-file-extensions="txt">
-								</div>
-							</div>
-							<div class="row padding-25 no-padding-top no-margin-top">
-								<div>
-									<p>
-										<strong class="text-primary">Step 2: </strong>Load a CSV file of labels. </p>
-								</div>
-								<div class="col-md-6">
-									<p>load yourself some really good data!</p>
-									<div class="well well-sm">
-										<code>
-											Pokémon\tSpecies
-											<br>Wartortle\tTurtle
-											<br>Venusaur\tSeed
-											<br>Charmeleon\tFlame
-										</code>
+								<div class="row padding-25 no-padding-top no-margin-top disabled">
+									<div>
+										<p>
+											<strong class="text-primary">Step 2: </strong>Load a CSV file of labels. </p>
+									</div>
+									<div class="col-md-6">
+										<p>load yourself some really good data!</p>
+										<div class="well well-sm">
+											<code>
+												Pokémon\tSpecies
+												<br>Wartortle\tTurtle
+												<br>Venusaur\tSeed
+												<br>Charmeleon\tFlame
+											</code>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<input type="file" name="labels-file" class="dropify" id="file-labels">
 									</div>
 								</div>
-								<div class="col-md-6">
-									<input type="file" class="dropify" data-allowed-file-extensions="txt">
-								</div>
 							</div>
-						</div>
 
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-sm btn-primary" disabled>Next</button>
-					</div>
+						</div>
+						<div class="modal-footer">
+							<input type="button" value="Next" class="btn btn-sm btn-primary" disabled id="next-1">
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -212,35 +125,10 @@
 				<div id="navbar-menu" class="pad-r">
 					<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
+							<a href="#" class="dropdown-toggle icon-menu">
 								<i class="lnr lnr-cog"></i>
 								<span class="badge bg-warning"></span>
 							</a>
-							<ul class="dropdown-menu notifications">
-								<li>
-									<a href="#" class="notification-item">
-										<span class="dot bg-warning"></span>System space is almost full</a>
-								</li>
-								<li>
-									<a href="#" class="notification-item">
-										<span class="dot bg-danger"></span>You have 9 unfinished tasks</a>
-								</li>
-								<li>
-									<a href="#" class="notification-item">
-										<span class="dot bg-success"></span>Monthly report is available</a>
-								</li>
-								<li>
-									<a href="#" class="notification-item">
-										<span class="dot bg-warning"></span>Weekly meeting in 1 hour</a>
-								</li>
-								<li>
-									<a href="#" class="notification-item">
-										<span class="dot bg-success"></span>Your request has been approved</a>
-								</li>
-								<li>
-									<a href="#" class="more">See all notifications</a>
-								</li>
-							</ul>
 						</li>
 					</ul>
 				</div>
@@ -254,7 +142,7 @@
 			<div class="main-content padding-top-30">
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-md-4">
+						<div class="col-md-3 dataset">
 							<div class="panel panel-default project-item grad">
 								<div class="panel-heading">
 									<p class="panel-title">Anuran</p>
@@ -282,14 +170,18 @@
 											<span class="value">2/50</span>
 										</div>
 									</div>
+									<div class="left">
+										<div class="info">
+											<span class="title">SIZE</span>
+											<span class="value">5.8MB</span>
+										</div>
+									</div>
 									<div class="right">
 										<div class="progress-chart easy-pie-chart" data-percent="65">
 											<span class="percent">65%</span>
 										</div>
 										<div class="task">
 											<div class="task-progress">35m Remaing...</div>
-											<!-- <a href="#" class="btn btn-default btn-xs">
-												<i class="fa fa-plus"></i> Add Task</a> -->
 										</div>
 									</div>
 									<div class="clearfix"></div>
@@ -297,24 +189,20 @@
 										<a href="#">
 											<i class="fa fa-eye"></i>View Details</a>
 										<a href="#">
-											<i class="fa fa-cloud-download"></i>Download Project File</a>
-										<a href="#">
 											<i class="fa fa-trash"></i>Delete</a>
+										<button type="button" class="btn btn-primary pull-right" disabled>
+											<i class="fa fa-area-chart"></i>OPEN</button>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="col-md-4">
-							<div class="panel">
-								<div class="panel-body">
-									<a href="#" class="btn btn-default col-md-12" data-toggle="modal" data-target="#exampleModalCenter">
+						<div class="col-md-4 hidden">
+							<div class="panel panel-default grad2">
+								<div class="panel-body" id="add-dataset">
+									<a href="#" class="btn btn-default col-md-12 btn-block">
 										<i class="fa fa-plus"></i> ADD DATASET</a>
 								</div>
 							</div>
-						</div>
-						<div class="col-md-3">
-
-							<!-- <input type="file" class="dropify" data-allowed-file-extensions="txt"> -->
 						</div>
 					</div>
 				</div>
@@ -341,7 +229,9 @@
 	<script src="assets/vendor/fuelux/wizard/wizard.js"></script>
 	<script src="assets/vendor/parsleyjs/js/parsley.min.js"></script>
 	<script src="assets/vendor/sweetalert2/sweetalert2.js"></script>
+	<script src="assets/scripts/mfb.js"></script>
 	<script src="assets/scripts/klorofilpro-common.js"></script>
+	<script src="assets/scripts/papaparse.min.js"></script>
 	<script>
 		$(function () {
 			$('.progress-chart').easyPieChart({
@@ -357,53 +247,80 @@
 	</script>
 	<script>
 		$(function () {
-			$('.dropify').dropify();
-			var drEvent = $('#dropify-event').dropify();
-			drEvent.on('dropify.beforeClear', function (event, element) {
-				return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
-			});
-			drEvent.on('dropify.afterClear', function (event, element) {
-				alert('File deleted');
-			});
-			$('.dropify-fr').dropify({
+
+			var drEvent = $('.dropify').dropify({
 				messages: {
-					default: 'Glissez-déposez un fichier ici ou cliquez',
-					replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-					remove: 'Supprimer',
-					error: 'Désolé, le fichier trop volumineux'
+					'default': 'Drag and drop a file here or click',
+					'replace': 'Drag and drop or click to replace',
+					'remove': 'Remove',
+					'error': 'Parsing Error.'
 				}
 			});
+			drEvent.on('dropify.afterClear', function (event, element) {
+				$("#next-1").attr("disabled", true)
+			});
+
 		});
 	</script>
 	<script>
+		$("#next-1").on("click", checkData);
+
+		function checkData() {
+			var dataset = $("#file-dataset")[0].files[0]
+			var labels = $("#file-labels")[0].files[0]
+			Papa.parse(dataset, {
+				complete: function (results) {
+					var data = results.data;
+					var errors = results.errors;
+					if (errors.length > 0) {
+						var drEvent = $('#file-dataset').dropify();
+						drEvent = drEvent.data('dropify');
+						drEvent.resetPreview();
+						drEvent.clearElement();
+						$('.dropify-wrapper').has("#file-dataset").toggleClass("has-error")
+
+					}
+				}
+			});
+			Papa.parse(labels, {
+				complete: function (results) {
+					var data = results.data;
+					var errors = results.errors;
+					if (errors.length > 0) {
+						var drEvent = $('#file-labels').dropify();
+						drEvent = drEvent.data('dropify');
+						drEvent.resetPreview();
+						drEvent.clearElement();
+						$('.dropify-wrapper').has("#file-labels").toggleClass("has-error")
+
+					}
+				}
+			});
+
+		}
 		$(function () {
-			$('#demo-wizard').wizard()
-				.on('actionclicked.fu.wizard', function (e, data) {
-					//validation
-					if ($('#form' + data.step).length) {
-						var parsleyForm = $('#form' + data.step).parsley();
-						parsleyForm.validate();
-						if (!parsleyForm.isValid())
-							return false;
-					}
-					//last step button
-					$btnNext = $(this).parents('.wizard-wrapper').find('.btn-next');
-					if (data.step === 3 && data.direction == 'next') {
-						$btnNext.text(' Create My Account')
-							.prepend('<i class="fa fa-check-circle"></i>')
-							.removeClass('btn-primary').addClass('btn-success');
-					} else {
-						$btnNext.text('Next ')
-							.append('<i class="fa fa-arrow-right"></i>')
-							.removeClass('btn-success').addClass('btn-primary');
-					}
-				}).on('finished.fu.wizard', function () {
-					swal(
-						'Awesome!',
-						'Your account has been created',
-						'success'
-					).catch(swal.noop);
-				});
+
+			$("#submitDataForm").find("input").change(function () {
+				if ($("#file-dataset")[0].files[0] != undefined) {
+					$("#next-1").attr("disabled", false);
+				}
+
+			})
+
+			$('#exampleModalCenter').on('hidden.bs.modal', function (e) {
+				$("#submitDataForm").trigger("reset");
+				$('.dropify-wrapper').has("#file-dataset").removeClass("has-error")
+				$('.dropify-wrapper').has("#file-labels").removeClass("has-error")
+				var d1 = $('#file-dataset').dropify();
+				var d2 = $('#file-labels').dropify();
+				d1 = d1.data('dropify');
+				d2 = d2.data('dropify');
+				d1.resetPreview();
+				d1.clearElement();
+				d2.resetPreview();
+				d2.clearElement();
+			})
+
 		});
 	</script>
 </body>
