@@ -47,17 +47,16 @@
 		<div class="modal fade" id="addDataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
-					<div class="modal-header hidden">
-						<h5 class="modal-title text-center panel-title-extra" id="exampleModalLongTitle">Load Dataset</h5>
+					<div class="modal-header">
+						<h5 class="modal-title text-center panel-title-extra js-title-step" id="exampleModalLongTitle"></h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<form id="submitDataForm">
-						<div class="modal-body no-padding wizard" id="formSteps">
+						<div class="modal-body no-padding wizard">
 							<div class="container-fluid">
-								<h3>Account</h3>
-								<section>
+								<div class="row hide" data-step="1" data-title="Select Dataset">
 									<div class="row padding-25 no-padding-bottom no-margin-top">
 										<div>
 											<p>
@@ -99,15 +98,34 @@
 											<input type="file" name="labels-file" class="dropify" id="file-labels">
 										</div>
 									</div>
-								</section>
-								<h3>Settings</h3>
-								<section>
-									<h1>Yolo</h1>
-								</section>
+								</div>
+								<div class="row hide" data-step="2" data-title="Configuration">
+									<div class="row padding-25">
+										<div class="form-group">
+											<label>Dataset Name</label>
+											<input type="text" class="form-control">
+										</div>
+										<div class="form-group">
+											<label>Distance</label>
+											<select class="form-control">
+												<option>Euclidean</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<label>RNG</label>
+											<select class="form-control">
+												<option>Filtered</option>
+											</select>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="modal-footer hidden">
-							<input type="button" value="Next" class="btn btn-sm btn-primary" disabled id="next-1">
+						<div class="modal-footer">
+							<!-- <input type="button" value="Next" class="btn btn-sm btn-primary" disabled id="next-1"> -->
+							<button type="button" class="btn btn-default js-btn-step pull-left" data-orientation="cancel" data-dismiss="modal"></button>
+							<button type="button" class="btn btn-warning js-btn-step" data-orientation="previous"></button>
+							<button type="button" class="btn btn-success js-btn-step" id="next1" data-orientation="next"></button>
 						</div>
 					</form>
 				</div>
@@ -224,8 +242,9 @@
 	<script src="assets/vendor/bootstrap-progressbar/js/bootstrap-progressbar.min.js"></script>
 	<script src="assets/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
 	<script src="assets/vendor/dropify/js/dropify.min.js"></script>
-	<script src="assets/vendor/jquery.steps-1.1.0/jquery.steps.min.js"></script>
+	<!-- <script src="assets/vendor/jquery.steps-1.1.0/jquery.steps.min.js"></script> -->
 	<!-- <script src="assets/vendor/parsleyjs/js/parsley.min.js"></script> -->
+	<script src="assets/scripts/jquery-bootstrap-modal-steps.min.js"></script>
 	<script src="assets/vendor/sweetalert2/sweetalert2.js"></script>
 	<script src="assets/scripts/mfb.js"></script>
 	<script src="assets/scripts/klorofilpro-common.js"></script>
@@ -244,14 +263,6 @@
 		});
 	</script>
 	<script>
-		var wizard = $("#formSteps").steps({
-			headerTag: "h3",
-			bodyTag: "section",
-			transitionEffect: "slideLeft",
-			autoFocus: true
-		});
-	</script>
-	<script>
 		$(function () {
 
 			var drEvent = $('.dropify').dropify({
@@ -263,67 +274,102 @@
 				}
 			});
 
+			var drEvent3 = $('#file-labels').dropify();
+			drEvent3.on('dropify.afterClear', function (event, element) {
+				checkSum[1] = undefined;
+			});
+
 			var drEvent2 = $('#file-dataset').dropify();
 			drEvent2.on('dropify.afterClear', function (event, element) {
-
-				$("#next-1").attr("disabled", true);
-
+				$("#next1").attr("disabled", true);
+				try {
+					drEvent3 = drEvent3.data("dropify");
+					drEvent3.resetPreview();
+					drEvent3.clearElement();
+				} catch (error) {
+					console.log(error);
+				}
+				checkSum = [];
 			});
 
 		});
 	</script>
 	<script>
-		$("#step2").fadeOut();
 		var checkSum = [];
-		$("#next-1").on("click", function () {
-			if (checkSum[0] == checkSum[1]) {
 
-			}
+		function submitData() {
+			console.log("gogogo!");
+		}
+
+		var modal = $('#addDataModal').modalSteps({
+			btnLastStepHtml: "Run",
+			btnPreviousHtml: "Back",
+			completeCallback: submitData
 
 		});
 
-		function checkData() {
-			var dataset = $("#file-dataset")[0].files[0]
-			var labels = $("#file-labels")[0].files[0]
-			Papa.parse(dataset, {
-				complete: function (results) {
-					var data = results.data;
-					var errors = results.errors;
-					checkSum[0] = data[0].length;
-					if (errors.length > 0) {
-						var drEvent = $('#file-dataset').dropify();
-						drEvent = drEvent.data('dropify');
-						drEvent.resetPreview();
-						drEvent.clearElement();
-						$('.dropify-wrapper').has("#file-dataset").toggleClass("has-error")
+		$("#next1").attr("disabled", true);
 
-					}
-				}
-			});
+
+		function check(selection) {
+			var labels = selection[0].files[0]
 			Papa.parse(labels, {
 				complete: function (results) {
 					var data = results.data;
 					var errors = results.errors;
-					checkSum[1] = data.length;
-					if (errors.length > 0) {
-						var drEvent = $('#file-labels').dropify();
-						drEvent = drEvent.data('dropify');
+
+					var drEvent = selection.dropify();
+					drEvent = drEvent.data('dropify');
+					var id = selection.attr("id")
+
+					if (id == "file-dataset") {
+						checkSum[0] = data[0].length;
+					}
+					if (id == "file-labels") {
+						checkSum[1] = data.length;
+					}
+
+					function resetFile(id) {
 						drEvent.resetPreview();
 						drEvent.clearElement();
-						$('.dropify-wrapper').has("#file-labels").toggleClass("has-error")
+						$('.dropify-wrapper').has("#" + id).toggleClass("has-error")
+					}
+
+					if (errors.length > 0) {
+						resetFile(id);
+						return false;
 
 					}
+
+					if (checkSum.length == 2) {
+						if (checkSum[0] != checkSum[1]) {
+							alert("Label Index Error: number of labels does not match number of dataset. ")
+							resetFile(id);
+							return false;
+						}
+					}
+
 				}
 			});
 
+			return true;
 		}
+
+
+
 		$(function () {
 
-			$("#submitDataForm").find("input").change(function () {
-				if ($("#file-dataset")[0].files[0] != undefined) {
-					$("#next-1").attr("disabled", false);
+			$("#submitDataForm").find("input").change(function (event) {
+				var selection = $(this);
+				if (selection.attr("id") == "file-dataset") {
+					if (check(selection)) {
+						$("#next1").removeAttr("disabled");
+					}
 				}
-				checkData();
+				if (selection.attr("id") == "file-labels") {
+					check(selection);
+				}
+
 
 			})
 
@@ -339,6 +385,7 @@
 				d1.clearElement();
 				d2.resetPreview();
 				d2.clearElement();
+				checkSum = [];
 			})
 
 		});
