@@ -53,76 +53,95 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<form id="submitDataForm">
+					<form id="submitDataForm" action="/submit" method="POST">
 						<div class="modal-body no-padding wizard">
 							<div class="container-fluid">
 								<div class="row hide" data-step="1" data-title="Select Dataset">
-									<div class="row padding-25 no-padding-bottom no-margin-top">
-										<div>
-											<p>
-												<strong class="text-primary">Step 1: </strong>Load a CSV file of data. </p>
-										</div>
+									<div class="col-md-12">
+										<div class="row padding-25 no-padding-bottom no-margin-top">
+											<div>
+												<p>
+													<strong class="text-primary">Step 1: </strong>Load a CSV file of data. </p>
+											</div>
+											<div class="col-md-6">
+												<p>load yourself some really good data!</p>
+												<div class="well well-sm">
+													<code>
+														0.1\t0.2\t0.5\t0.9
+														<br>0.2\t0.1\t5.0\t0.2
+														<br>0.4\t0.1\t7.0\t0.8
+													</code>
+												</div>
+											</div>
 
-										<div class="col-md-6">
-											<p>load yourself some really good data!</p>
-											<div class="well well-sm">
-												<code>
-													0.1\t0.2\t0.5\t0.9
-													<br>0.2\t0.1\t5.0\t0.2
-													<br>0.4\t0.1\t7.0\t0.8
-												</code>
+											<div class="col-md-6">
+												<input type="file" name="dataset-file" class="dropify" id="file-dataset">
 											</div>
 										</div>
-
-										<div class="col-md-6">
-											<input type="file" name="dataset-file" class="dropify" id="file-dataset">
-										</div>
-									</div>
-									<div class="row padding-25 no-padding-top no-margin-top disabled">
-										<div>
-											<p>
-												<strong class="text-primary">Step 2: </strong>Load a CSV file of labels. </p>
-										</div>
-										<div class="col-md-6">
-											<p>load yourself some really good data!</p>
-											<div class="well well-sm">
-												<code>
-													Pokémon\tSpecies
-													<br>Wartortle\tTurtle
-													<br>Venusaur\tSeed
-													<br>Charmeleon\tFlame
-												</code>
+										<div class="row padding-25 no-padding-top no-margin-top disabled">
+											<div>
+												<p>
+													<strong class="text-primary">Step 2: </strong>Load a CSV file of labels. </p>
 											</div>
-										</div>
-										<div class="col-md-6">
-											<input type="file" name="labels-file" class="dropify" id="file-labels">
+											<div class="col-md-6">
+												<p>load yourself some really good data!</p>
+												<div class="well well-sm">
+													<code>
+														Pokémon\tSpecies
+														<br>Wartortle\tTurtle
+														<br>Venusaur\tSeed
+														<br>Charmeleon\tFlame
+													</code>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<input type="file" name="labels-file" class="dropify" id="file-labels">
+											</div>
 										</div>
 									</div>
 								</div>
 								<div class="row hide" data-step="2" data-title="Configuration">
 									<div class="row padding-25">
-										<div class="form-group">
-											<label>Dataset Name</label>
-											<input type="text" class="form-control">
-										</div>
-										<div class="form-group">
-											<label>Distance</label>
-											<select class="form-control">
-												<option>Euclidean</option>
-											</select>
-										</div>
-										<div class="form-group">
-											<label>RNG</label>
-											<select class="form-control">
-												<option>Filtered</option>
-											</select>
+										<div class="col-md-12">
+											<div class="form-group">
+												<label>Datapoints</label>
+												<input type="text" class="form-control" name="datasetPoints" readonly disabled>
+											</div>
+											<div class="form-group">
+												<label>Dataset Name</label>
+												<input type="text" class="form-control" name="datasetName" data-validation="length" data-validation-length="5-150">
+											</div>
+											<div class="form-group">
+												<label>Distance</label>
+												<select class="form-control" name="datasetDistance" data-validation="length" data-validation-length="min1">
+													<option>Euclidean</option>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>RNG</label>
+												<select class="form-control" name="datasetRng" data-validation="length" data-validation-length="min1">
+													<option>Filtered</option>
+												</select>
+											</div>
+											<div class="form-group col-xs-6 nopadding-l">
+												<label>Min Mpts</label>
+												<input type="number" class="form-control" name="datasetMinMpts" value=1 data-validation="number" data-validation-allowing="range[1;100]">
+											</div>
+											<div class="form-group col-xs-6 nopadding-r">
+												<label>Max Mpts</label>
+												<input type="number" class="form-control" name="datasetMaxMpts" data-validation="number" data-validation-allowing="range[1;100]">
+											</div>
+											<div class="form-group">
+												<label>Min Cluster Size</label>
+												<input type="number" class="form-control" name="datasetMinCluster" value=1 data-validation="number" data-validation-allowing="range[1;100]">
+											</div>
+
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="modal-footer">
-							<!-- <input type="button" value="Next" class="btn btn-sm btn-primary" disabled id="next-1"> -->
 							<button type="button" class="btn btn-default js-btn-step pull-left" data-orientation="cancel" data-dismiss="modal"></button>
 							<button type="button" class="btn btn-warning js-btn-step" data-orientation="previous"></button>
 							<button type="button" class="btn btn-success js-btn-step" id="next1" data-orientation="next"></button>
@@ -236,19 +255,19 @@
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
 	<script src="assets/vendor/jquery/jquery.min.js"></script>
-
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 	<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script src="assets/vendor/pace/pace.min.js"></script>
 	<script src="assets/vendor/bootstrap-progressbar/js/bootstrap-progressbar.min.js"></script>
 	<script src="assets/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
 	<script src="assets/vendor/dropify/js/dropify.min.js"></script>
-	<!-- <script src="assets/vendor/jquery.steps-1.1.0/jquery.steps.min.js"></script> -->
-	<!-- <script src="assets/vendor/parsleyjs/js/parsley.min.js"></script> -->
 	<script src="assets/scripts/jquery-bootstrap-modal-steps.min.js"></script>
 	<script src="assets/vendor/sweetalert2/sweetalert2.js"></script>
 	<script src="assets/scripts/mfb.js"></script>
 	<script src="assets/scripts/klorofilpro-common.js"></script>
 	<script src="assets/scripts/papaparse.min.js"></script>
+	<script>
+	</script>
 	<script>
 		$(function () {
 			$('.progress-chart').easyPieChart({
@@ -298,13 +317,70 @@
 		var checkSum = [];
 
 		function submitData() {
-			console.log("gogogo!");
+
+			$("form").submit(function (event) {
+				event.preventDefault(); //prevent default action 
+				var post_url = $(this).attr("action"); //get form action url
+				var request_method = $(this).attr("method"); //get form GET/POST method
+				var form_data = new FormData()
+
+				try {
+					var datasetFile = $(this).find("#file-dataset")[0].files[0];
+					form_data.append("file-dataset", datasetFile, datasetFile.name);
+				} catch (error) {
+					console.log(error)
+				}
+
+				try {
+					var labelsFile = $(this).find("#file-labels")[0].files[0];
+					form_data.append("file-labels", labelsFile, labelsFile.name);
+				} catch (error) {
+					console.log(error)
+				}
+
+				var fields = $(this).serializeArray();
+				for (i = 0; i < fields.length; i++) {
+					form_data.append(fields[i].name, fields[i].value);
+				}
+
+				var xhr = new XMLHttpRequest();
+				xhr.open(request_method, post_url, true);
+				xhr.onload = function () {
+					if (xhr.status === 200) {
+						console.log("yolo");
+					} else {}
+				};
+				xhr.send(form_data);
+			});
+
+			$("form").submit();
+		}
+
+		function nextStep() {
+			$("input[name='datasetName']").val($("#file-dataset")[0].files[0].name.split(".")[0]);
+			$("input[name='datasetPoints']").val(checkSum[0]);
+			if (checkSum[0] < 100) {
+				$("input[name='datasetMaxMpts']").attr("value", checkSum[0]);
+			} else {
+				$("input[name='datasetMaxMpts']").attr("value", 100);
+			}
+
+			$.validate({
+				modules: 'logic,toggleDisabled',
+				showErrorDialogs: false
+			});
+
+			$("#submitDataForm").validate();
+
 		}
 
 		var modal = $('#addDataModal').modalSteps({
 			btnLastStepHtml: "Run",
 			btnPreviousHtml: "Back",
-			completeCallback: submitData
+			completeCallback: submitData,
+			callbacks: {
+				"2": nextStep
+			}
 
 		});
 
@@ -323,7 +399,7 @@
 					var id = selection.attr("id")
 
 					if (id == "file-dataset") {
-						checkSum[0] = data[0].length;
+						checkSum[0] = data.length;
 					}
 					if (id == "file-labels") {
 						checkSum[1] = data.length;
@@ -359,7 +435,7 @@
 
 		$(function () {
 
-			$("#submitDataForm").find("input").change(function (event) {
+			$("#submitDataForm").find("input[type='file']").change(function (event) {
 				var selection = $(this);
 				if (selection.attr("id") == "file-dataset") {
 					if (check(selection)) {
@@ -369,8 +445,6 @@
 				if (selection.attr("id") == "file-labels") {
 					check(selection);
 				}
-
-
 			})
 
 			$('#addDataModal').on('hidden.bs.modal', function (e) {
