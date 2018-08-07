@@ -71,8 +71,16 @@ function submitData() {
     $("form").submit();
 }
 
+function startStep() {
+    // $("#submitDataForm").trigger("reset");
+    // console.log("start");
+}
+
 function nextStep() {
-    $("input[name='datasetName']").val($("#file-dataset")[0].files[0].name.split(".")[0]);
+
+    var filename = $("#file-dataset")[0].files[0].name.split(".")[0]
+
+    $("input[name='datasetName']").val(filename[0].toUpperCase() + filename.substring(1));
     $("input[name='datasetPoints']").val(checkSum[0]);
     if (checkSum[0] < 100) {
         $("input[name='datasetMaxMpts']").attr("value", checkSum[0]);
@@ -80,12 +88,45 @@ function nextStep() {
         $("input[name='datasetMaxMpts']").attr("value", 100);
     }
 
+    $("input[name='datasetMaxMpts']").attr("data-validation-allowing", "range[" + 1 + ";" + (checkSum[0] - 1) + "]")
+
+    $("input[name='datasetMaxMpts']").on("input", function () {
+        $("input[name='datasetMinMpts']").attr("data-validation-allowing", "range[" + 1 + ";" + $(this).val() + "]")
+    })
+
+    $("input[name='datasetMinMpts']").on("input", function () {
+        $("input[name='datasetMaxMpts']").attr("data-validation-allowing", "range[" + $(this).val() + ";" + (checkSum[0] - 1) + "]")
+    })
+
+
     $.validate({
+        form: '#submitDataForm',
         modules: 'logic,toggleDisabled',
-        showErrorDialogs: false
+        showErrorDialogs: true
     });
 
-    $("#submitDataForm").validate();
+    $("#submitDataForm").isValid();
+
+    $("form").validate(function (valid, elem) {
+        console.log(valid, elem);
+        if (!valid) {
+            $("#next1").attr("disabled", true);
+        } else {
+            $("#next1").attr("disabled", false);
+        }
+    })
+
+    $("form").on("validation", function (valid, elem) {
+        console.log(valid, elem);
+        if (!elem) {
+            $("#next1").attr("disabled", true);
+        } else {
+            $("#next1").attr("disabled", false);
+        }
+    })
+
+
+    $("#next1").attr("disabled", true);
 
 }
 
@@ -94,6 +135,7 @@ var modal = $('#addDataModal').modalSteps({
     btnPreviousHtml: "Back",
     completeCallback: submitData,
     callbacks: {
+        "1": startStep,
         "2": nextStep
     }
 
@@ -128,6 +170,7 @@ function check(selection) {
 
             if (errors.length > 0) {
                 resetFile(id);
+                console.log(errors);
                 return false;
 
             }
