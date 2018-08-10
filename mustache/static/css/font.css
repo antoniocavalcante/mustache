@@ -1,0 +1,40 @@
+@font-face {
+    font-family: LogoFont;
+    src: url(roboto-condensed/RobotoCondensed-Bold.ttf);
+    font-weight: 700;
+}
+
+.branding {
+    font-family: LogoFont;
+}
+
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(source-sans-pro/SourceSansPro-Bold.ttf);
+  }
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Source Sans Pro SemiBold'), local('SourceSansPro-SemiBold'), url(source-sans-pro/SourceSansPro-Semibold.ttf);
+  }
+
+
+  @font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url(source-sans-pro/SourceSansPro-Regular.ttf);
+  }
+
+  @font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url(source-sans-pro/SourceSansPro-Light.ttf);
+  }
+

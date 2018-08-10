@@ -1,0 +1,572 @@
+svg {
+    font-family: Helvetica, sans-serif;
+    font-style: normal;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.grad {
+    background: linear-gradient(to bottom, white, #eeeeee);
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #333;
+}
+
+g.context rect.background {
+    fill: rgb(200, 200, 255);
+    visibility: visible !important;
+}
+
+.node {
+    font: 10px sans-serif;
+    color: blue;
+}
+
+.node text {
+    fill: #666;
+    font-family: Helvetica
+}
+
+.link {
+    fill: none;
+    stroke-width: 1px;
+}
+
+line {
+    stroke: black;
+    opacity: 0.35;
+    stroke-width: 2px;
+    cursor: row-resize;
+}
+
+.crosshair {
+    stroke: red;
+    opacity: 0.75;
+    stroke-width: 2px;
+    stroke-dasharray: 1;
+}
+
+.crosshair2 {
+    stroke: #333333;
+    opacity: 0.35;
+    stroke-width: 2px;
+    stroke-dasharray: 1;
+}
+
+/* HEATMAP */
+
+rect.bordered {
+    /*
+	stroke: #E6E6E6;
+	stroke-width:0.1px;
+*/
+}
+
+text.mono {
+    font-size: 15pt;
+    font-family: Consolas, courier;
+    fill: #aaa;
+}
+
+text.axis-heatmap {
+    font-size: 15pt;
+    font-family: Consolas, courier;
+    fill: #000;
+}
+
+text.axis-worktime {
+    fill: #000;
+}
+
+.logo-wrapper {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: auto;
+    height: auto;
+    padding: 8px;
+    font: 12px sans-serif;
+    color: black;
+    background: white;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+    border-color: #cccccc;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 0;
+    vertical-align: top;
+    overflow: hidden;
+}
+
+.svg-content {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#logo {
+    height: 30px;
+    width: auto;
+}
+
+#slider {
+    float: right;
+    height: 0px;
+    transform: rotate(-90deg);
+    display: inline;
+}
+
+#chart-dendogram {
+    display: inline;
+}
+
+body {
+    overflow: hidden;
+}
+
+html {
+    overflow: hidden;
+}
+
+.nopadding {
+    padding: 0;
+    margin: 0 !important;
+}
+
+.nopadding-v {
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.nopadding-b {
+    padding-bottom: 0 !important;
+    margin: 0 !important;
+}
+
+.nopadding-h {
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.nopadding-r {
+    padding-right: 0;
+    margin-right: 0;
+}
+
+.nopadding-l {
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.pad-l {
+    padding-left: 10px;
+}
+
+.pad-r {
+    padding-right: 10px;
+}
+
+.pad-t {
+    padding-top: 10px;
+}
+
+.pad-b {
+    padding-bottom: 10px;
+}
+
+#row-top {
+    height: calc(50% - 55);
+}
+
+.side-logo {
+    width: 80%;
+    margin: 0 10%;
+    filter: grayscale(100%) invert(100%);
+    opacity: 0.5;
+    mix-blend-mode: screen;
+}
+
+.side-logo-uofa {
+    width: 90%;
+    margin: 0 5%;
+}
+
+.side-logo-jcu {
+    width: 90%;
+    margin: 0 5%;
+    margin-bottom: 10%;
+}
+
+.branding {
+    float: left;
+}
+
+.grouper>.row {
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+.chart-scroller {
+    display: inline-block;
+    float: none;
+}
+
+#reach-panel>::-webkit-scrollbar {
+    background-color: rgba(64, 64, 64, 0.1);
+    border-radius: 3px;
+    height: 10px;
+}
+
+#reach-panel>::-webkit-scrollbar-thumb {
+    background: #cccc;
+    border-radius: 3px;
+}
+
+#reach-panel>::-webkit-scrollbar-thumb:hover {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+#reach-panel>::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+    border-radius: 3px;
+}
+
+/*
+.panel-options > .dropdown-menu {
+    background:rgba(255,255,255,0.8);
+}
+*/
+
+/*.panel-options > .dropdown-menu > li > a:hover {
+    background:rgba(70,180,200,0.3);
+}
+*/
+
+.options-value {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.options-value>p {
+    display: inline-block;
+    padding: 0 8px 0 0;
+}
+
+.options-value>input[type=number] {
+    display: inline-block;
+    width: 100%;
+    display: none;
+}
+
+.panel-options>.dropdown-menu>li>input {
+    padding: 10px;
+    width: 5px;
+}
+
+/*dendogram input button*/
+
+.switch-field {
+    font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
+    overflow: hidden;
+    margin: auto;
+}
+
+.switch-field input {
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    width: 1px;
+    border: 0;
+    overflow: hidden;
+}
+
+.switch-field label {
+    float: left;
+}
+
+.switch-field label {
+    display: inline-block;
+    background-color: #9f9f9f;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    text-shadow: none;
+    padding: 6px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    -ms-transition: all 0.1s ease-in-out;
+    -o-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+
+.switch-field label:hover {
+    cursor: pointer;
+}
+
+.switch-field input:checked+label {
+    background-color: #eeeeee;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.switch-field input:disabled+label label {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    opacity: 0.5;
+}
+
+.switch-field label:first-of-type {
+    border-radius: 4px 0 0 4px;
+}
+
+.switch-field label:last-of-type {
+    border-radius: 0 4px 4px 0;
+}
+
+.no-link {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.side-icon {
+    width: 24px;
+    margin-right: 8px;
+    margin-bottom: 2px;
+}
+
+.brand-block {
+    display: inline-block;
+    color: #097B43;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    padding-top: 10px;
+}
+
+.brand-logo {
+    width: 48px;
+    position: absolute;
+    top: 10px;
+    left: 210px;
+    padding-bottom: 10px;
+}
+
+.panel-clear-header {
+    background: none !important;
+    outline: none !important;
+    border: none !important;
+}
+
+/* .panel {
+    border: rgba(9, 123, 68, 0.486) 1px solid;
+} */
+
+.no-border {
+    outline: none !important;
+    border: none !important;
+}
+
+.panel-heading-fix {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.loader-logo {
+    width: 200px;
+    color: white;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.block {
+    display: block;
+}
+
+.f-left {
+    float: left;
+}
+
+.f-right {
+    float: right;
+}
+
+.panel-title-extra {
+    width: auto;
+    display: inline-block;
+    margin: auto 0;
+}
+
+.paging {
+    display: inline-block;
+    width: auto;
+    margin: 0 auto;
+}
+
+.perpg {
+    display: inline-block;
+    padding-left: 10px;
+}
+
+/* .tip-values {
+    overflow-y: scroll;
+} */
+
+#tip-color {
+    pointer-events: none;
+}
+
+.tip-text {
+    font-size: 18px;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 400px;
+    overflow-x: hidden;
+}
+
+.strike {
+    display: block;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.strike>span {
+    position: relative;
+    display: inline-block;
+}
+
+.strike>span:before,
+.strike>span:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 9999px;
+    height: 1.5px;
+    background: rgb(226, 226, 226);
+}
+
+.strike>span:before {
+    right: 100%;
+    margin-right: 15px;
+}
+
+.strike>span:after {
+    left: 100%;
+    margin-left: 15px;
+}
+
+.info-format {
+    font-size: 12px;
+}
+
+.tip-values {}
+
+.scroller {
+    /* overflow-y: scroll;
+    overflow-x: hidden; */
+}
+
+.cap {
+    text-transform: capitalize;
+}
+
+.side-nav {
+    height: 80%;
+    overflow-y: scroll;
+}
+
+#sidebar-nav>::-webkit-scrollbar {
+    width: 0px;
+    /* remove scrollbar space */
+    background: transparent;
+    /* optional: just make scrollbar invisible */
+}
+
+#sidebar-nav {
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+}
+
+/* optional: show position indicator in red */
+
+#sidebar-nav>::-webkit-scrollbar-thumb {
+    background: rgba(50, 50, 50, 0.5)
+}
+
+.dataset_title {
+    float: inherit !important;
+    margin: 0 auto;
+}
+
+.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translatex(-50%);
+}
+
+#colorTheme {
+    vertical-align: top;
+}
+
+#full-context {
+    overflow-x: scroll;
+    top: 3px;
+    bottom: auto;
+}
+
+.margin-r {
+    margin-right: 15px;
+}
+
+.margin-t {
+    margin-top: 10px;
+}
+
+/* This is a compiled file, you should be editing the file in the templates directory */
+
+.pace {
+    -webkit-pointer-events: none;
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.pace-inactive {
+    display: none;
+}
+
+/* .pace .pace-progress {
+    background: #eb7a55;
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    right: 100%;
+    width: 100%;
+    height: 2px;
+} */
