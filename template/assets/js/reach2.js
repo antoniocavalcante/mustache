@@ -119,7 +119,7 @@ function drawReach(filename) {
     var width = parseInt($(".modal-xl").attr("width") * (10 / 12)),
         h = $(".modal-xl").attr("height");
 
-    h = 600
+    h = 665
 
     var svg = d3.select("#full-plot")
         .append("svg")
@@ -132,7 +132,7 @@ function drawReach(filename) {
     var svg2 = d3.select("#full-context")
         .append("svg")
         .attr("width", width2)
-        .attr("height", 200);
+        .attr("height", 100);
 
     d3.select("#full-context").style("width", width);
 
@@ -155,7 +155,7 @@ function drawReach(filename) {
 
     margin2.top = 0;
 
-    height2 = 200 - margin2.bottom - margin2.top - 20;
+    height2 = 100 - margin2.bottom - margin2.top - 20;
 
     var x = d3.scaleLinear().range([0, width]),
         x2 = d3.scaleLinear().range([0, width]),
