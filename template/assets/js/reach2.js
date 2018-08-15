@@ -577,7 +577,7 @@ function drawReach(filename) {
             }
 
             $("#full-domain-in").find("span").text(start.toFixed(0))
-            $("#full-domain-out").find("span").text("80")
+            $("#full-domain-out").find("span").text("110")
         }
 
     }
