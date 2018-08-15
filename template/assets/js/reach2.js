@@ -577,7 +577,7 @@ function drawReach(filename) {
             }
 
             $("#full-domain-in").find("span").text(start.toFixed(0))
-            $("#full-domain-out").find("span").text(end.toFixed(0))
+            $("#full-domain-out").find("span").text("80")
         }
 
     }
@@ -597,8 +597,8 @@ function drawReach(filename) {
 
         selected = s;
 
-        x5 = d3.scaleLinear().range([0,width2]),
-        x5.domain([0,width])
+        x5 = d3.scaleLinear().range([0,width]),
+        x5.domain([0,width2])
 
         x3.domain([0, barWindow]);
         Swindow = s.map(x5.invert)
@@ -639,7 +639,7 @@ function drawReach(filename) {
 
         throttled_version();
 
-        stats(barData.raw.length, barWindow, threshold, factor, x.invert(s[0]), x.invert(s[1]));
+        stats(barData.raw.length, barWindow, threshold, factor, x2.invert(s[0]), x2.invert(s[1]));
 
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
             .translate(-s[0], 0));
