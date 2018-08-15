@@ -538,7 +538,7 @@ html {
 }
 
 #full-context {
-    overflow-x: scroll;
+    /* overflow-x: scroll; */
     top: 3px;
     bottom: auto;
 }

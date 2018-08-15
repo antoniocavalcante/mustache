@@ -14,6 +14,12 @@ def.barWidth = {
     tip: "set the bar width for the bar graph."
 };
 
+def.samplingRate = {
+    title: "Sampling Rate",
+    tip: "set the data downsampling rate for the given range."
+
+}
+
 def.points = {
     title: "Points",
     tip: "number of points in the dataset."

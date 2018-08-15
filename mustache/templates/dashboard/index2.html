@@ -9,22 +9,9 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-    <!-- VENDOR CSS -->
-    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
-        crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/vendor/linearicons/style.css">
-    <link class="default-style" rel="stylesheet" href="assets/vendor/themify-icons/css/themify-icons.css">
-    <link rel="stylesheet" href="assets/css/animate.css">
-    <!-- MAIN CSS -->
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/dashboard.css" />
-    <link rel="stylesheet" href="assets/css/sidebar-nav-darkblue.css">
-    <link rel="stylesheet" href="assets/css/loader.css" />
-    <link rel="stylesheet" href="assets/css/range.css">
-    <!-- GOOGLE FONTS -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:700" rel="stylesheet">
+    {% assets "dashboard_css" %}
+	<link rel="stylesheet" href="{{ ASSET_URL }}"> {% endassets %}
+
     <!-- ICONS -->
     <link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
     <link rel="icon" type="image/png" sizes="96x96" href="assets/img/favicon.png">
@@ -72,15 +59,15 @@
 
     <div id="loading">
         <div id="loader">
-            <object data="assets/img/Mustache_Logo_SVG.svg" type="image/svg+xml" class="animated swing infinite loader-logo"></object>
+            <object data="{{ url_for('static', filename='img/Mustache_Logo_SVG.svg') }}" type="image/svg+xml" class="animated swing infinite loader-logo"></object>
         </div>
     </div>
 
     <!-- WRAPPER -->
     <div id="wrapper">
 
-        <!-- Modal -->
-        <div class="modal" id="reach-modal" tabindex="-1" role="dialog" aria-hidden="true">
+         <!-- Modal -->
+         <div class="modal" id="reach-modal" tabindex="-1" role="dialog" aria-hidden="true">
             <div id="myreach" class="modal-dialog modal-lg modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header text-center">
@@ -111,18 +98,14 @@
                     <div class="modal-body grad">
                         <div id="full-reach">
                             <div class="row">
-                                <div class="col-md-12 nopadding-v pad-l pad-r" id="full-context">
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div id="full-plot" class="col-md-10"></div>
-                                <div id="full-options" class="col-md-2 scroller padding-top-30">
+                                <div id="full-options" class="col-md-2 scroller">
                                     <form class="well" id="full-settings">
                                         <input type="submit" class="hidden">
                                         <div class="strike">
                                             <span>Settings</span>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group hidden">
 
                                             <h5 data-inf="param" data-val="domain">
                                                 <i class="fas fa-info-circle"></i>
@@ -183,29 +166,23 @@
                                             </h5>
                                             <input type="range" id="full-bar-width" min="4" max="14" step="1" value="6">
                                         </div>
-                                        <div class="form-group">
-                                            <h5 data-inf="param" data-val="samplingRate">
-                                                <i class="fas fa-info-circle"></i>
-                                            </h5>
-                                            <input type="range" id="full-sample-rate" min="1" max="100" step="1" value="50">
-                                        </div>
 
                                         <div class="strike">
                                             <span>Stats</span>
                                         </div>
 
                                         <div class="form-group">
-                                            <!-- <h5 data-inf="stats" data-val="points">
+                                            <h5 data-inf="stats" data-val="points">
                                                 <i class="fas fa-info-circle"></i>
                                                 <strong></strong>
                                                 <span></span>
-                                            </h5> -->
+                                            </h5>
                                             <h5 data-inf="stats" data-val="clusters">
                                                 <i class="fas fa-info-circle"></i>
                                                 <strong></strong>
                                                 <span></span>
                                             </h5>
-                                            <!-- <h5 data-inf="stats" data-val="smplWindow">
+                                            <h5 data-inf="stats" data-val="smplWindow">
                                                 <i class="fas fa-info-circle"></i>
                                                 <strong></strong>
                                                 <span></span>
@@ -224,7 +201,7 @@
                                                 <i class="fas fa-info-circle"></i>
                                                 <strong></strong>
                                                 <span></span>
-                                            </h5> -->
+                                            </h5>
 
                                         </div>
 
@@ -268,7 +245,7 @@
                 <div class="branding">
                     <h1 class="text-center brand-block">
                         MustaCHE</h1>
-                    <img src="assets/img/Mustache_Logo_SVG_black.svg" class="brand-logo">
+                    <img src="{{ url_for('static', filename='img/Mustache_Logo_SVG_black.svg') }}" class="brand-logo">
                 </div>
 
                 <div id="navbar-menu" class="pad-r">
@@ -335,7 +312,7 @@
                     <li class="menu-group">Main</li>
                     <li class="panel">
                         <a href="#" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
-                            <img src="assets/img/pie-chart-2.svg" class="side-icon" />
+                            <img src="{{ url_for('static', filename='img/pie-chart-2.svg') }}"  class="side-icon" />
                             <span class="title">Datasets</span>
                             <i class="icon-submenu ti-angle-left"></i>
                         </a>
@@ -344,7 +321,7 @@
                     </li>
                     <li class="panel">
                         <a href="#globalSettings" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
-                            <img src="assets/img/settings.svg" class="side-icon" />
+                            <img src="{{ url_for('static', filename='img/settings.svg') }}" class="side-icon" />
                             <span class="title">Global Settings</span>
                             <i class="icon-submenu ti-angle-left"></i>
                         </a>
@@ -363,7 +340,7 @@
                     <li class="menu-group">Panels</li>
                     <li class="panel">
                         <a href="#settingsDendrogram" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
-                            <img src="assets/img/diagram.svg" class="side-icon" />
+                            <img src="{{ url_for('static', filename='img/diagram.svg') }}" class="side-icon" />
                             <span class="title">Dendrogram</span>
                             <i class="icon-submenu ti-angle-left"></i>
                         </a>
@@ -389,7 +366,7 @@
                     </li>
                     <li class="panel">
                         <a href="#settingsHai" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
-                            <img src="assets/img/grid-2.svg" class="side-icon" />
+                            <img src="{{ url_for('static', filename='img/grid-2.svg') }}" class="side-icon" />
                             <span class="title">HAI Plot</span>
                             <i class="icon-submenu ti-angle-left"></i>
                         </a>
@@ -430,7 +407,7 @@
                     </li>
                     <li class="panel">
                         <a href="#settingsReach" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
-                            <img src="assets/img/area-chart.svg" class="side-icon" />
+                            <img src="{{ url_for('static', filename='img/area-chart.svg') }}" class="side-icon" />
                             <span class="title">Reachabillity</span>
                             <i class="icon-submenu ti-angle-left"></i>
                         </a>
@@ -473,10 +450,10 @@
             </nav>
             <div style="position: absolute; bottom: 0;">
                 <a href="">
-                    <img src="assets/img/UA-EAC-COLOUR-REVERSE.svg" class="side-logo-uofa">
+                    <img src="{{ url_for('static', filename='img/UA-EAC-COLOUR-REVERSE.svg') }}" class="side-logo-uofa">
                 </a>
                 <a href="">
-                    <img src="assets/img/jcu-logo.png" class="side-logo-jcu">
+                    <img src="{{ url_for('static', filename='img/jcu-logo.png') }}" class="side-logo-jcu">
                 </a>
             </div>
             </div>
@@ -648,24 +625,9 @@
         <!-- END WRAPPER -->
         <!-- Javascript -->
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore.js"></script>
-        <script src="assets/vendor/jquery/jquery.min.js"></script>
-        <script src="https://d3js.org/d3.v4.js"></script>
-        <script src="https://d3js.org/d3-array.v1.min.js"></script>
-        <script src="https://d3js.org/d3-scale-chromatic.v1.js"></script>
-        <script src="https://d3js.org/d3-drag.v1.min.js"></script>
-        <script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-        <script src="assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-        <script src="assets/scripts/klorofil-2.js"></script>
-        <script src="https://unpkg.com/tippy.js@2.5.3/dist/tippy.all.min.js"></script>
-        <script src="assets/js/layout.js"></script>
-        <script>
-            const project = "anuran"
-        </script>
-        <script type="text/javascript" src="assets/js/myplots.js"></script>
-        <script type="text/javascript" src="assets/js/reach2.js"></script>
-        <script type="text/javascript" src="assets/js/info.js"></script>
+    {% assets "dashboard_js" %}
+	<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+	{% endassets %}
 
 
 </body>

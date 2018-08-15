@@ -111,12 +111,8 @@
                     <div class="modal-body grad">
                         <div id="full-reach">
                             <div class="row">
-                                <div class="col-md-12 nopadding-v pad-l pad-r" id="full-context">
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div id="full-plot" class="col-md-10"></div>
-                                <div id="full-options" class="col-md-2 scroller padding-top-30">
+                                <div id="full-options" class="col-md-2 scroller">
                                     <form class="well" id="full-settings">
                                         <input type="submit" class="hidden">
                                         <div class="strike">
@@ -175,7 +171,7 @@
                                             <h5 data-inf="param" data-val="yAxes">
                                                 <i class="fas fa-info-circle"></i>
                                             </h5>
-                                            <input type="range" id="full-y-scale" min="0.05" max="1.0" step="0.05">
+                                            <input type="range" id="full-y-scale" min="0.05" max="1.0" step="0.05" value="0.3">
                                         </div>
                                         <div class="form-group">
                                             <h5 data-inf="param" data-val="barWidth">
@@ -187,7 +183,7 @@
                                             <h5 data-inf="param" data-val="samplingRate">
                                                 <i class="fas fa-info-circle"></i>
                                             </h5>
-                                            <input type="range" id="full-sample-rate" min="1" max="100" step="1" value="50">
+                                            <input type="range" id="full-sample-rate" min="0" max="100" step="1" value="50">
                                         </div>
 
                                         <div class="strike">
@@ -219,8 +215,8 @@
                                                 <i class="fas fa-info-circle"></i>
                                                 <strong></strong>
                                                 <span></span>
-                                            </h5>
-                                            <h5 data-inf="stats" data-val="resolution">
+                                            </h5> -->
+                                            <!-- <h5 data-inf="stats" data-val="resolution">
                                                 <i class="fas fa-info-circle"></i>
                                                 <strong></strong>
                                                 <span></span>
@@ -273,7 +269,7 @@
 
                 <div id="navbar-menu" class="pad-r">
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown hidden">
+                        <li class="dropdown">
                             <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
                                 <i class="lnr lnr-alarm"></i>
                                 <span class="badge bg-warning"></span>
@@ -311,14 +307,16 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#">
-                                        <span></span>
-                                        <i class="ti ti-github"></i>GitHub</a>
+                                    <a href="#">Basic Use</a>
                                 </li>
                                 <li>
-                                    <a href="#">
-                                        <span></span>
-                                        <i class="ti ti-info-alt"></i>About</a>
+                                    <a href="#">Working With Data</a>
+                                </li>
+                                <li>
+                                    <a href="#">Security</a>
+                                </li>
+                                <li>
+                                    <a href="#">Troubleshooting</a>
                                 </li>
                             </ul>
                         </li>
@@ -334,12 +332,20 @@
                 <ul class="nav" id="sidebar-nav-menu">
                     <li class="menu-group">Main</li>
                     <li class="panel">
-                        <a href="#" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
+                        <a href="#dashboards" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
                             <img src="assets/img/pie-chart-2.svg" class="side-icon" />
                             <span class="title">Datasets</span>
                             <i class="icon-submenu ti-angle-left"></i>
                         </a>
-                        <div id="main">
+                        <div id="dashboards" class="collapse">
+                            <ul class="submenu">
+                                <li>
+                                    <a href="index.html">Anuran</a>
+                                </li>
+                                <li>
+                                    <a href="index2.html">Articles</a>
+                                </li>
+                            </ul>
                         </div>
                     </li>
                     <li class="panel">
@@ -441,33 +447,17 @@
                                         <input type="range" id="yScale">
                                     </a>
                                 </li>
-                                <li>
-                                    <a>
-                                        <p>Plots / page: </p>
-                                        <select class="input-sm form-control" id="reach-per-pg">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option selected>4</option>
-                                            <option>6</option>
-                                            <option>12</option>
-                                        </select>
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </li>
                     <li class="menu-group spec2">Project
                         <a class="disabled spec text-capitalize">
-                            <strong>Name:</strong>
-                            <new id="projectTitle"></new>
+                            <strong id="projectTitle"></strong>
                         </a>
                         <a class="disabled spec">
-                            <strong>Min mpts: </strong>2</a>
+                            <strong>Mpts: </strong> 98</a>
                         <a class="disabled spec">
-                            <strong>Max mpts: </strong>50</a>
-                        <a class="disabled spec">
-                            <strong>Distance: </strong> Angular</a>
+                            <strong>Distance: </strong> Euclidean</a>
                     </li>
                 </ul>
             </nav>
@@ -601,7 +591,7 @@
                                     <div class="panel-heading clearfix">
                                         <p class="pull-left">Reachabillity Plots</p>
 
-                                        <div class="perpg btn-group pull-right nopadding-b no-border hidden">
+                                        <div class="perpg btn-group pull-right nopadding-b no-border">
                                             <select class="input-sm" id="reach-per-pg">
                                                 <option>1</option>
                                                 <option>2</option>
@@ -628,7 +618,7 @@
                                         </div>
                                     </div>
                                     <div class="panel-body nopadding">
-                                        <div class="container-fluid nopadding-v nopadding-l grouper">
+                                        <div class="container-fluid nopadding grouper">
                                             <div class="row nopadding" id="reach-plot">
                                             </div>
                                         </div>
@@ -664,7 +654,7 @@
             const project = "anuran"
         </script>
         <script type="text/javascript" src="assets/js/myplots.js"></script>
-        <script type="text/javascript" src="assets/js/reach2.js"></script>
+        <script type="text/javascript" src="assets/js/reach3.js"></script>
         <script type="text/javascript" src="assets/js/info.js"></script>
 
 

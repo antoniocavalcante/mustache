@@ -152,6 +152,9 @@ $("#dirPath").val(path)}else{$("#workspace").modal();}};xhr.send();$("#selectDir
 $("#setWorkspace").submit(function(event){event.preventDefault();var post_url=$(this).attr("action")
 var request_method=$(this).attr("method");var xhr=new XMLHttpRequest();xhr.open(request_method,post_url,true);xhr.setRequestHeader("Content-Type","application/json");var json={"path":$("#dirPath").val()}
 xhr.send(JSON.stringify(json));xhr.onload=function(){if(xhr.status===200){location.reload()}else{}};});})
+$(function(){var distanceRequest=new XMLHttpRequest();distanceRequest.open("GET","/distance",true);distanceRequest.onload=function(){if(distanceRequest.status===200){var distances=JSON.parse(distanceRequest.response)
+var select=$('select[name="datasetDistance"]');distances.forEach(function(key){select.append($('<option />',{value:key,text:key.replace(/^\w/,c=>c.toUpperCase())}));})
+}else{}};distanceRequest.send();})
 $(function(){var drEvent=$('.dropify').dropify({messages:{'default':'Drag and drop a file here or click','replace':'Drag and drop or click to replace','remove':'Remove','error':'Parsing Error.'}});var drEvent3=$('#file-labels').dropify();drEvent3.on('dropify.afterClear',function(event,element){checkSum[1]=undefined;});var drEvent2=$('#file-dataset').dropify();drEvent2.on('dropify.afterClear',function(event,element){$("#next1").attr("disabled",true);try{drEvent3=drEvent3.data("dropify");drEvent3.resetPreview();drEvent3.clearElement();}catch(error){console.log(error);}
 checkSum=[];});});var checkSum=[];function submitData(){$("#submitDataForm").submit(function(event){event.preventDefault();var post_url=$(this).attr("action")
 var request_method=$(this).attr("method");var form_data=new FormData()

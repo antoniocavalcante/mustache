@@ -48,7 +48,7 @@ bundles = {
         'js/dashboard/tippy.all.min.js',
         'js/dashboard/layout.js',
         'js/dashboard/myplots.js',
-        'js/dashboard/reach2.js',
+        'js/dashboard/reach.js',
         'js/dashboard/info.js',
         output='gen/dashboard.js', filters="jsmin"),
 

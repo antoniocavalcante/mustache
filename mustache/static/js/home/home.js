@@ -1,6 +1,6 @@
 $(function () {
 
-    $("#workspace").on("show.bs.modal", function(e){
+    $("#workspace").on("show.bs.modal", function (e) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "/workspace", true);
         xhr.onload = function () {
@@ -15,38 +15,40 @@ $(function () {
     })
 
     var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/workspace", true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                var path = JSON.parse(xhr.response)['path']
-                $("#dirPath").val(path)
-            } else {
-                $("#workspace").modal();
-            }
-        };
-        xhr.send();
+    xhr.open("GET", "/workspace", true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var path = JSON.parse(xhr.response)['path']
+            $("#dirPath").val(path)
+        } else {
+            $("#workspace").modal();
+        }
+    };
+    xhr.send();
 
-    $("#selectDir").click(function(){
+    $("#selectDir").click(function () {
         xhr.open("GET", "/directory", true);
         xhr.onload = function () {
             if (xhr.status === 200) {
                 $("#dirPath").val(xhr.response)
             } else {
-                
+
             }
         };
         xhr.send();
     })
 
     $("#setWorkspace").submit(function (event) {
-        event.preventDefault(); 
-        var post_url = $(this).attr("action") 
-        var request_method = $(this).attr("method"); 
+        event.preventDefault();
+        var post_url = $(this).attr("action")
+        var request_method = $(this).attr("method");
 
         var xhr = new XMLHttpRequest();
         xhr.open(request_method, post_url, true);
         xhr.setRequestHeader("Content-Type", "application/json");
-        var json = {"path":$("#dirPath").val()}
+        var json = {
+            "path": $("#dirPath").val()
+        }
         xhr.send(JSON.stringify(json));
         xhr.onload = function () {
             if (xhr.status === 200) {
@@ -55,8 +57,35 @@ $(function () {
 
             }
         };
-        
+
     });
+})
+
+
+
+$(function () {
+
+    var distanceRequest = new XMLHttpRequest();
+    distanceRequest.open("GET", "/distance", true);
+    distanceRequest.onload = function () {
+        if (distanceRequest.status === 200) {
+            var distances = JSON.parse(distanceRequest.response)
+            var select = $('select[name="datasetDistance"]');
+            distances.forEach(function (key) {
+                select.append($('<option />', {
+                    value: key,
+                    text: key.replace(/^\w/, c => c.toUpperCase())
+                }));
+            })
+            // select.attr('size', distances.length);
+
+        } else {
+
+        }
+    };
+    distanceRequest.send();
+
+
 })
 
 
@@ -256,12 +285,12 @@ function check(selection) {
 
 $(function () {
 
-    $("#dsearch").on("keyup", function() {
+    $("#dsearch").on("keyup", function () {
         var value = $(this).val().toLowerCase();
-        $(".dataset").filter(function() {
-          $(this).toggle($(this).find(".panel-title").text().toLowerCase().indexOf(value) > -1)
+        $(".dataset").filter(function () {
+            $(this).toggle($(this).find(".panel-title").text().toLowerCase().indexOf(value) > -1)
         });
-      });
+    });
 
     $("#submitDataForm").find("input[type='file']").change(function (event) {
         var selection = $(this);

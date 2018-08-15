@@ -126,12 +126,9 @@ function drawReach(filename) {
         .attr("width", width)
         .attr("height", h);
 
-
-    var width2 = parseInt($(".modal-xl").attr("width"));
-
     var svg2 = d3.select("#full-context")
         .append("svg")
-        .attr("width", width2)
+        .attr("width", width)
         .attr("height", 200);
 
     d3.select("#full-context").style("width", width);
@@ -146,11 +143,10 @@ function drawReach(filename) {
             top: 0,
             right: 20,
             bottom: 0,
-            left: 15
+            left: 40
         },
 
         width = width - margin.left - margin.right,
-        width2 = width2 - margin2.left - margin2.right,
         height = h - margin.top - margin.bottom;
 
     margin2.top = 0;
@@ -323,7 +319,7 @@ function drawReach(filename) {
         .attr("width", width)
         .attr("height", height)
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .call(zoom)
+        // .call(zoom)
         .on("mousemove", function () {
             v = d3.mouse(this);
             highlight(v)
@@ -376,6 +372,7 @@ function drawReach(filename) {
     function settingsFull() {
         settings = d3.select("#full-settings");
 
+
         var minBarWidth = Math.ceil(width / barData.raw.length);
         settings.select("#full-bar-width").on("input", function () {
             barWidth = +this.value;
@@ -411,8 +408,6 @@ function drawReach(filename) {
 
             var data = barData.raw;
 
-            barData.sampled = largestTriangleThreeBuckets(barData.chr, barData.chr.length);
-
             y.domain([0, d3.max(data, function (d) {
                 return +d;
             })]);
@@ -431,14 +426,12 @@ function drawReach(filename) {
                 var middle = x6.range()[1] / 2;
             }
 
-            mWidth = mWidth - 20;
-
-            svg2.attr("width", mWidth);
-            x4 = d3.scaleLinear().range([0, width2]);
-            x6.range([0, width2]).domain(x2.domain());
+            x4 = d3.scaleLinear().range([0, barData.raw.length * miniBarWidth]);
+            svg2.attr("width", (barData.raw.length * miniBarWidth) + miniBarWidth + 10);
+            x6.range([0, (barData.raw.length * miniBarWidth) + miniBarWidth]).domain(x2.domain());
             brush.extent([
                 [0, 0],
-                [width2, height2]
+                [(barData.raw.length * miniBarWidth) + miniBarWidth, height2]
             ])
 
             y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
@@ -470,41 +463,79 @@ function drawReach(filename) {
                 .attr("class", "axis axis--y");
 
             var sampled = barData.chr;
-            if (barData.raw.length > width2) {
-                sampled = largestTriangleThreeBuckets(barData.chr, width2);
-            }
 
-            // zoom.scaleExtent([1, barData.raw.length / barWindow])
+            // zoom.scaleExtent([barData.raw.length / barWindow, barData.raw.length / barWindow])
 
-            context.selectAll("#area-gradient").remove();
+            // context.selectAll("#area-gradient").remove();
 
-            // set the gradient
-            context.append("linearGradient")
-                .attr("id", "area-gradient")
-                .attr("gradientUnits", "userSpaceOnUse")
-                .attr("x1", 0).attr("y1", 0)
-                .attr("x2", width2).attr("y2", 0)
-                .selectAll("stop")
-                .data(sampled)
-                .enter().append("stop")
-                .attr("offset", function (d, i) {
+            // // set the gradient
+            // context.append("linearGradient")
+            //     .attr("id", "area-gradient")
+            //     .attr("gradientUnits", "userSpaceOnUse")
+            //     .attr("x1", 0).attr("y1", 0)
+            //     .attr("x2", barData.raw.length).attr("y2", 0)
+            //     .selectAll("stop")
+            //     .data(sampled)
+            //     .enter().append("stop")
+            //     .attr("offset", function (d, i) {
+            //         return ((i / (barData.raw.length)) * 100) + "%";
+            //     })
+            //     .attr("stop-color", function (d) {
+            //         var b = barData.color[d[1]]
+            //         return colorScale(barColoring[b]);
+            //     });
 
-                    return ((i / (sampled.length)) * 100) + "%";
+            // mini = context.selectAll(".area").data([sampled])
+
+            // mini.enter().append("path")
+            //     .attr("class", "area")
+            //     .attr("d", area2)
+            //     .style("fill", "url(#area-gradient)")
+
+            // mini.transition().duration(500).attr("d", area2)
+            //     .style("fill", "url(#area-gradient)")
+
+            // mini.exit().remove();
+
+            //select current bars
+            mini = context.selectAll(".mini")
+                .data(sampled, function (d, i) {
+                    return d;
+                });
+
+            mini.attr("x", function (d, i) {
+                    return x4(i);
                 })
-                .attr("stop-color", function (d) {
+                // .transition().duration(250)
+                .attr("y", function (d) {
+                    return y4(+d[0]);
+                })
+                .attr("height", function (d) {
+                    return height2 - y4(+d[0])
+                })
+                .style("fill", function (d, i) {
                     var b = barData.color[d[1]]
                     return colorScale(barColoring[b]);
                 });
 
-            mini = context.selectAll(".area").data([sampled])
+            //add new bars   
+            mini.enter().append("rect")
+                .attr("class", "mini")
+                .style("fill", function (d, i) {
+                    var b = barData.color[d[1]]
+                    return colorScale(barColoring[b]);
+                })
+                .attr("x", function (d, i) {
+                    return x4(i);
+                }).attr("width", miniBarWidth)
+                // .transition().duration(250)
+                .attr("y", function (d) {
+                    return y4(+d[0]);
+                })
+                .attr("height", function (d) {
+                    return height2 - y4(+d[0])
+                });
 
-            mini.enter().append("path")
-                .attr("class", "area")
-                .attr("d", area2)
-                .style("fill", "url(#area-gradient)")
-
-            mini.transition().duration(500).attr("d", area2)
-                .style("fill", "url(#area-gradient)")
 
             mini.exit().remove();
 
@@ -523,19 +554,19 @@ function drawReach(filename) {
             }
 
 
-            // var middleWindow = [middle - (x6(barWindow) / 2), middle + (x6(barWindow) / 2)]
+            var middleWindow = [middle - (x6(barWindow) / 2), middle + (x6(barWindow) / 2)]
 
             context.append("g")
                 .attr("class", "brush")
                 .call(brush)
-                .call(brush.move, [100,300])
+                .call(brush.move, middleWindow)
 
             $("#full-context").scrollLeft(function () {
                 return x6.domain()[1] / 2;
             })
 
-            // context.select(".brush").selectAll(".handle").remove();
-            // context.select(".brush").selectAll(".overlay").remove();
+            context.select(".brush").selectAll(".handle").remove();
+            context.select(".brush").selectAll(".overlay").remove();
 
             settingsFull();
 
@@ -575,14 +606,12 @@ function drawReach(filename) {
             if (val == "resolution") {
                 elem.find("span").text(((smplpoints / points) * 100).toFixed(2) + "%");
             }
-
-            $("#full-domain-in").find("span").text(start.toFixed(0))
-            $("#full-domain-out").find("span").text(end.toFixed(0))
         }
 
     }
 
     function brushed() {
+
 
 
         d3.select(".crosshair").classed("hidden", "true");
@@ -597,16 +626,17 @@ function drawReach(filename) {
 
         selected = s;
 
-        x5 = d3.scaleLinear().range([0,width2]),
-        x5.domain([0,width])
-
         x3.domain([0, barWindow]);
-        Swindow = s.map(x5.invert)
+        Swindow = s.map(x3.invert)
 
         data = barData.chr;
         points = data.length;
 
         start = x2(Swindow[0] / factor)
+
+        if (start > barData.raw.length - barWindow) {
+            start = barData.raw.length - barWindow;
+        }
 
         data = data.slice(start, start + barWindow);
 

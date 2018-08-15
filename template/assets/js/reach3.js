@@ -119,56 +119,42 @@ function drawReach(filename) {
     var width = parseInt($(".modal-xl").attr("width") * (10 / 12)),
         h = $(".modal-xl").attr("height");
 
-    h = 600
-
     var svg = d3.select("#full-plot")
         .append("svg")
         .attr("width", width)
         .attr("height", h);
 
-
-    var width2 = parseInt($(".modal-xl").attr("width"));
-
-    var svg2 = d3.select("#full-context")
-        .append("svg")
-        .attr("width", width2)
-        .attr("height", 200);
-
-    d3.select("#full-context").style("width", width);
-
     var margin = {
             top: 20,
             right: 20,
-            bottom: 10,
+            bottom: 100,
             left: 40
         },
         margin2 = {
             top: 0,
             right: 20,
             bottom: 0,
-            left: 15
+            left: 40
         },
 
         width = width - margin.left - margin.right,
-        width2 = width2 - margin2.left - margin2.right,
         height = h - margin.top - margin.bottom;
 
-    margin2.top = 0;
+    margin2.top = height
 
-    height2 = 200 - margin2.bottom - margin2.top - 20;
+    height2 = (h * 0.08) - margin2.bottom;
 
     var x = d3.scaleLinear().range([0, width]),
         x2 = d3.scaleLinear().range([0, width]),
         x3 = d3.scaleLinear().range([0, width]),
         x5 = d3.scaleLinear().range([0, width]),
-        x6 = d3.scaleLinear(),
         y = d3.scaleLinear().range([height, 0]),
         y2 = d3.scaleLinear().range([height2, 0]),
         xtip = d3.scaleLinear().domain([0, width]).clamp(true);
 
 
     var xAxis = d3.axisBottom(x).ticks(0),
-        xAxis2 = d3.axisBottom(x6),
+        xAxis2 = d3.axisBottom(x2),
         yAxis = d3.axisLeft(y);
 
     var brush = d3.brushX()
@@ -203,13 +189,14 @@ function drawReach(filename) {
         .attr("class", "focus")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var context = svg2.append("g")
+    var context = svg.append("g")
         .attr("class", "context")
-        .attr("transform", "translate(" + 5 + "," + (margin2.top) + ")");
+        .attr("transform", "translate(" + margin2.left + "," + (margin2.top + 20) + ")");
 
     var mini;
 
     var crosshair = svg.append("g").append("line").classed("crosshair", "true");
+
     var crosshair2 = svg.append("g").append("line").classed("crosshair2", "true");
 
     // set the y scale for the context view based on the html input value
@@ -376,6 +363,7 @@ function drawReach(filename) {
     function settingsFull() {
         settings = d3.select("#full-settings");
 
+
         var minBarWidth = Math.ceil(width / barData.raw.length);
         settings.select("#full-bar-width").on("input", function () {
             barWidth = +this.value;
@@ -386,14 +374,11 @@ function drawReach(filename) {
         settings.select("#full-y-scale").on("input", function () {
             fullYScale = +this.value;
             y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
-            mini = context.selectAll(".mini")
-            mini.transition().duration(500)
-                .attr("y", function (d) {
-                    return y4(+d[0]);
-                })
-                .attr("height", function (d) {
-                    return height2 - y4(+d[0])
-                });
+            mini = context.selectAll(".area")
+            area2.y1(function (d) {
+                return y4(+d[0]);
+            });
+            mini.transition().duration(500).attr("d", area2);
         })
 
     }
@@ -411,8 +396,6 @@ function drawReach(filename) {
 
             var data = barData.raw;
 
-            barData.sampled = largestTriangleThreeBuckets(barData.chr, barData.chr.length);
-
             y.domain([0, d3.max(data, function (d) {
                 return +d;
             })]);
@@ -423,24 +406,7 @@ function drawReach(filename) {
                 return i;
             }));
 
-            var middle = x6.domain()[1] / 2;
-            var mWidth = parseInt($(".modal-xl").attr("width"));
-            var miniBarWidth = 1;
-            if (barData.raw.length < mWidth) {
-                var miniBarWidth = mWidth / barData.raw.length
-                var middle = x6.range()[1] / 2;
-            }
-
-            mWidth = mWidth - 20;
-
-            svg2.attr("width", mWidth);
-            x4 = d3.scaleLinear().range([0, width2]);
-            x6.range([0, width2]).domain(x2.domain());
-            brush.extent([
-                [0, 0],
-                [width2, height2]
-            ])
-
+            x4 = d3.scaleLinear().range([0, width]);
             y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
             x4.domain(x2.domain());
             x5.domain(x2.domain());
@@ -470,11 +436,11 @@ function drawReach(filename) {
                 .attr("class", "axis axis--y");
 
             var sampled = barData.chr;
-            if (barData.raw.length > width2) {
-                sampled = largestTriangleThreeBuckets(barData.chr, width2);
+            if (barData.raw.length > width) {
+                sampled = largestTriangleThreeBuckets(barData.chr, width);
             }
 
-            // zoom.scaleExtent([1, barData.raw.length / barWindow])
+            zoom.scaleExtent([1, barData.raw.length / barWindow])
 
             context.selectAll("#area-gradient").remove();
 
@@ -483,13 +449,16 @@ function drawReach(filename) {
                 .attr("id", "area-gradient")
                 .attr("gradientUnits", "userSpaceOnUse")
                 .attr("x1", 0).attr("y1", 0)
-                .attr("x2", width2).attr("y2", 0)
+                .attr("x2", width).attr("y2", 0)
                 .selectAll("stop")
                 .data(sampled)
                 .enter().append("stop")
                 .attr("offset", function (d, i) {
 
-                    return ((i / (sampled.length)) * 100) + "%";
+                    if (barData.raw.length > width) {
+                        return ((i / (width)) * 100) + "%";
+                    }
+                    return ((i / (barData.raw.length)) * 100) + "%";
                 })
                 .attr("stop-color", function (d) {
                     var b = barData.color[d[1]]
@@ -517,25 +486,10 @@ function drawReach(filename) {
 
             context.selectAll(".brush").remove();
 
-            var middle = x6.domain()[1] / 2;
-            if (barData.raw.length < mWidth) {
-                var middle = x6.range()[1] / 2;
-            }
-
-
-            // var middleWindow = [middle - (x6(barWindow) / 2), middle + (x6(barWindow) / 2)]
-
             context.append("g")
                 .attr("class", "brush")
                 .call(brush)
-                .call(brush.move, [100,300])
-
-            $("#full-context").scrollLeft(function () {
-                return x6.domain()[1] / 2;
-            })
-
-            // context.select(".brush").selectAll(".handle").remove();
-            // context.select(".brush").selectAll(".overlay").remove();
+                .call(brush.move, x.range());
 
             settingsFull();
 
@@ -543,7 +497,7 @@ function drawReach(filename) {
 
     }
 
-    var throttled_version = _.debounce(addNewBars, 10);
+    var throttled_version = _.debounce(addNewBars, 200);
 
     function stats(points, window, smplpoints, zoom, start, end) {
 
@@ -575,15 +529,11 @@ function drawReach(filename) {
             if (val == "resolution") {
                 elem.find("span").text(((smplpoints / points) * 100).toFixed(2) + "%");
             }
-
-            $("#full-domain-in").find("span").text(start.toFixed(0))
-            $("#full-domain-out").find("span").text(end.toFixed(0))
         }
 
     }
 
     function brushed() {
-
 
         d3.select(".crosshair").classed("hidden", "true");
         highlighted = null;
@@ -593,20 +543,28 @@ function drawReach(filename) {
 
         //get brush selection      
         var s = d3.event.selection;
-        factor = Math.abs((s[1] - s[0]) / barData.raw.length);
+        factor = Math.abs((s[1] - s[0]) / width);
 
-        selected = s;
-
-        x5 = d3.scaleLinear().range([0,width2]),
-        x5.domain([0,width])
+        selected = s.map(x2.invert);
 
         x3.domain([0, barWindow]);
-        Swindow = s.map(x5.invert)
+        Swindow = s.map(x3.invert);
 
-        data = barData.chr;
-        points = data.length;
+        threshold = Math.floor(barWindow / factor);
 
-        start = x2(Swindow[0] / factor)
+        if (threshold < barData.raw.length) {
+            data = largestTriangleThreeBuckets(barData.chr.slice(selected), threshold);
+            points = data.length;
+        } else {
+            data = barData.chr;
+            points = data.length;
+        }
+
+        start = Swindow[0] / factor;
+
+        if (start > barData.raw.length - barWindow) {
+            start = barData.raw.length - barWindow;
+        }
 
         data = data.slice(start, start + barWindow);
 
@@ -622,8 +580,7 @@ function drawReach(filename) {
 
         bars.attr("x", function (d, i) {
                 return x3(i) + barPadding;
-            })
-            // .transition().duration(250)
+            }).transition().duration(250)
             .attr("y", function (d) {
                 return y(+d[0]);
             })
@@ -642,11 +599,26 @@ function drawReach(filename) {
         stats(barData.raw.length, barWindow, threshold, factor, x.invert(s[0]), x.invert(s[1]));
 
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+            .scale(width / (s[1] - s[0]))
             .translate(-s[0], 0));
 
     }
 
     function brushEnd() {
+
+        var s = d3.event.selection;
+
+        try {
+            var deltaS = Math.abs(s[1] - s[0])
+        } catch (error) {
+            d3.select(this).call(brush.move, x.range());
+        }
+
+        var deltaW = Math.abs(where[1] - where[0])
+
+        if (deltaS < deltaW) {
+            d3.select(this).call(brush.move, where);
+        }
 
         focus.select(".axis--y").transition().duration(500).call(yAxis);
 
@@ -667,7 +639,7 @@ function drawReach(filename) {
             .attr("y", function (d) {
                 return height;
             }).attr("width", barWidth - barPadding)
-            // .transition().duration(250)
+            .transition().duration(250)
             .attr("y", function (d) {
                 return y(+d[0]);
             })
@@ -682,8 +654,8 @@ function drawReach(filename) {
             return;
         }
         var t = d3.event.transform;
-        x6.domain(t.rescaleX(x6).domain());
-        var window = x6.range().map(t.invertX, t);
+        x2.domain(t.rescaleX(x2).domain());
+        var window = x2.range().map(t.invertX, t);
         where = window;
         context.select(".brush").call(brush.move, window);
     }

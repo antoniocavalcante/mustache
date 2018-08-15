@@ -43,7 +43,7 @@ def directory():
 
 @api.route('/distance')
 def index():
-    return str(hdbscan.dist_metrics.METRIC_MAPPING)
+    return jsonify(list(dict(hdbscan.dist_metrics.METRIC_MAPPING).keys())) 
 
 
 @api.route("/submit", methods=['GET', 'POST'])

@@ -4,4 +4,4 @@ dashboard = Blueprint('dashboard', __name__)
 
 @dashboard.route('/')
 def index():
-    return render_template("dashboard/index.html")
+    return render_template("dashboard/index2.html")

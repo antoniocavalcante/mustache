@@ -16,18 +16,33 @@
 </head>
 
 <body class="layout-fullwidth">
-	<ul class="mfb-component--br mfb-slidein effects-slidein" data-mfb-hover>
-		<!-- the menu content -->
-		<li class="mfb-component__wrap">
-			<!-- the main menu button -->
-			<a data-mfb-label="Add new dataset" class="mfb-component__button--main grad" data-toggle="modal" data-target="#addDataModal">
-				<!-- the main button icon visibile by default -->
-				<i class="mfb-component__main-icon--resting ti ti-plus text-primary"></i>
-				<!-- the main button icon visibile when the user is hovering/interacting with the menu -->
-				<i class="mfb-component__main-icon--active ti ti-plus text-success"></i>
-			</a>
-		</li>
-	</ul>
+
+		<ul id="menu" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
+				<li class="mfb-component__wrap">
+				  <a href="#" class="mfb-component__button--main grad">
+					<i class="mfb-component__main-icon--resting ti ti-plus text-primary"></i>
+					<i class="mfb-component__main-icon--active ti ti-plus text-primary"></i>
+				  </a>
+				  <ul class="mfb-component__list">
+
+					<li>
+					  <a data-mfb-label="Create new dataset" class="mfb-component__button--child grad" data-toggle="modal" data-target="#addDataModal">
+						<i class="mfb-component__child-icon ti ti-file text-primary"></i>
+					  </a>
+					</li>
+		  
+					<li>
+					  <a 
+						 data-mfb-label="Import dataset from .zip" class="mfb-component__button--child grad"
+						 onclick="document.getElementById('zipInput').click();">
+						 <input id="zipInput" type="file" style="display:none;" accept=".zip" />
+						<i class="mfb-component__child-icon ti ti-zip text-primary"></i>
+					  </a>
+					</li>
+				  </ul>
+				</li>
+			  </ul>
+	
 	<!-- WRAPPER -->
 	<div id="wrapper">
 
@@ -140,7 +155,6 @@
 											<div class="form-group">
 												<label>Distance</label>
 												<select class="form-control" name="datasetDistance" data-validation="length" data-validation-length="min1">
-													<option>Euclidean</option>
 												</select>
 											</div>
 											<div class="form-group">
