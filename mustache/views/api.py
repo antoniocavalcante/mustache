@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, current_app as app, Response, redirect
+from flask import Blueprint, request, jsonify, current_app as app, Response, redirect, url_for
 import json, hdbscan, tkinter as tk, os
 from tkinter import filedialog
 from .. import __file__ as base
@@ -30,6 +30,7 @@ def workspace():
 @api.route("/directory")
 def directory():
     root = tk.Tk()
+    root.iconbitmap(os.path.join(os.path.dirname(base), r'static\icon\favicon.ico'))
     root.attributes("-topmost", True)
     root.withdraw()
     dirStr = filedialog.askdirectory()

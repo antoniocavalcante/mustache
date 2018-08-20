@@ -1,0 +1,14 @@
+{
+    "name": "MustaCHE",
+    "short_name": "MustaCHE",
+    "icons": [
+        {
+            "src": "/icon/android-chrome-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#097b43",
+    "background_color": "#097b43",
+    "display": "standalone"
+}

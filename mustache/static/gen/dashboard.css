@@ -8156,6 +8156,11 @@ html {
     margin: 0 !important;
 }
 
+.nopadding-t {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
 .nopadding-h {
     padding-right: 0;
     padding-left: 0;
@@ -8533,6 +8538,21 @@ html {
     overflow-x: scroll;
     top: 3px;
     bottom: auto;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.about-logo {
+    width: 20%;
+    height:auto;
+    margin: 0 auto;
+}
+
+.about-header {
+    font-size: 24px;
 }
 #wrapper .sidebar {
   background-color: #2B333E;
