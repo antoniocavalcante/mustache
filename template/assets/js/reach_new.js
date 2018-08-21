@@ -530,6 +530,8 @@ function drawReach(filename) {
 
     }
 
+    var range;
+
     function brushed() {
 
         d3.select(".crosshair").classed("hidden", "true");
@@ -538,12 +540,9 @@ function drawReach(filename) {
         var factor;
         var threshold;
 
-        if (d3.event.sourceEvent && d3.event.sourceEvent.type == "zoom"){
-            console.log("object");
-        }
-
         //get brush selection      
         var s = d3.event.selection;
+        range = s;
         factor = Math.abs((s[1] - s[0]) / width);
 
         selected = s.map(x2.invert);
@@ -553,13 +552,6 @@ function drawReach(filename) {
 
         threshold = Math.floor(barWindow / factor);
 
-        if (threshold < barData.raw.length) {
-            data = largestTriangleThreeBuckets(barData.chr.slice(selected), threshold);
-            points = data.length;
-        } else {
-            data = barData.chr;
-            points = data.length;
-        }
 
         start = Swindow[0] / factor;
 
@@ -567,15 +559,21 @@ function drawReach(filename) {
             start = barData.raw.length - barWindow;
         }
 
-        data = data.slice(start, start + barWindow);
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type == "zoom") {
+            barData.sampled.sliced = barData.sampled.slice(Swindow[0], Swindow[0] + barWindow)
+            console.log(Swindow);
+        } else {
+            barData.sampled = largestTriangleThreeBuckets(barData.chr.slice(selected), threshold);
+            points = barData.sampled.length;
+        }
 
-        y.domain([0, d3.max(data, function (d) {
+        y.domain([0, d3.max(barData.sampled.sliced, function (d) {
             return +d[0];
         })]);
 
         //select current bars
         bars = focus.selectAll(".bar")
-            .data(data, function (d, i) {
+            .data(barData.sampled.sliced, function (d, i) {
                 return d;
             });
 
@@ -654,7 +652,7 @@ function drawReach(filename) {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type == "brush") {
             return;
         }
-        if (d3.event.sourceEvent.type == "wheel"){
+        if (d3.event.sourceEvent.type == "wheel") {
             return;
         }
         var t = d3.event.transform;
