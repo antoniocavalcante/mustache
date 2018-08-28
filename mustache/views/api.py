@@ -1,11 +1,20 @@
-from flask import Blueprint, request, jsonify, current_app as app, Response, redirect, url_for
-import json, hdbscan, tkinter as tk, os
+from flask import Blueprint, request, jsonify, current_app as app, Response, redirect, url_for, send_file
+import json
+import shutil
+import time
+import datetime as dt
+import hdbscan
+import tkinter as tk
+import os
+import zipfile
+from io import BytesIO
 from tkinter import filedialog
 from .. import __file__ as base
-# from ..util.helpers import createDatasetPath
 from ..tasks.tasks import process
+from ..util.helpers import rngl
 
 api = Blueprint('api', __name__)
+
 
 @api.route('/workspace', methods=['GET', 'POST'])
 def workspace():
@@ -19,20 +28,21 @@ def workspace():
         path = request.json['path']
         app.config['WORKSPACE'] = path
 
-        with open(os.path.join(os.path.dirname(base),'settings.json')) as jfile:
+        with open(os.path.join(os.path.dirname(base), 'settings.json')) as jfile:
             data = json.load(jfile)
             data['WORKSPACE'] = path
 
-        with open(os.path.join(os.path.dirname(base),'settings.json'), 'w') as jfile:
+        with open(os.path.join(os.path.dirname(base), 'settings.json'), 'w') as jfile:
             json.dump(data, jfile)
 
         return Response("{}", status=200, mimetype='application/json')
-        
+
 
 @api.route("/directory")
 def directory():
     root = tk.Tk()
-    root.iconbitmap(os.path.join(os.path.dirname(base), r'static\icon\favicon.ico'))
+    # root.iconbitmap(os.path.join(
+    #     os.path.dirname(base), 'static/icon/favicon.ico'))
     root.attributes("-topmost", True)
     root.withdraw()
     dirStr = filedialog.askdirectory()
@@ -45,23 +55,88 @@ def directory():
 
 
 @api.route('/distance')
-def index():
-    return jsonify(list(dict(hdbscan.dist_metrics.METRIC_MAPPING).keys())) 
+def distance():
+    # list(dict(hdbscan.dist_metrics.METRIC_MAPPING).keys())
+    d = ["euclidean", "cosine", "pearson", "manhattan", "supremum"]
+    return jsonify(d)
+
+
+@api.route('/rng')
+def rng():
+    return jsonify(rngl)
 
 
 @api.route("/submit", methods=['GET', 'POST'])
 def submit():
     if request.method == 'POST':
-        result = request.form
+        result = request.form.to_dict()
         files = request.files
+        data = []
+
         try:
-            print(files['file-dataset'])
-            print(files['file-labels'])
-        except:
-            pass
+            data.append({"name": files['file-dataset'].filename,
+                         "data": files['file-dataset'].read()})
+        except Exception as e:
+            print("file datatset error!")
 
-        task = process.apply_async()
-        print(task.id)
+        try:
+            data.append({"name": files['file-labels'].filename,
+                         "data": files['file-labels'].read()})
+        except Exception as e:
+            print("file labels error!")
 
+        process.apply_async(
+            args=[app.config['WORKSPACE'], data, result])
+
+        time.sleep(1)
 
     return jsonify(status="good!")
+
+
+@api.route("/status", methods=['GET', 'POST'])
+def status():
+    return ""
+
+
+@api.route("/delete/<id>", methods=['GET', 'POST'])
+def delete(id):
+    print("deleted id!", id)
+    root = app.config['WORKSPACE']
+    if os.path.exists(os.path.join(root, id)):
+        try:
+            shutil.rmtree(os.path.join(root, id))
+            return Response("{}", status=200, mimetype='application/json')
+        except OSError as e:
+            print("Error:")
+            return Response("{}", status=404, mimetype='application/json')
+    else:
+        print("Sorry, I can not find %s file.")
+    return Response("{}", status=404, mimetype='application/json')
+
+
+@api.route("/exportZip", methods=['GET', 'POST'])
+def export_zip():
+    memory_file = BytesIO()
+    with zipfile.ZipFile(memory_file, 'w') as zf:
+        files = [None]
+        for individualFile in files:
+            data = zipfile.ZipInfo(individualFile['fileName'])
+            data.date_time = time.localtime(time.time())[:6]
+            data.compress_type = zipfile.ZIP_DEFLATED
+            zf.writestr(data, individualFile['fileData'])
+    memory_file.seek(0)
+    return send_file(memory_file, attachment_filename='capsule.zip', as_attachment=True)
+
+
+@api.route("/importtZip", methods=['GET', 'POST'])
+def import_zip():
+    memory_file = BytesIO()
+    with zipfile.ZipFile(memory_file, 'w') as zf:
+        files = [None]
+        for individualFile in files:
+            data = zipfile.ZipInfo(individualFile['fileName'])
+            data.date_time = time.localtime(time.time())[:6]
+            data.compress_type = zipfile.ZIP_DEFLATED
+            zf.writestr(data, individualFile['fileData'])
+    memory_file.seek(0)
+    return send_file(memory_file, attachment_filename='capsule.zip', as_attachment=True)

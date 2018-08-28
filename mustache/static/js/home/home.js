@@ -8,7 +8,7 @@ $(function () {
                 var path = JSON.parse(xhr.response)['path']
                 $("#dirPath").val(path)
             } else {
-                $("#workspace").modal();
+
             }
         };
         xhr.send();
@@ -62,6 +62,49 @@ $(function () {
 })
 
 
+$(function () {
+
+    console.log($(".dataset"));
+
+})
+
+$(function () {
+
+    $('.btn-sw-confirmation').on('click', function () {
+        var id = $(this).data("val")
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#F9354C',
+            cancelButtonColor: '#41B314',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function () {
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/delete/" + id, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    );
+                    setTimeout(function () { location.reload() }, 2000);
+                } else {
+                    swal.noop;
+                }
+            };
+            xhr.send();
+
+
+        }).catch(swal.noop);
+    });
+
+})
+
+
 
 $(function () {
 
@@ -77,13 +120,32 @@ $(function () {
                     text: key.replace(/^\w/, c => c.toUpperCase())
                 }));
             })
-            // select.attr('size', distances.length);
 
         } else {
 
         }
     };
     distanceRequest.send();
+
+    var rngRequest = new XMLHttpRequest();
+    rngRequest.open("GET", "/rng", true);
+    rngRequest.onload = function () {
+        if (rngRequest.status === 200) {
+            var rngs = JSON.parse(rngRequest.response)
+            var select = $('select[name="datasetRng"]');
+            rngs.forEach(function (key) {
+                console.log(key);
+                select.append($('<option />', {
+                    value: key[0],
+                    text: key[0].replace(/^\w/, c => c.toUpperCase())
+                }));
+            })
+
+        } else {
+
+        }
+    };
+    rngRequest.send();
 
 
 })
@@ -125,80 +187,44 @@ $(function () {
 var checkSum = [];
 
 function submitData() {
-    // $("#submitDataForm").submit(function (event) {
-    //     event.preventDefault(); //prevent default action 
-    //     var post_url = $(this).attr("action") //get form action url
-    //     var request_method = $(this).attr("method"); //get form GET/POST method
-    //     var form_data = new FormData()
 
-    //     try {
-    //         var datasetFile = $(this).find("#file-dataset")[0].files[0];
-    //         form_data.append("file-dataset", datasetFile, datasetFile.name);
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
+    console.log("submiited!");
 
-    //     try {
-    //         var labelsFile = $(this).find("#file-labels")[0].files[0];
-    //         form_data.append("file-labels", labelsFile, labelsFile.name);
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
+    var form = $("#submitDataForm")
 
-    //     var fields = $(this).serializeArray();
-    //     for (i = 0; i < fields.length; i++) {
-    //         form_data.append(fields[i].name, fields[i].value);
-    //     }
+    var post_url = form.attr("action") //get form action url
+    var request_method = form.attr("method"); //get form GET/POST method
+    var form_data = new FormData()
 
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open(request_method, post_url, true);
-    //     xhr.onload = function () {
-    //         if (xhr.status === 200) {
-    //             console.log(xhr.response);
-    //         } else {
+    try {
+        var datasetFile = form.find("#file-dataset")[0].files[0];
+        form_data.append("file-dataset", datasetFile, datasetFile.name);
+    } catch (error) {
+        console.log(error)
+    }
 
-    //         }
-    //     };
-    //     xhr.send(form_data);
-    // });
+    try {
+        var labelsFile = form.find("#file-labels")[0].files[0];
+        form_data.append("file-labels", labelsFile, labelsFile.name);
+    } catch (error) {
+        console.log(error)
+    }
 
-        console.log("submiited!");
+    var fields = form.serializeArray();
+    for (i = 0; i < fields.length; i++) {
+        form_data.append(fields[i].name, fields[i].value);
+    }
 
-        var form = $("#submitDataForm")
+    var xhr = new XMLHttpRequest();
+    xhr.open(request_method, post_url, true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            location.reload();
+        } else {
 
-        var post_url = form.attr("action") //get form action url
-        var request_method = form.attr("method"); //get form GET/POST method
-        var form_data = new FormData()
-
-        try {
-            var datasetFile = form.find("#file-dataset")[0].files[0];
-            form_data.append("file-dataset", datasetFile, datasetFile.name);
-        } catch (error) {
-            console.log(error)
         }
-
-        try {
-            var labelsFile = form.find("#file-labels")[0].files[0];
-            form_data.append("file-labels", labelsFile, labelsFile.name);
-        } catch (error) {
-            console.log(error)
-        }
-
-        var fields = form.serializeArray();
-        for (i = 0; i < fields.length; i++) {
-            form_data.append(fields[i].name, fields[i].value);
-        }
-
-        var xhr = new XMLHttpRequest();
-        xhr.open(request_method, post_url, true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                console.log(xhr.response);
-            } else {
-
-            }
-        };
-        xhr.send(form_data);
+    };
+    xhr.send(form_data);
 
     // $("form").submit();
 }

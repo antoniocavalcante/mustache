@@ -30,6 +30,7 @@ bundles = {
         "css/home/mfb.css",
         "css/home/main.css",
         "css/home/style.css",
+        "css/home/loaders.css",
         "css/dashboard/dashboard.css",
         "css/font.css",
         output='gen/home.css', filters="cssrewrite"),

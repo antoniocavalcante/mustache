@@ -5,21 +5,20 @@
 	<title>MustaCHE | Home</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-
-	{% assets "home_css" %}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> {% assets "home_css"
+	%}
 	<link rel="stylesheet" href="{{ ASSET_URL }}"> {% endassets %}
 
 	<link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icon/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icon/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ url_for('static', filename='icon/site.webmanifest') }}">
-    <link rel="mask-icon" href="{{ url_for('static', filename='icon/safari-pinned-tab.svg') }}" color="#097b43">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='icon/favicon.ico') }}">
-    <meta name="msapplication-TileColor" content="#097b43">
-    <meta name="msapplication-config" content="{{ url_for('static', filename='icon/browserconfig.xml') }}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icon/favicon-32x32.png') }}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icon/favicon-16x16.png') }}">
+	<link rel="manifest" href="{{ url_for('static', filename='icon/site.webmanifest') }}">
+	<link rel="mask-icon" href="{{ url_for('static', filename='icon/safari-pinned-tab.svg') }}" color="#097b43">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='icon/favicon.ico') }}">
+	<meta name="msapplication-TileColor" content="#097b43">
+	<meta name="msapplication-config" content="{{ url_for('static', filename='icon/browserconfig.xml') }}">
 	<meta name="theme-color" content="#097b43">
-	
+
 </head>
 
 <body class="layout-fullwidth">
@@ -91,7 +90,7 @@
 
 		<!-- ADD DATASET -->
 		<div class="modal fade" id="addDataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"
-		    data-backdrop="static">
+		 data-backdrop="static">
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -152,7 +151,7 @@
 										<div class="col-md-12">
 											<div class="form-group">
 												<label>Datapoints</label>
-												<input type="text" class="form-control" name="datasetPoints" readonly disabled>
+												<input type="text" class="form-control" name="datasetPoints" readonly>
 											</div>
 											<div class="form-group">
 												<label>Dataset Name</label>
@@ -166,7 +165,6 @@
 											<div class="form-group">
 												<label>RNG</label>
 												<select class="form-control" name="datasetRng" data-validation="length" data-validation-length="min1">
-													<option>Filtered</option>
 												</select>
 											</div>
 											<div class="form-group col-xs-6 nopadding-l">
@@ -239,54 +237,63 @@
 			<div class="main-content padding-top-30">
 				<div class="container-fluid">
 					<div class="row">
+						{% for id, dataset in datasets.items() %}
 						<!-- DATASETS -->
-						<div class="col-md-3 dataset">
+						<div class="col-md-3 dataset" id="{{id}}" data-processed="false">
 							<div class="panel panel-default project-item grad">
 								<div class="panel-heading">
-									<p class="panel-title">Anuran</p>
+									<p class="panel-title">{{ dataset['datasetName'] }}</p>
 									<div class="right">
 										<span class="label label-primary">PROCESSING</span>
-										<!-- <span class="label label-success">PROCESSED</span> -->
+										<span class="label label-default">QUEUED</span>
+										<span class="label label-success">PROCESSED</span>
 									</div>
 								</div>
 								<div class="panel-body">
 									<div class="left">
 										<div class="info">
 											<span class="title">DATE ADDED</span>
-											<span class="value">7/25/2018</span>
+											<span class="value">{{ dataset['date_added'] | datetime }}</span>
 										</div>
 										<div class="info">
 											<span class="title">DISTANCE</span>
-											<span class="value">EUCLIDEAN</span>
+											<span class="value">{{ dataset['datasetDistance'].upper() }}</span>
 										</div>
 										<div class="info">
 											<span class="title">RNG</span>
-											<span class="value">FILTERED</span>
+											<span class="value">{{ dataset['datasetRng'].upper() }}</span>
 										</div>
 										<div class="info">
 											<span class="title">MPTS MIN/MAX</span>
-											<span class="value">2/50</span>
+											<span class="value">{{ dataset['datasetMinMpts'] }}/{{ dataset['datasetMaxMpts'] }}</span>
 										</div>
 									</div>
 									<div class="left">
 										<div class="info">
 											<span class="title">POINTS</span>
-											<span class="value">7195</span>
+											<span class="value">{{ dataset['datasetPoints'] }}</span>
 										</div>
 									</div>
 									<div class="right">
-										<div class="progress-chart easy-pie-chart" data-percent="65">
+										<div class="lds-facebook">
+											<div></div>
+											<div></div>
+											<div></div>
+										</div>
+									</div>
+									<div class="right">
+										<div class="progress-chart easy-pie-chart hidden" data-percent="65">
 											<span class="percent">65%</span>
 										</div>
-										<!-- <div class="task">
-											<div class="task-progress">35m Remaing...</div>
-										</div> -->
+										<div class="task">
+											<div class="task-progress">calculating ...</div>
+										</div>
 									</div>
 									<div class="clearfix"></div>
 									<div class="controls">
 										<a href="#">
 											<i class="fa fa-file-archive-o"></i>Export Zip</a>
-										<a href="#">
+										<a href="#" class="btn-sw-confirmation" data-val="{{id}}">
 											<i class="fa fa-trash"></i>Delete</a>
 										<button type="button" class="btn btn-default pull-right" disabled>
 											<i class="fa fa-area-chart"></i>OPEN</button>
@@ -295,6 +302,7 @@
 							</div>
 						</div>
 						<!-- END DATASETS -->
+						{% endfor %}
 					</div>
 				</div>
 			</div>
@@ -305,8 +313,7 @@
 	<!-- END WRAPPER -->
 
 	{% assets "home_js" %}
-	<script type="text/javascript" src="{{ ASSET_URL }}"></script>
-	{% endassets %}
+	<script type="text/javascript" src="{{ ASSET_URL }}"></script> {% endassets %}
 
 	<script>
 		$(function () {

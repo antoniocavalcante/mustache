@@ -1,1 +1,1 @@
-{"WORKSPACE": "C:/Users/schoo/Documents/Development/mustache", "DEBUG": false, "CELERY_BROKER_URL": "redis://localhost:6379/0", "CELERY_RESULT_BACKEND": "redis://localhost:6379/0", "SERVER_NAME": "localhost:7000"}
+{"WORKSPACE": "/home/csaba/Documents/datasets", "DEBUG": false, "CELERY_BROKER_URL": "redis://localhost:6379/0", "CELERY_RESULT_BACKEND": "redis://localhost:6379/0"}
