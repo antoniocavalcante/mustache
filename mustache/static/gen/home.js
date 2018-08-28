@@ -156,13 +156,14 @@ $(function(){var distanceRequest=new XMLHttpRequest();distanceRequest.open("GET"
 var select=$('select[name="datasetDistance"]');distances.forEach(function(key){select.append($('<option />',{value:key,text:key.replace(/^\w/,c=>c.toUpperCase())}));})
 }else{}};distanceRequest.send();})
 $(function(){var drEvent=$('.dropify').dropify({messages:{'default':'Drag and drop a file here or click','replace':'Drag and drop or click to replace','remove':'Remove','error':'Parsing Error.'}});var drEvent3=$('#file-labels').dropify();drEvent3.on('dropify.afterClear',function(event,element){checkSum[1]=undefined;});var drEvent2=$('#file-dataset').dropify();drEvent2.on('dropify.afterClear',function(event,element){$("#next1").attr("disabled",true);try{drEvent3=drEvent3.data("dropify");drEvent3.resetPreview();drEvent3.clearElement();}catch(error){console.log(error);}
-checkSum=[];});});var checkSum=[];function submitData(){$("#submitDataForm").submit(function(event){event.preventDefault();var post_url=$(this).attr("action")
-var request_method=$(this).attr("method");var form_data=new FormData()
-try{var datasetFile=$(this).find("#file-dataset")[0].files[0];form_data.append("file-dataset",datasetFile,datasetFile.name);}catch(error){console.log(error)}
-try{var labelsFile=$(this).find("#file-labels")[0].files[0];form_data.append("file-labels",labelsFile,labelsFile.name);}catch(error){console.log(error)}
-var fields=$(this).serializeArray();for(i=0;i<fields.length;i++){form_data.append(fields[i].name,fields[i].value);}
-var xhr=new XMLHttpRequest();xhr.open(request_method,post_url,true);xhr.onload=function(){if(xhr.status===200){console.log(xhr.response);}else{}};xhr.send(form_data);});}
-function startStep(){}
+checkSum=[];});});var checkSum=[];function submitData(){console.log("submiited!");var form=$("#submitDataForm")
+var post_url=form.attr("action")
+var request_method=form.attr("method");var form_data=new FormData()
+try{var datasetFile=form.find("#file-dataset")[0].files[0];form_data.append("file-dataset",datasetFile,datasetFile.name);}catch(error){console.log(error)}
+try{var labelsFile=form.find("#file-labels")[0].files[0];form_data.append("file-labels",labelsFile,labelsFile.name);}catch(error){console.log(error)}
+var fields=form.serializeArray();for(i=0;i<fields.length;i++){form_data.append(fields[i].name,fields[i].value);}
+var xhr=new XMLHttpRequest();xhr.open(request_method,post_url,true);xhr.onload=function(){if(xhr.status===200){console.log(xhr.response);}else{}};xhr.send(form_data);}
+function startStep(){$("#submitDataForm").trigger("reset");console.log("start");}
 function nextStep(){var filename=$("#file-dataset")[0].files[0].name.split(".")[0]
 $("input[name='datasetName']").val(filename[0].toUpperCase()+filename.substring(1));$("input[name='datasetPoints']").val(checkSum[0]);if(checkSum[0]<100){$("input[name='datasetMaxMpts']").attr("value",checkSum[0]);}else{$("input[name='datasetMaxMpts']").attr("value",100);}
 $("input[name='datasetMaxMpts']").attr("data-validation-allowing","range["+1+";"+(checkSum[0]-1)+"]")

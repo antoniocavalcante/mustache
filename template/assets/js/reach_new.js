@@ -410,6 +410,7 @@ function drawReach(filename) {
             y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
             x4.domain(x2.domain());
             x5.domain(x2.domain());
+            sampleRateScale = d3.scaleLinear().range([0, width]);
 
             area2 = d3.area()
                 .curve(d3.curveStep)
@@ -492,6 +493,11 @@ function drawReach(filename) {
 
             settingsFull();
 
+            svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+                .scale(width / barData.chr.length)
+                .translate(-barData.chr.length, 0)
+            );
+
         });
 
     }
@@ -531,56 +537,27 @@ function drawReach(filename) {
     }
 
     var range;
+    var sampleRate;
 
-    function brushed() {
+    
 
-        d3.select(".crosshair").classed("hidden", "true");
-        highlighted = null;
+    function barChart(window) {
 
-        var factor;
-        var threshold;
+        var data2 = barData.sampled.slice(window[0], window[0]+barWindow)
 
-        //get brush selection      
-        var s = d3.event.selection;
-        range = s;
-        factor = Math.abs((s[1] - s[0]) / width);
-
-        selected = s.map(x2.invert);
-
-        x3.domain([0, barWindow]);
-        Swindow = s.map(x3.invert);
-
-        threshold = Math.floor(barWindow / factor);
-
-
-        start = Swindow[0] / factor;
-
-        if (start > barData.raw.length - barWindow) {
-            start = barData.raw.length - barWindow;
-        }
-
-        if (d3.event.sourceEvent && d3.event.sourceEvent.type == "zoom") {
-            barData.sampled.sliced = barData.sampled.slice(Swindow[0], Swindow[0] + barWindow)
-            console.log(Swindow);
-        } else {
-            barData.sampled = largestTriangleThreeBuckets(barData.chr.slice(selected), threshold);
-            points = barData.sampled.length;
-        }
-
-        y.domain([0, d3.max(barData.sampled.sliced, function (d) {
+        y.domain([0, d3.max(data2, function (d) {
             return +d[0];
         })]);
 
         //select current bars
         bars = focus.selectAll(".bar")
-            .data(barData.sampled.sliced, function (d, i) {
-                return d;
+            .data(data2, function (d, i) {
+                return +d[0];
             });
 
         bars.attr("x", function (d, i) {
                 return x3(i) + barPadding;
             })
-            // .transition().duration(250)
             .attr("y", function (d) {
                 return y(+d[0]);
             })
@@ -596,11 +573,47 @@ function drawReach(filename) {
 
         addNewBars()
 
+        focus.select(".axis--y").transition().duration(500).call(yAxis);
+
+    }
+
+    function brushed() {
+
+        d3.select(".crosshair").classed("hidden", "true");
+        highlighted = null;
+
+        var factor;
+        var threshold;
+ 
+        var s = d3.event.selection;
+        
+        factor = Math.abs((s[1] - s[0]) / width);
+
+        selected = s.map(x2.invert);
+
+        x3.domain([0, barWindow]);
+        Swindow = s.map(x3.invert);
+
+        // threshold = Math.floor(barWindow / factor);
+
+        start = Swindow[0] / factor;
+
+        if (start > barData.raw.length - barWindow) {
+            start = barData.raw.length - barWindow;
+        }
+
+        sampleRate = 1000;
+
+        // barData.sampled = largestTriangleThreeBuckets(barData.chr, sampleRate);
+
+        barData.sampled = barData.chr
+        barData.sampled = barData.sampled.slice(selected[0], selected[1])
+        points = barData.sampled.length;
+
         stats(barData.raw.length, barWindow, threshold, factor, x.invert(s[0]), x.invert(s[1]));
 
-        svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
-            .scale(width / (s[1] - s[0]))
-            .translate(-s[0], 0));
+        // svg.select(".zoom").call(zoom);
+
 
     }
 
@@ -608,17 +621,7 @@ function drawReach(filename) {
 
         var s = d3.event.selection;
 
-        // try {
-        //     var deltaS = Math.abs(s[1] - s[0])
-        // } catch (error) {
-        //     d3.select(this).call(brush.move, x.range());
-        // }
-
-        // var deltaW = Math.abs(where[1] - where[0])
-
-        // if (deltaS < deltaW) {
-        //     d3.select(this).call(brush.move, where);
-        // }
+        barChart(s)
 
         focus.select(".axis--y").transition().duration(500).call(yAxis);
 
@@ -649,6 +652,7 @@ function drawReach(filename) {
     }
 
     function zoomed() {
+
         if (d3.event.sourceEvent && d3.event.sourceEvent.type == "brush") {
             return;
         }
@@ -658,8 +662,8 @@ function drawReach(filename) {
         var t = d3.event.transform;
         x2.domain(t.rescaleX(x2).domain());
         var window = x2.range().map(t.invertX, t);
-        where = window;
-        context.select(".brush").call(brush.move, window);
+        barChart(window)
+
     }
 
     function update() {

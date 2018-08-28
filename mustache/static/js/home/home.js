@@ -125,28 +125,66 @@ $(function () {
 var checkSum = [];
 
 function submitData() {
+    // $("#submitDataForm").submit(function (event) {
+    //     event.preventDefault(); //prevent default action 
+    //     var post_url = $(this).attr("action") //get form action url
+    //     var request_method = $(this).attr("method"); //get form GET/POST method
+    //     var form_data = new FormData()
 
-    $("#submitDataForm").submit(function (event) {
-        event.preventDefault(); //prevent default action 
-        var post_url = $(this).attr("action") //get form action url
-        var request_method = $(this).attr("method"); //get form GET/POST method
+    //     try {
+    //         var datasetFile = $(this).find("#file-dataset")[0].files[0];
+    //         form_data.append("file-dataset", datasetFile, datasetFile.name);
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+
+    //     try {
+    //         var labelsFile = $(this).find("#file-labels")[0].files[0];
+    //         form_data.append("file-labels", labelsFile, labelsFile.name);
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+
+    //     var fields = $(this).serializeArray();
+    //     for (i = 0; i < fields.length; i++) {
+    //         form_data.append(fields[i].name, fields[i].value);
+    //     }
+
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open(request_method, post_url, true);
+    //     xhr.onload = function () {
+    //         if (xhr.status === 200) {
+    //             console.log(xhr.response);
+    //         } else {
+
+    //         }
+    //     };
+    //     xhr.send(form_data);
+    // });
+
+        console.log("submiited!");
+
+        var form = $("#submitDataForm")
+
+        var post_url = form.attr("action") //get form action url
+        var request_method = form.attr("method"); //get form GET/POST method
         var form_data = new FormData()
 
         try {
-            var datasetFile = $(this).find("#file-dataset")[0].files[0];
+            var datasetFile = form.find("#file-dataset")[0].files[0];
             form_data.append("file-dataset", datasetFile, datasetFile.name);
         } catch (error) {
             console.log(error)
         }
 
         try {
-            var labelsFile = $(this).find("#file-labels")[0].files[0];
+            var labelsFile = form.find("#file-labels")[0].files[0];
             form_data.append("file-labels", labelsFile, labelsFile.name);
         } catch (error) {
             console.log(error)
         }
 
-        var fields = $(this).serializeArray();
+        var fields = form.serializeArray();
         for (i = 0; i < fields.length; i++) {
             form_data.append(fields[i].name, fields[i].value);
         }
@@ -161,14 +199,13 @@ function submitData() {
             }
         };
         xhr.send(form_data);
-    });
 
     // $("form").submit();
 }
 
 function startStep() {
-    // $("#submitDataForm").trigger("reset");
-    // console.log("start");
+    $("#submitDataForm").trigger("reset");
+    console.log("start");
 }
 
 function nextStep() {

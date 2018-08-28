@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify, current_app as app, Response, red
 import json, hdbscan, tkinter as tk, os
 from tkinter import filedialog
 from .. import __file__ as base
+# from ..util.helpers import createDatasetPath
+from ..tasks.tasks import process
 
 api = Blueprint('api', __name__)
 
@@ -52,7 +54,14 @@ def submit():
     if request.method == 'POST':
         result = request.form
         files = request.files
-        for k,v in files.items():
+        try:
             print(files['file-dataset'])
+            print(files['file-labels'])
+        except:
+            pass
+
+        task = process.apply_async()
+        print(task.id)
+
 
     return jsonify(status="good!")
