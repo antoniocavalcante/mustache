@@ -24,7 +24,7 @@ echo "Compact hierarchy: $7"
 # Creates all the folder structure
 cp $1 $8 # copies the dataset into the folder
 mkdir -p "$8/msts" # creates the msts directory
-mkdir -p "/$8/visualization" # creates the visualization directory
+mkdir -p "$8/visualization" # creates the visualization directory
 
 FILE_NAME=$(basename "$1")
 
@@ -50,4 +50,4 @@ done
 mv "$8/visualization/${FILE_NAME}_HAI_tree.out" $8
 mv "$8/visualization/${FILE_NAME}_meta-hierarchy_.json" $8
 
-# Removes hierarchy files.
+python progress.py $8
