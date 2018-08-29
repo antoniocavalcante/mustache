@@ -22,6 +22,31 @@ Home
 
 .. image:: docs/home.png
 
+.. image:: docs/add_file.png
+
+.. image:: docs/paramters.png
+
+
+Dashboard
+-------------------------------------
+
+.. image:: docs/overview.png
+
+.. image:: docs/reach.png
+
+
+* **SIDE BAR** — Info about SIDE BAR
+
+* **DENDROGRAM** — Info about DENDROGRAM
+
+* **HAI PLOT** — Info about HAI PLOT
+
+* **REACHABILLITY PLOTS** — Info about REACHABILLITY PLOTS
+
+
+ 
+* **FULL REACHABILLITY PLOT** — Info about REACHABILLITY PLOTS
+
 
 2. Installation & Setup
 =======================
