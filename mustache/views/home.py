@@ -11,25 +11,27 @@ home = Blueprint('home', __name__)
 def get_datasets():
     root = app.config['WORKSPACE']
     datasets = {}
-    if root:
 
-        dirlist = [item for item in os.listdir(
-            root) if os.path.isdir(os.path.join(root, item))]
+    dirlist = [item for item in os.listdir(
+        root) if os.path.isdir(os.path.join(root, item))]
 
-        for dir in dirlist:
+    for dir in dirlist:
 
-            file = glob.glob(os.path.join(
-                os.path.join(root, dir), "settings"))[0]
+        file = glob.glob(os.path.join(
+            os.path.join(root, dir), "settings"))[0]
 
-            with open(file) as f:
-                data = json.load(f)
+        with open(file) as f:
+            data = json.load(f)
 
-            datasets[dir] = data
+        datasets[dir] = data
 
     return OrderedDict(sorted(datasets.items(), key=lambda x: float(x[1]['date_added']), reverse=True))
 
 
 @home.route('/')
 def index():
-    datasets = get_datasets()
+    if app.config['WORKSPACE']:
+        datasets = get_datasets()
+    else:
+        datasets = {}
     return render_template("home/index.html", datasets=datasets)

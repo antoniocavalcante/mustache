@@ -1,1 +1,1 @@
-{"WORKSPACE": "/home/csaba/Documents/datasets", "DEBUG": false, "CELERY_BROKER_URL": "redis://localhost:6379/0", "CELERY_RESULT_BACKEND": "redis://localhost:6379/0"}
+{"WORKSPACE": "/home/csaba/Documents/datasets2", "DEBUG": false, "CELERY_BROKER_URL": "redis://localhost:6379/0", "CELERY_RESULT_BACKEND": "redis://localhost:6379/0"}
