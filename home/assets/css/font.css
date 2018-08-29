@@ -1,9 +1,0 @@
-@font-face {
-    font-family: LogoFont;
-    src: url(roboto-condensed/RobotoCondensed-Bold.ttf);
-    font-weight: 700;
-}
-
-.branding {
-    font-family: LogoFont;
-}
