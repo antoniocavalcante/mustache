@@ -29,11 +29,10 @@ mkdir -p "/$8/visualization" # creates the visualization directory
 FILE_NAME=$(basename "$1")
 
 # Runs the pre-processing.
-java -jar -Xmx12G IHDBSCAN.jar file=$8/$FILE_NAME minPts=$2 minClSize=$3 filter=$4 output=$5 dist_function=$6 compact=$7
+java -jar -Xmx12G IHDBSCAN.jar file=$8/$FILE_NAME minPts=$2 minClSize=$3 filter=$4 output=$5 dist_function=$6 compact=$7 separator=","
 
-mv output/*.mst $8/msts
-rm output/*.tree
-mv output/* $8/visualization
+mv $8/visualization/*.mst $8/msts
+rm $8/visualization/*.tree
 
 # Runs the meta-clustering.
 python hierarchies.py "$8/visualization" $FILE_NAME 2 $MPTS
