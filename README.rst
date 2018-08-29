@@ -13,7 +13,7 @@ MustaCHE, a tool that allows analysis and exploration of multiple clustering hie
 4. `Troubleshooting <#4-troubleshooting-problems>`_
 5. `Frequent Questions <#5-frequent-questions>`_
 
-|Python Version|
+|forthebadge made-with-python|
 
 1. Examples & Usage
 ===================
@@ -49,8 +49,8 @@ Afterward fetching the repository, you can run the following commands from your 
 4. Troubleshooting Problems
 ===========================
 
-.. |Python Version| image:: http://aigamedev.github.io/scikit-neuralnetwork/badge_python.svg
-    :target: https://www.python.org/
+.. |forthebadge made-with-python| image:: http://ForTheBadge.com/images/badges/made-with-python.svg
+   :target: https://www.python.org/
 
 .. |License Type| image:: https://img.shields.io/badge/license-AGPL-blue.svg
     :target: https://github.com/alexjc/neural-enhance/blob/master/LICENSE
