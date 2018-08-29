@@ -20,8 +20,20 @@ def get_datasets():
         file = glob.glob(os.path.join(
             os.path.join(root, dir), "settings"))[0]
 
+        file2 = glob.glob(os.path.join(
+            os.path.join(root, dir), "progress.json"))[0]
+
         with open(file) as f:
             data = json.load(f)
+
+        with open(file2) as f:
+            progress = json.load(f)
+
+        if progress['stage'] == 'meta-clustering' and progress['state']['current'] == 1:
+            data['state'] = {'stage': 'done', 'message': '',
+                             'state': {'current': 1, 'end': 1}}
+        else:
+            data['state'] = progress
 
         datasets[dir] = data
 

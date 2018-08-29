@@ -93,9 +93,15 @@ def submit():
     return jsonify(status="good!")
 
 
-@api.route("/status", methods=['GET', 'POST'])
-def status():
-    return ""
+@api.route("/status/<id>", methods=['GET', 'POST'])
+def status(id):
+    fn = os.path.join(
+        os.path.join(app.config['WORKSPACE'], id), "progress.json")
+
+    with open(fn) as f:
+        data = json.load(f)
+
+    return jsonify(data)
 
 
 @api.route("/delete/<id>", methods=['GET', 'POST'])
@@ -140,3 +146,8 @@ def import_zip():
             zf.writestr(data, individualFile['fileData'])
     memory_file.seek(0)
     return send_file(memory_file, attachment_filename='capsule.zip', as_attachment=True)
+
+
+@api.route('/files/<path:filename>')
+def custom_static(filename):
+    return send_from_directory(app.config['CUSTOM_STATIC_PATH'], filename)

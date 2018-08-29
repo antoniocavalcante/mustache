@@ -239,14 +239,56 @@
 					<div class="row">
 						{% for id, dataset in datasets.items() %}
 						<!-- DATASETS -->
+						{% if dataset['state']['stage'] == 'done' %}
+						<div class="col-md-3 dataset" id="{{id}}" data-processed="true">
+							<div class="panel panel-default project-item grad">
+								<div class="panel-heading">
+									<p class="panel-title">{{ dataset['datasetName'] }}</p>
+								</div>
+								<div class="panel-body">
+									<div class="left">
+										<div class="info">
+											<span class="title">DATE ADDED</span>
+											<span class="value">{{ dataset['date_added'] | datetime }}</span>
+										</div>
+										<div class="info">
+											<span class="title">DISTANCE</span>
+											<span class="value">{{ dataset['datasetDistance'].upper() }}</span>
+										</div>
+										<div class="info">
+											<span class="title">RNG</span>
+											<span class="value">{{ dataset['datasetRng'].upper() }}</span>
+										</div>
+										<div class="info">
+											<span class="title">MPTS MIN/MAX</span>
+											<span class="value">{{ dataset['datasetMinMpts'] }}/{{ dataset['datasetMaxMpts'] }}</span>
+										</div>
+									</div>
+									<div class="left">
+										<div class="info">
+											<span class="title">POINTS</span>
+											<span class="value">{{ dataset['datasetPoints'] }}</span>
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="controls">
+										<button data-val="launch" onclick="location.href='/dashboard/{{id}}';" class="btn btn-primary pull-right">
+											<i class="fa fa-area-chart"></i>OPEN</button>
+										<a href="#" data-val="zip">
+											<i class="fa fa-file-archive-o"></i>Export Zip</a>
+										<a href="#" class="btn-sw-confirmation" data-val="{{id}}">
+											<i class="fa fa-trash"></i>Delete</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% else %}
 						<div class="col-md-3 dataset" id="{{id}}" data-processed="false">
 							<div class="panel panel-default project-item grad">
 								<div class="panel-heading">
 									<p class="panel-title">{{ dataset['datasetName'] }}</p>
 									<div class="right">
-										<span class="label label-primary">PROCESSING</span>
-										<span class="label label-default">QUEUED</span>
-										<span class="label label-success">PROCESSED</span>
+										<span class="label label-success stage"></span>
 									</div>
 								</div>
 								<div class="panel-body">
@@ -275,32 +317,48 @@
 										</div>
 									</div>
 									<div class="right">
-										<div class="lds-facebook">
+										<div class="progress-chart easy-pie-chart hidden" data-percent="0">
+											<span class="percent hidden"></span>
+										</div>
+										<div class="lds-rng hidden">
+											<div class="bg-primary"></div>
+											<div class="bg-primary"></div>
+											<div class="bg-primary"></div>
+										</div>
+										<div class="lds-meta">
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
 											<div></div>
 											<div></div>
 											<div></div>
 										</div>
-									</div>
-									<div class="right">
-										<div class="progress-chart easy-pie-chart hidden" data-percent="65">
-											<span class="percent">65%</span>
+										<div class="lds-core hidden">
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
 										</div>
-										<div class="task">
-											<div class="task-progress">calculating ...</div>
+										<div class="task hidden">
+											<div class="task-progress stage-message"></div>
 										</div>
 									</div>
 									<div class="clearfix"></div>
 									<div class="controls">
-										<a href="#">
+										<a href="#" data-val="zip" class="hidden">
 											<i class="fa fa-file-archive-o"></i>Export Zip</a>
-										<a href="#" class="btn-sw-confirmation" data-val="{{id}}">
+										<a data-val="delete" href="#" class="btn-sw-confirmation hidden" data-val="{{id}}">
 											<i class="fa fa-trash"></i>Delete</a>
-										<button type="button" class="btn btn-default pull-right" disabled>
+										<button data-val="launch" class="btn btn-default pull-right" disabled>
 											<i class="fa fa-area-chart"></i>OPEN</button>
 									</div>
 								</div>
 							</div>
 						</div>
+						{% endif %}
 						<!-- END DATASETS -->
 						{% endfor %}
 					</div>

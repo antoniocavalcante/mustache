@@ -64,7 +64,68 @@ $(function () {
 
 $(function () {
 
-    console.log($(".dataset"));
+    $('.easy-pie-chart').easyPieChart({
+        animate: 2000, size: 64, lineCap: "sqaure", lineWidth: 5, scaleColor: false, barColor: "#097B43", trackColor: "#eeeeee"
+    });
+
+    var sources = $(".dataset")
+
+    function getStatus(id) {
+        var datasetRequest = new XMLHttpRequest();
+        datasetRequest.open("GET", "/status/" + id, true);
+        datasetRequest.onload = function () {
+            if (datasetRequest.status === 200) {
+                var state = JSON.parse(datasetRequest.response)
+                // console.log(state);
+                if (state['stage'] == 'meta-clustering' && state['state']['current'] == 1) {
+                    // we are done
+                } else {
+
+                    var d = $("#" + id)
+
+                    d.find(".stage").text(state['stage'].toUpperCase())
+                    d.find(".stage-message").text(state['message'])
+
+                    if (state['state']['end'] == 1) {
+                        if (state['stage'] == 'meta-clustering') {
+
+                        } else if (state['stage'] == 'rng') {
+
+                        } else if (state['stage'] == 'core-distances') {
+
+                        }
+                    }
+
+                    if (state['stage'] == 'hierarchies') {
+
+                        // d.find(".easy-pie-chart")
+
+                        var n = state['state']['current']
+                        var denom = state['state']['end']
+                        var percent = ((n / denom) * 100).toFixed(0)
+                        d.find(".easy-pie-chart").data('easyPieChart').update(percent);
+                        d.find(".easy-pie-chart").find(".percent").text(percent + "%")
+                    }
+
+                    setTimeout(function () {
+                        getStatus(id);
+                    }, 2000);
+                }
+
+            } else {
+
+            }
+        };
+        datasetRequest.send();
+
+    }
+
+    sources.each(function () {
+        if (!$(this).data("processed")) {
+            getStatus($(this).attr("id"));
+        }
+    })
+
 
 })
 
@@ -134,7 +195,6 @@ $(function () {
             var rngs = JSON.parse(rngRequest.response)
             var select = $('select[name="datasetRng"]');
             rngs.forEach(function (key) {
-                console.log(key);
                 select.append($('<option />', {
                     value: key[0],
                     text: key[0].replace(/^\w/, c => c.toUpperCase())
