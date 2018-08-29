@@ -12,6 +12,8 @@ OUTPUT_PATH=$8
 
 mkdir -p $8
 
+source venv2/bin/activate
+
 echo "File to be clustered: $1"
 echo "mpts: $2"
 echo "minClSize: $3"

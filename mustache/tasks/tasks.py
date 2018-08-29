@@ -4,6 +4,7 @@ import time
 import os
 import datetime as dt
 from ..util.helpers import rngd
+import subprocess
 
 
 def createDatasetPath(workspace, directory):
@@ -18,7 +19,7 @@ def createDatasetPath(workspace, directory):
 
 
 @celery.task(bind=True)
-def process(self, workspace, files, settings):
+def process(self, workspace, root, files, settings):
     task_id = self.request.id.__str__()
     print("task {} queued!".format(task_id))
     settings['date_added'] = str(dt.datetime.now().timestamp())
@@ -30,6 +31,29 @@ def process(self, workspace, files, settings):
             f.close()
         with open(os.path.join(path, 'settings'), 'w') as fp:
             json.dump(settings, fp)
+
+    root = str(os.path.dirname(root))
+    venv = str(os.path.join(root, 'resources/run.sh'))
+    sh = str(os.path.join(root, 'resources/run.sh'))
+    in_file = str(os.path.join(path, files[0]['name']))
+
+    while not os.path.exists(in_file):
+        time.sleep(1)
+
+    if os.path.isfile(in_file):
+
+        mpts = str(settings['datasetMaxMpts'])
+        minCluster = str(settings['datasetMinCluster'])
+        rng = str(rngd[settings['datasetRng']])
+        outp = True
+        distance = str(settings['datasetDistance'])
+        com = True
+
+        subprocess.check_call([sh, in_file, mpts, minCluster,
+                               rng, str(outp), distance, str(com), path], cwd=os.path.join(root, 'resources'))
+    else:
+        raise ValueError("%s isn't a file!" % in_file)
+
     print("completed!")
 
     # file.save(wp)

@@ -86,7 +86,7 @@ def submit():
             print("file labels error!")
 
         process.apply_async(
-            args=[app.config['WORKSPACE'], data, result])
+            args=[app.config['WORKSPACE'], base, data, result])
 
         time.sleep(1)
 
