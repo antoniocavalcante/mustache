@@ -47,7 +47,7 @@ def process(self, workspace, root, files, settings):
         rng = str(rngd[settings['datasetRng']])
         outp = True
         distance = str(settings['datasetDistance'])
-        com = True
+        com = False
 
         subprocess.check_call([sh, in_file, mpts, minCluster,
                                rng, str(outp), distance, str(com), path], cwd=os.path.join(root, 'resources'))
