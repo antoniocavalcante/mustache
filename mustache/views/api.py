@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, current_app as app, Response, redirect, url_for, send_file
+from flask import Blueprint, request, jsonify, current_app as app, Response, redirect, url_for, send_file, send_from_directory
 import json
 import shutil
 import time
@@ -146,8 +146,3 @@ def import_zip():
             zf.writestr(data, individualFile['fileData'])
     memory_file.seek(0)
     return send_file(memory_file, attachment_filename='capsule.zip', as_attachment=True)
-
-
-@api.route('/files/<path:filename>')
-def custom_static(filename):
-    return send_from_directory(app.config['CUSTOM_STATIC_PATH'], filename)

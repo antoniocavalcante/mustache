@@ -11,7 +11,7 @@ function drawReach(filename) {
     var barColoring;
     var globalColor = d3.interpolateRainbow;
     var colorScale = d3.scaleSequential(globalColor);
-    var file = folderRoot + project + "/" + "visualization/" + filename + "RNG_" + project + ".lr"
+    var file = datasetId + "/" + "visualization/" + filename + "RNG_" + project + ".lr"
     var barWindow;
     var statElements = $("*").filter(function () {
         return $(this).data("inf") == "stats";
@@ -64,7 +64,7 @@ function drawReach(filename) {
             selection = d3.select(this).select("a").html();
 
             filename = selection;
-            file = folderRoot + project + "/" + "visualization/" + filename + "RNG_" + project + ".lr"
+            file = datasetId + "/" + "visualization/" + filename + "RNG_" + project + ".lr"
 
             update();
         })
@@ -77,7 +77,7 @@ function drawReach(filename) {
                 if (+d.data.label == selection) {
 
                     filename = selection;
-                    file = folderRoot + project + "/" + "visualization/" + filename + "RNG_" + project + ".lr"
+                    file = datasetId + "/" + "visualization/" + filename + "RNG_" + project + ".lr"
 
                     update()
                 };
@@ -125,11 +125,11 @@ function drawReach(filename) {
         .attr("height", h);
 
     var margin = {
-            top: 20,
-            right: 20,
-            bottom: 100,
-            left: 40
-        },
+        top: 20,
+        right: 20,
+        bottom: 100,
+        left: 40
+    },
         margin2 = {
             top: 0,
             right: 20,
@@ -579,8 +579,8 @@ function drawReach(filename) {
             });
 
         bars.attr("x", function (d, i) {
-                return x3(i) + barPadding;
-            }).transition().duration(250)
+            return x3(i) + barPadding;
+        }).transition().duration(250)
             .attr("y", function (d) {
                 return y(+d[0]);
             })

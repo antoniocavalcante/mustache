@@ -148,8 +148,8 @@
                                                 <a href="#" target="blank">
                                                     <small>MustaCHE: A Multiple Clustering Hierarchies Explorer.</small>
                                                     <em>
-                                                        <small>Antônio C. Araújo Neto, Mario A. Nascimento, Jörg Sander, Ricardo
-                                                            J. G. B. Campello:</small>
+                                                        <small>Antônio C. Araújo Neto, Mario A. Nascimento, Jörg Sander,
+                                                            Ricardo J. G. B. Campello:</small>
                                                     </em>
                                                     <small> PVLDB 11(12): 2058-2061 (2018)
                                                     </small>
@@ -159,8 +159,8 @@
                                                 <a href="#" target="blank">
                                                     <small>Efficient Computation of Multiple Density-Based Clustering Hierarchies.</small>
                                                     <em>
-                                                        <small>Antonio Cavalcante Araújo Neto, Jörg Sander, Ricardo J. G. B. Campello,
-                                                            Mario A. Nascimento:</small>
+                                                        <small>Antonio Cavalcante Araújo Neto, Jörg Sander, Ricardo J. G.
+                                                            B. Campello, Mario A. Nascimento:</small>
                                                     </em>
                                                     <small>
                                                         ICDM 2017</small>
@@ -169,10 +169,12 @@
                                             <li>
                                                 <a href="#" target="blank">
 
-                                                    <small>Hierarchical Density Estimates for Data Clustering, Visualization, and
-                                                        Outlier Detection.</small>
+                                                    <small>Hierarchical Density Estimates for Data Clustering, Visualization,
+                                                        and Outlier Detection.</small>
                                                     <em>
-                                                        <small>Ricardo J. G. B. Campello, Davoud Moulavi, Arthur Zimek, Jörg Sander:</small>
+                                                        <small>Ricardo J. G. B. Campello, Davoud Moulavi, Arthur Zimek, Jörg
+                                                            Sander:
+                                                        </small>
                                                     </em>
                                                     <small> TKDD 10(1): 5:1-5:51 (2015)</small>
                                                 </a>
@@ -815,9 +817,11 @@
         <!-- END WRAPPER -->
         <!-- Javascript -->
 
-        {% assets "dashboard_js" %}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-        {% endassets %}
+        <script>
+            const project = "{{name}}"
+            const datasetId = "{{id}}"
+        </script> {% assets "dashboard_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script> {% endassets %}
 
 
 </body>

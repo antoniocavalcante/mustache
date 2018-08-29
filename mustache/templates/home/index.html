@@ -274,7 +274,7 @@
 									<div class="controls">
 										<button data-val="launch" onclick="location.href='/dashboard/{{id}}';" class="btn btn-primary pull-right">
 											<i class="fa fa-area-chart"></i>OPEN</button>
-										<a href="#" data-val="zip">
+										<a href="#" data-val="zip" class="disabled">
 											<i class="fa fa-file-archive-o"></i>Export Zip</a>
 										<a href="#" class="btn-sw-confirmation" data-val="{{id}}">
 											<i class="fa fa-trash"></i>Delete</a>
@@ -288,7 +288,7 @@
 								<div class="panel-heading">
 									<p class="panel-title">{{ dataset['datasetName'] }}</p>
 									<div class="right">
-										<span class="label label-success stage"></span>
+										<span class="label label-default stage"></span>
 									</div>
 								</div>
 								<div class="panel-body">
@@ -320,35 +320,36 @@
 										<div class="progress-chart easy-pie-chart hidden" data-percent="0">
 											<span class="percent hidden"></span>
 										</div>
-										<div class="lds-rng hidden">
-											<div class="bg-primary"></div>
-											<div class="bg-primary"></div>
-											<div class="bg-primary"></div>
-										</div>
-										<div class="lds-meta">
-											<div></div>
-											<div></div>
-											<div></div>
-											<div></div>
-											<div></div>
-											<div></div>
+										<div class="lds-rng lds hidden">
 											<div></div>
 											<div></div>
 											<div></div>
 										</div>
-										<div class="lds-core hidden">
+										<div class="lds-meta lds hidden">
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
 											<div></div>
 											<div></div>
 											<div></div>
 											<div></div>
 										</div>
-										<div class="task hidden">
-											<div class="task-progress stage-message"></div>
+										<div class="lds-core lds">
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
 										</div>
 									</div>
 									<div class="clearfix"></div>
+									<div class="task right">
+										<div class="task-progress stage-message"></div>
+									</div>
+									<!-- <div class="clearfix"></div> -->
 									<div class="controls">
-										<a href="#" data-val="zip" class="hidden">
+										<a href="#" data-val="zip" class="hidden disabled">
 											<i class="fa fa-file-archive-o"></i>Export Zip</a>
 										<a data-val="delete" href="#" class="btn-sw-confirmation hidden" data-val="{{id}}">
 											<i class="fa fa-trash"></i>Delete</a>

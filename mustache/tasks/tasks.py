@@ -56,12 +56,4 @@ def process(self, workspace, root, files, settings):
 
     print("completed!")
 
-    # file.save(wp)
-    # file2.save()
-    # for i in range(0, 10):
-    #     f = open("guru"+i+".txt", "w+")
-    #     f.write("This is line %d\r\n" % (i+1))
-    #     f.close
-    #     time.sleep(1)
-
     return True

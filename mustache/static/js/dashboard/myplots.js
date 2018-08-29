@@ -1,10 +1,7 @@
 //globals
 
-try {
-    project = "anuran"
-} catch (error) {}
 
-var folderRoot = "data/",
+var folderRoot = "",
     metaHiearchyFile = "",
     HAIPlotFile = "";
 
@@ -77,11 +74,11 @@ var monoInterpolators = [
 var floor = Math.floor,
     abs = Math.abs;
 
-d3.text(folderRoot + project + "/" + "ids", function (data) {
+d3.text(datasetId + "/" + "ids", function (data) {
     ids = d3.csvParseRows(data);
 })
 
-d3.text(folderRoot + project + "/" + "FOSC", function (data) {
+d3.text(datasetId + "/" + "FOSC", function (data) {
     raw = d3.csvParseRows(data)[0];
     fosc = raw.map(function (d) {
         return parseInt(d);
@@ -355,11 +352,11 @@ function update() {
     var v = Object.keys(medoids);
 
     var margin = {
-            top: 10,
-            right: 0,
-            bottom: 10,
-            left: 0
-        },
+        top: 10,
+        right: 0,
+        bottom: 10,
+        left: 0
+    },
 
         width = $("#reach-panel").find(".panel-body").attr("width"),
         height = $("#reach-panel").find(".panel-body").attr("height");
@@ -397,7 +394,7 @@ function update() {
             return "chart_" + d;
         })
         .text(function (d, i) {
-            d3.text(folderRoot + project + "/" + "visualization/" + d + "RNG_" + project + ".lr", function (d2) {
+            d3.text(datasetId + "/" + "visualization/" + d + "RNG_" + project + ".lr", function (d2) {
                 $('#chart_' + d).hide();
                 reachCharts[d] = createChart(d2, u, i, d);
                 $('#chart_' + d).show("fast");
@@ -619,7 +616,7 @@ function highlightShading(clusters, counter, clustersCopy) {
                 colouring[childs[y].data.name] = counter + 1;
             }
             clusters[key].data['color'] = counter;
-        } catch (error) {}
+        } catch (error) { }
         counter++;
     });
 
@@ -692,7 +689,7 @@ function shading(clusters) {
                 colouring[childs[y].data.name] = counter;
             }
             clusters[key].data['color'] = counter;
-        } catch (error) {}
+        } catch (error) { }
         counter++;
     });
 
@@ -822,7 +819,7 @@ function dendrogram() {
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-    var data = d3.json(folderRoot + project + "/" + project + "_meta-hierarchy_.json", function (json) {
+    var data = d3.json(datasetId + "/" + project + "_meta-hierarchy_.json", function (json) {
         var root = d3.hierarchy(json);
 
         clusterLayout(root);
@@ -923,23 +920,23 @@ function dendrogram() {
 
         node.on("mouseover", function (d) {
 
-                d3.select(this).attr("stroke", "red")
-                d3.select("body")
-                    .style("cursor", "pointer");
+            d3.select(this).attr("stroke", "red")
+            d3.select("body")
+                .style("cursor", "pointer");
 
-                if (!d.children) {
+            if (!d.children) {
 
-                    div.transition()
-                        .duration(200)
-                        .style("opacity", 1.0);
+                div.transition()
+                    .duration(200)
+                    .style("opacity", 1.0);
 
-                    displayText = d.data.label;
-                    div.html(displayText)
-                        .style("left", (d3.event.pageX + 10) + "px")
-                        .style("top", (d3.event.pageY) + "px");
+                displayText = d.data.label;
+                div.html(displayText)
+                    .style("left", (d3.event.pageX + 10) + "px")
+                    .style("top", (d3.event.pageY) + "px");
 
-                }
-            })
+            }
+        })
             .on("mouseout", function (d) {
                 d3.select(this).attr("stroke", "none");
                 div.transition()
@@ -1220,7 +1217,7 @@ function haiPlot() {
     height = height - 20;
 
 
-    var dataset = folderRoot + project + "/" + project + "_HAI_tree.out";
+    var dataset = datasetId + "/" + project + "_HAI_tree.out";
 
     var heatmapChart = function (file) {
         d3.text(file,
