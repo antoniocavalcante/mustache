@@ -11,18 +11,29 @@ MustaCHE, a tool that allows analysis and exploration of multiple clustering hie
 2. `Installation <#2-installation--setup>`_
 3. `Background & Research <#3-background--research>`_
 4. `Troubleshooting <#4-troubleshooting-problems>`_
-5. `Frequent Questions <#5-frequent-questions>`_
 
 |forthebadge made-with-python|
 
 1. Examples & Usage
 ===================
 
+Home
+-------------------------------------
+
+.. image:: docs/overview.png
+
+
 2. Installation & Setup
 =======================
 
+Docker [ recommended ]
+-------------------------------------
+
+
+
 Manual Installation [developers]
 -------------------------------------
+
 
 This project requires Python 3.4+ and you'll also need ``numpy`` and ``scipy`` (numerical computing libraries) as well as ``python3-dev`` installed system-wide.  If you want more detailed instructions, follow these:
 
@@ -57,3 +68,6 @@ Afterward fetching the repository, you can run the following commands from your 
 
 .. |Project Stars| image:: https://img.shields.io/github/stars/alexjc/neural-enhance.svg?style=flat
     :target: https://github.com/alexjc/neural-enhance/stargazers
+    
+.. |Python versions| image:: https://img.shields.io/badge/<SUBJECT>-<STATUS>-<COLOR>.svg
+   :target: 
