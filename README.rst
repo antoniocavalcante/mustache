@@ -1,7 +1,7 @@
 MustaCHE | Multiple Clustering Hierarchies Explorer
 ==============
 
-.. image:: docs/overview.png
+.. image:: docs/hero_Shot.png
 
 ----
 
