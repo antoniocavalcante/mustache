@@ -76,12 +76,19 @@ $(function () {
         datasetRequest.onload = function () {
             if (datasetRequest.status === 200) {
                 var state = JSON.parse(datasetRequest.response)
-                // console.log(state);
-                if (state['stage'] == 'meta-clustering' && state['state']['current'] == 1) {
-                    // we are done
-                } else {
+                var d = $("#" + id)
 
-                    var d = $("#" + id)
+                if (state['stage'] == 'meta-clustering' && state['state']['current'] == 1) {
+
+                    d.find(".stage").hide()
+                    d.find(".stage-message").hide()
+                    d.find(".lds").hide()
+
+                    d.find(".controls").find("a").toggleClass("hidden")
+                    d.find(".controls").find("button").removeAttr("disabled")
+
+
+                } else {
 
                     d.find(".stage").text(state['stage'].toUpperCase())
                     d.find(".stage-message").text(state['message'])
@@ -89,16 +96,25 @@ $(function () {
                     if (state['state']['end'] == 1) {
                         if (state['stage'] == 'meta-clustering') {
 
+                            d.find(".progress-chart").addClass("hidden")
+                            d.find(".lds-meta").removeClass("hidden")
+
                         } else if (state['stage'] == 'rng') {
 
+                            d.find(".lds-core").addClass("hidden")
+                            d.find(".lds-rng").removeClass("hidden")
+
                         } else if (state['stage'] == 'core-distances') {
+
+                            d.find(".lds-core").removeClass("hidden")
 
                         }
                     }
 
                     if (state['stage'] == 'hierarchies') {
 
-                        // d.find(".easy-pie-chart")
+                        d.find(".lds-rng").addClass("hidden")
+                        d.find(".progress-chart").removeClass("hidden")
 
                         var n = state['state']['current']
                         var denom = state['state']['end']
@@ -152,7 +168,10 @@ $(function () {
                         'Your file has been deleted.',
                         'success'
                     );
-                    setTimeout(function () { location.reload() }, 2000);
+                    // setTimeout(function () { $("#" + id).remove() }, 2000);
+                    $("#" + id).fadeOut("normal", function () {
+                        $(this).remove();
+                    });
                 } else {
                     swal.noop;
                 }

@@ -42,8 +42,11 @@ def get_datasets():
 
 @home.route('/')
 def index():
-    if app.config['WORKSPACE']:
-        datasets = get_datasets()
-    else:
+    try:
+        if app.config['WORKSPACE']:
+            datasets = get_datasets()
+        else:
+            datasets = {}
+    except:
         datasets = {}
     return render_template("home/index.html", datasets=datasets)

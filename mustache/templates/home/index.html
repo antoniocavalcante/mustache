@@ -110,7 +110,7 @@
 													<strong class="text-primary">Step 1: </strong>Load a CSV file of data. </p>
 											</div>
 											<div class="col-md-6">
-												<p>load yourself some really good data!</p>
+												<!-- <p>load yourself some really good data!</p> -->
 												<div class="well well-sm">
 													<code>
 														0.1\t0.2\t0.5\t0.9
@@ -130,7 +130,7 @@
 													<strong class="text-primary">Step 2: </strong>Load a CSV file of labels. </p>
 											</div>
 											<div class="col-md-6">
-												<p>load yourself some really good data!</p>
+												<!-- <p>load yourself some really good data!</p> -->
 												<div class="well well-sm">
 													<code>
 														Pokémon\tSpecies
@@ -336,7 +336,7 @@
 											<div></div>
 											<div></div>
 										</div>
-										<div class="lds-core lds">
+										<div class="lds-core lds hidden">
 											<div></div>
 											<div></div>
 											<div></div>
@@ -349,12 +349,12 @@
 									</div>
 									<!-- <div class="clearfix"></div> -->
 									<div class="controls">
-										<a href="#" data-val="zip" class="hidden disabled">
-											<i class="fa fa-file-archive-o"></i>Export Zip</a>
-										<a data-val="delete" href="#" class="btn-sw-confirmation hidden" data-val="{{id}}">
-											<i class="fa fa-trash"></i>Delete</a>
-										<button data-val="launch" class="btn btn-default pull-right" disabled>
+										<button data-val="launch" onclick="location.href='/dashboard/{{id}}';" class="btn btn-primary pull-right" disabled>
 											<i class="fa fa-area-chart"></i>OPEN</button>
+										<a href="#" data-val="zip" class="hidden">
+											<i class="fa fa-file-archive-o"></i>Export Zip</a>
+										<a href="#" class="btn-sw-confirmation hidden" data-val="{{id}}">
+											<i class="fa fa-trash"></i>Delete</a>
 									</div>
 								</div>
 							</div>

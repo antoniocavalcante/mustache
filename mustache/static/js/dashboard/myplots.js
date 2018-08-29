@@ -1284,13 +1284,13 @@ function haiPlot() {
                 // Set up X axis Left
                 svg.append("g")
                     .attr("class", "axis-heatmap-l")
-                    .attr("transform", "translate(" + -gridSize + "," + -gridSize + ")")
+                    .attr("transform", "translate(" + -5 + "," + -5 + ")")
                     .call(HeatMapxAxisLeft);
 
                 // Set up X axis Top
                 svg.append("g")
                     .attr("class", "axis-heatmap-t")
-                    .attr("transform", "translate(" + -gridSize + "," + -gridSize + ")")
+                    .attr("transform", "translate(" + -5 + "," + -5 + ")")
                     .call(HeatMapxAxisTop);
 
                 // Define the div for the tooltip

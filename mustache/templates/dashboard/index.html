@@ -275,10 +275,6 @@
                     <div class="modal-body grad">
                         <div id="full-reach">
                             <div class="row">
-                                <div class="col-md-12 nopadding-v pad-l pad-r" id="full-context">
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div id="full-plot" class="col-md-10"></div>
                                 <div id="full-options" class="col-md-2 scroller padding-top-30">
                                     <form class="well" id="full-settings">
@@ -621,11 +617,11 @@
                             <new id="projectTitle"></new>
                         </a>
                         <a class="disabled spec">
-                            <strong>Min mpts: </strong>2</a>
+                            <strong>Min mpts: </strong>{{minM}}</a>
                         <a class="disabled spec">
-                            <strong>Max mpts: </strong>50</a>
-                        <a class="disabled spec">
-                            <strong>Distance: </strong> Angular</a>
+                            <strong>Max mpts: </strong>{{maxM}}</a>
+                        <a class="disabled spec text-capitalize">
+                            <strong>Distance: </strong> {{dist}}</a>
                     </li>
                 </ul>
             </nav>
@@ -717,9 +713,10 @@
                                         </div>
 
                                         <div class="right">
-                                            <li class="panel-options">
-                                                <i class="lnr lnr-download" data-toggle="tooltip" data-placement="bottom" title="Save Screenshot"></i>
-                                            </li>
+                                            <li class="dropdown panel-options">
+                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                    <i class="lnr lnr-download"></i>
+                                                </a>
                                         </div>
                                     </div>
                                     <div class="row">
