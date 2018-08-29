@@ -39,6 +39,16 @@ mv output/* $8/visualization
 python hierarchies.py "$8/visualization" $FILE_NAME 2 $MPTS
 
 # Generates the visualization files.
-# python reachability-plot.py ${data} ${minPts}
+for data in `ls ${8}/visualization/*RNG*.hierarchy | sort -V`;
+do
+    echo "Hierarchy File: ${data}"
+    labels=${data//hierarchy/partition}
+    # echo "Labels File: ${labels}"
+    # python hierarchy.py ${data};
+    python reachability-plot.py ${data} ${labels}
+done
+
+mv "$8/visualization/${FILE_NAME}_HAI_tree.out" $8
+mv "$8/visualization/${FILE_NAME}_meta-hierarchy_.json" $8
 
 # Removes hierarchy files.

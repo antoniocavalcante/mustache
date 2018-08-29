@@ -268,14 +268,13 @@ def run_hdbscan_hai(hs, labels, method='hai', show='save', cut=0, colormap=plt.c
 
     roots = leaders(Z, np.asarray(cluster_labels).astype('i'))
 
-    print "Roots", roots
+    print "Roots", map(str, roots[0])
+    print "Roots", ', '.join(map(str, roots[0]))
 
-    fosc_file = open(basedir + "FOSC", "w+")
-    fosc_file.write(roots)
+    fosc_file = open(basedir + "/FOSC", "w+")
+    fosc_file.write(', '.join(map(str, roots[0])))
 
     fosc_file.close()
-
-    print("Roots: ", roots)
 
     # Plot Settings
     fig, ax1 = plt.subplots()
