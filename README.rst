@@ -20,7 +20,7 @@ MustaCHE, a tool that allows analysis and exploration of multiple clustering hie
 Home
 -------------------------------------
 
-.. image:: docs/overview.png
+.. image:: docs/home.png
 
 
 2. Installation & Setup
