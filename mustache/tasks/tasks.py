@@ -26,7 +26,7 @@ def process(self, workspace, root, files, settings):
     path = createDatasetPath(workspace, task_id)
     if path:
         for file in files:
-            f = open(os.path.join(path, file['name']), 'w')
+            f = open(os.path.join(path, file['name']), 'wb')
             f.write(file['data'])
             f.close()
         with open(os.path.join(path, 'settings'), 'w') as fp:

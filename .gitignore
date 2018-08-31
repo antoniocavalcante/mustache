@@ -21,6 +21,9 @@ _mailinglist
 .pytest_cache/
 .idea/
 docs/_build/
+run.sh
+clean-build.sh
+build.sh
 
 # Coverage reports
 htmlcov/

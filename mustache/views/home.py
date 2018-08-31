@@ -47,6 +47,7 @@ def index():
             datasets = get_datasets()
         else:
             datasets = {}
-    except:
+    except Exception as e:
+        print(e)
         datasets = {}
     return render_template("home/index.html", datasets=datasets)

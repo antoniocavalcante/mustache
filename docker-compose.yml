@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+
+  flask:
+    build: .
+    command: >
+      gunicorn -b 0.0.0.0:5000
+        -w 4
+        "wsgi:app"
+    volumes:
+      - '$MUSTACHE_WORKSPACE:/app/workspace'
+      - '/tmp/.X11-unix:/tmp/.X11-unix'
+      - '.:/usr/src/app:ro'
+    environment:
+      DISPLAY: ':0'
+    ports:
+      - '5000:5000'
+    links:
+      - redis
+      - celery
+
+  celery:
+      build: .
+      command: "celery -A mustache.celery worker --loglevel=info"
+      user: nobody
+      links:
+          - redis
+      volumes:
+          - '$MUSTACHE_WORKSPACE:/app/workspace'
+          - '.:/usr/src/app:ro'
+
+  redis:
+      image: redis
+      ports:
+          - '6379:6379'

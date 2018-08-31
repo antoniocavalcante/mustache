@@ -3,7 +3,7 @@ import json
 import shutil
 import time
 import datetime as dt
-import hdbscan
+# import hdbscan
 import tkinter as tk
 import os
 import zipfile
