@@ -1,5 +1,9 @@
 #!/bin/bash
+echo "Building Application.."
 export COMPOSE_PROJECT_NAME=mustache
 export MUSTACHE_WORKSPACE=$1
-docker-compose up --build
-# python webbrowser http://127.0.0.1:5000
+mkdir -p $1
+chmod a+rwx $1
+docker-compose build --compress -d
+
+
