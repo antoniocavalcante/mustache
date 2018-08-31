@@ -53,9 +53,21 @@ Dashboard
 
 Docker [ recommended ]
 -------------------------------------
+The easiest way to get up-and-running is to `install Docker <https://www.docker.com/>`_. You will need both ``docker`` & ``docker-compose`` installed on your system. 
+
+To build simply run the build script passing a path to a workspace folder on your system, mustache will store your processed datasets in this folder. ( make sure the folder has full access ) 
+
+.. code:: bash
+
+    # Builds the docker image and creates the required containers. 
+    ./build.sh /home/user/Documents/datasets
+    
+After which the app will be available on your system's localhost, http://127.0.0.1:5000
 
 Manual Installation [developers]
 -------------------------------------
+
+Coming soon...
 
 3. Background & Research
 ========================
