@@ -62,7 +62,12 @@ To build simply run the build script passing a path to a workspace folder on you
     # Builds the docker image and creates the required containers. 
     ./build.sh /home/user/Documents/datasets
     
-After which the app will be available on your system's localhost, http://127.0.0.1:5000
+    # Run the containers and open the application. 
+    ./run.sh 
+    
+    # Stop the containers and close the application.
+    ./stop.sh
+    
 
 Manual Installation [developers]
 -------------------------------------
