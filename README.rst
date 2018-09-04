@@ -60,7 +60,7 @@ To build simply run the build script passing a path to a workspace folder on you
 .. code:: bash
 
     # Builds the docker image and creates the required containers. 
-    ./build.sh /home/user/Documents/datasets
+    ./compose.sh /home/user/Documents/datasets
     
     # Run the containers and open the application. 
     ./run.sh 
