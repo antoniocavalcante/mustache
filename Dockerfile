@@ -13,10 +13,12 @@ RUN apt-get install -y default-jdk
 RUN apt-get install -y python-tk
 RUN apt-get install -y python3-tk 
 RUN apt install -y gunicorn
+RUN apt install -y python-numpy
 
 # copy source
 COPY . /app
 ENV HOME=/app
+RUN chmod a+rwx app
 WORKDIR /app
 RUN mkdir workspace
 RUN chmod a+rwx workspace
@@ -25,6 +27,11 @@ RUN chmod a+rwx workspace
 RUN pip3 install -r requirements.txt
 RUN pip install -r mustache/resources/requirements.txt
 RUN pip install hdbscan
+
+WORKDIR /app/mustache/resources
+RUN python setup.py build_ext --inplace
+
+WORKDIR /app
 
 
 # EXPOSE 5000

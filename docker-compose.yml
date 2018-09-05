@@ -26,11 +26,14 @@ services:
       user: nobody
       links:
           - redis
+      environment:
+        DISPLAY: ':0'
       volumes:
           - '$MUSTACHE_WORKSPACE:/app/workspace'
+          - '/tmp/.X11-unix:/tmp/.X11-unix'
           - '.:/usr/src/app:ro'
 
   redis:
       image: redis
       ports:
-          - '6379:6379'
+          - '6378:6379'
