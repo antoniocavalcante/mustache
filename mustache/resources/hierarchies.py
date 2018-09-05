@@ -1,5 +1,8 @@
 import numpy as np
 
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as colors
@@ -277,15 +280,15 @@ def run_hdbscan_hai(hs, labels, method='hai', show='save', cut=0, colormap=plt.c
     fosc_file.close()
 
     # Plot Settings
-    fig, ax1 = plt.subplots()
-    plt.title('HDBSCAN*')
-    plt.xlabel('mpts')
-    plt.ylabel('distance')
+    # fig, ax1 = plt.subplots()
+    # plt.title('HDBSCAN*')
+    # plt.xlabel('mpts')
+    # plt.ylabel('distance')
 
     # Extraction Method: FOSC or Thresholfd.
     if cut > 0:
         partitioning = fcluster(Z, cut, criterion='distance')
-        plt.axhline(y=cut, c='k')
+        # plt.axhline(y=cut, c='k')
     else:
         partitioning = cluster_labels + 1
 
@@ -350,11 +353,11 @@ def run_hdbscan(hs, mpts, labels, metric):
     # clusterer.single_linkage_tree_.plot(cmap='viridis', colorbar=True, axis='matplotlib')
     Z = clusterer.single_linkage_tree_.to_numpy()
 
-    fig, ax1 = plt.subplots()
-
-    plt.title('HDBSCAN* - mpts: ' + str(mpts) + " - " + metric)
-    plt.xlabel('mpts')
-    plt.ylabel('distance')
+    # fig, ax1 = plt.subplots()
+    #
+    # plt.title('HDBSCAN* - mpts: ' + str(mpts) + " - " + metric)
+    # plt.xlabel('mpts')
+    # plt.ylabel('distance')
 
     dbcv = np.zeros((kmax - kmin)/skip)
 
@@ -371,7 +374,7 @@ def run_hdbscan(hs, mpts, labels, metric):
 
     cut = 2
     partitioning = fcluster(Z, cut, criterion='distance')
-    plt.axhline(y=cut, c='k')
+    # plt.axhline(y=cut, c='k')
     clusters = np.unique(partitioning)
 
     h = np.array(hs)
@@ -526,9 +529,3 @@ global_colormap = plt.cm.rainbow
 medoids, labels, partitioning, maxLabel = run_hdbscan_hai(np.subtract(1, dist), mpts, cut=0, colormap=global_colormap)
 
 print("Clustering Time: " + str(time.time() - t))
-
-# t = time.time()
-
-# plot_reachability_medoids(rr, medoids, labels, partitioning, maxLabel, colormap=global_colormap)
-
-# print("Plot Multiple Reachability Plots: " + str(time.time() - t))
