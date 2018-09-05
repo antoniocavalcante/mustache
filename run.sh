@@ -1,6 +1,6 @@
 #!/bin/bash
 export COMPOSE_PROJECT_NAME=mustache
-export MUSTACHE_WORKSPACE=/home/csaba/Documents/newdatasets
+export MUSTACHE_WORKSPACE=
 docker-compose up -d
 xhost +
 sleep 3

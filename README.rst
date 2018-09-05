@@ -53,20 +53,27 @@ Dashboard
 
 Docker [ recommended ]
 -------------------------------------
-The easiest way to get up-and-running is to `install Docker <https://www.docker.com/>`_ & `install Docker-Compose <https://docs.docker.com/compose/install/>`_.
+The easiest way to get up-and-running is to `install Docker <https://www.docker.com/>`_ & `install Docker-Compose <https://docs.docker.com/compose/install/>`_. You will also need X11.
+
+.. code:: bash
+
+    # install X11
+    sudo apt-get install x11-xserver-utils
+    
 
 To build simply run the build script passing a path to a workspace folder on your system, mustache will store your processed datasets in this folder. ( make sure the folder has full access ) 
 
 .. code:: bash
 
+    # change <USER> to your local user name.
     # Builds the docker image and creates the required containers. 
-    ./compose.sh /home/user/Documents/datasets
+    sudo ./compose.sh /home/<USER>/Documents/datasets
     
     # Run the containers and open the application. 
-    ./run.sh 
+    sudo ./run.sh 
     
     # Stop the containers and close the application.
-    ./stop.sh
+    sudo ./stop.sh
     
 
 Manual Installation [developers]
