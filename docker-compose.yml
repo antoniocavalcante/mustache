@@ -10,10 +10,7 @@ services:
         "wsgi:app"
     volumes:
       - '$MUSTACHE_WORKSPACE:/app/workspace'
-      - '/tmp/.X11-unix:/tmp/.X11-unix'
       - '.:/usr/src/app:ro'
-    environment:
-      DISPLAY: ':0'
     ports:
       - '5000:5000'
     links:
@@ -26,11 +23,8 @@ services:
       user: nobody
       links:
           - redis
-      environment:
-        DISPLAY: ':0'
       volumes:
           - '$MUSTACHE_WORKSPACE:/app/workspace'
-          - '/tmp/.X11-unix:/tmp/.X11-unix'
           - '.:/usr/src/app:ro'
 
   redis:

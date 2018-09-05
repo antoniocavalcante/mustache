@@ -5,6 +5,7 @@ redis==2.10.*
 numpy==1.15.1
 Cython==0.28.5
 flask_assets==0.12
+jsmin==2.2.2 
 hai==0.0.6
 # hdbscan==0.8.15
 matplotlib==2.2.3

@@ -12,7 +12,7 @@ var globalColor = d3.interpolateViridis,
     medoids = {},
     ppg,
     ids,
-    fosc = [146, 150, 138, 122, 163, 121, 187, 180];
+    fosc = [];
 
 var barWidth = 6;
 var barPadding = 1.5;
@@ -1119,7 +1119,7 @@ function dendrogram() {
 
                     clusters = {}
                     node.each(function (d) {
-                        if (fosc.includes(+d.data.name)) {
+                        if (fosc.includes(+d.data.name) && +d.data.name != 0) {
                             clusters[d.data.name] = d;
                         }
                     })
