@@ -53,14 +53,8 @@ Dashboard
 
 Docker [ recommended ]
 -------------------------------------
-The easiest way to get up-and-running is to `install Docker <https://www.docker.com/>`_ & `install Docker-Compose <https://docs.docker.com/compose/install/>`_. You will also need X11.
-
-.. code:: bash
-
-    # install X11
-    sudo apt-get install x11-xserver-utils
+The easiest way to get up-and-running is to `install Docker <https://www.docker.com/>`_ & `install Docker-Compose <https://docs.docker.com/compose/install/>`_. 
     
-
 To build simply run the build script passing a path to a workspace folder on your system, mustache will store your processed datasets in this folder. ( make sure the folder has full access ) 
 
 .. code:: bash
