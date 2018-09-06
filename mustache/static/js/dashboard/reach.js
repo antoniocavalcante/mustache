@@ -374,6 +374,7 @@ function drawReach(filename) {
         settings.select("#full-y-scale").on("input", function () {
             fullYScale = +this.value;
             y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
+            y4.domain(y.domain());
             mini = context.selectAll(".area")
             area2.y1(function (d) {
                 return y4(+d[0]);
@@ -408,6 +409,7 @@ function drawReach(filename) {
 
             x4 = d3.scaleLinear().range([0, width]);
             y4 = d3.scalePow().range([height2, 0]).exponent(fullYScale);
+            y4.domain(y.domain());
             x4.domain(x2.domain());
             x5.domain(x2.domain());
 
