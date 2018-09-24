@@ -310,7 +310,7 @@ function submitData() {
 
 function startStep() {
     $("#submitDataForm").trigger("reset");
-    console.log("start");
+    console.log("Opening data submission form...");
 }
 
 function nextStep() {
@@ -397,6 +397,7 @@ function check(selection) {
             }
             if (id == "file-labels") {
                 checkSum[1] = data.length;
+                console.log(data.length);
             }
 
             function resetFile(id) {
@@ -405,12 +406,11 @@ function check(selection) {
                 $('.dropify-wrapper').has("#" + id).toggleClass("has-error")
             }
 
-            if (errors.length > 0) {
-                resetFile(id);
-                console.log(errors);
-                return false;
-
-            }
+            // if (errors.length > 0) {
+            //     resetFile(id);
+            //     console.log(errors);
+            //     return false;
+            // }
 
             if (checkSum.length == 2) {
                 if (checkSum[0] != checkSum[1]) {

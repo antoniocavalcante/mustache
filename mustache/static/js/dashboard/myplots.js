@@ -30,7 +30,7 @@ var dendrogramXScale;
 var yScaleInverted;
 var lineScale;
 
-// reachabillity settings 
+// reachabillity settings
 var reachExponent = 1.0;
 var reachCharts = {};
 
@@ -388,7 +388,7 @@ function update() {
             .attr("fill", MultiReachcolorScale(medoids[d]));
     })
 
-    // add new 
+    // add new
     u.enter()
         .append("div").classed("chart-scroller", "true").property("id", function (d) {
             return "chart_" + d;
@@ -948,7 +948,7 @@ function dendrogram() {
 
         var transitionTime = 100;
 
-        // colour and extract clusters from dendogram based on threshold bar current value. 
+        // colour and extract clusters from dendogram based on threshold bar current value.
         function clusterThresholdExtraction(currentValue) {
 
             d3.select("#manualThresh").select("input").property("value", function () {
@@ -1135,7 +1135,7 @@ function dendrogram() {
 
         }
 
-        // set dendogram initially 
+        // set dendogram initially
         d3.selectAll("input").each(function (d, i) {
             dendoSelect(this)
         })

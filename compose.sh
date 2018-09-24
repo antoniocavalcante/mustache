@@ -1,4 +1,5 @@
 #!/bin/bash
+
 echo "Building Application.."
 export COMPOSE_PROJECT_NAME=mustache
 export MUSTACHE_WORKSPACE=$1
@@ -14,5 +15,3 @@ echo "sleep 3" >> run.sh
 echo "xdg-open http://127.0.0.01:5000" >> run.sh
 
 docker-compose build --compress
-
-

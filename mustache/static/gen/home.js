@@ -185,7 +185,7 @@ try{var datasetFile=form.find("#file-dataset")[0].files[0];form_data.append("fil
 try{var labelsFile=form.find("#file-labels")[0].files[0];form_data.append("file-labels",labelsFile,labelsFile.name);}catch(error){console.log(error)}
 var fields=form.serializeArray();for(i=0;i<fields.length;i++){form_data.append(fields[i].name,fields[i].value);}
 var xhr=new XMLHttpRequest();xhr.open(request_method,post_url,true);xhr.onload=function(){if(xhr.status===200){location.reload();}else{}};xhr.send(form_data);}
-function startStep(){$("#submitDataForm").trigger("reset");console.log("start");}
+function startStep(){$("#submitDataForm").trigger("reset");console.log("Opening data submission form...");}
 function nextStep(){var filename=$("#file-dataset")[0].files[0].name.split(".")[0]
 $("input[name='datasetName']").val(filename[0].toUpperCase()+filename.substring(1));$("input[name='datasetPoints']").val(checkSum[0]);if(checkSum[0]<100){$("input[name='datasetMaxMpts']").attr("value",checkSum[0]);}else{$("input[name='datasetMaxMpts']").attr("value",100);}
 $("input[name='datasetMaxMpts']").attr("data-validation-allowing","range["+1+";"+(checkSum[0]-1)+"]")
@@ -197,9 +197,8 @@ $("#next1").attr("disabled",true);}
 var modal=$('#addDataModal').modalSteps({btnLastStepHtml:"Run",btnPreviousHtml:"Back",completeCallback:submitData,callbacks:{"1":startStep,"2":nextStep}});$("#next1").attr("disabled",true);function check(selection){var labels=selection[0].files[0]
 Papa.parse(labels,{complete:function(results){var data=results.data;var errors=results.errors;var drEvent=selection.dropify();drEvent=drEvent.data('dropify');var id=selection.attr("id")
 if(id=="file-dataset"){checkSum[0]=data.length;}
-if(id=="file-labels"){checkSum[1]=data.length;}
+if(id=="file-labels"){checkSum[1]=data.length;console.log(data.length);}
 function resetFile(id){drEvent.resetPreview();drEvent.clearElement();$('.dropify-wrapper').has("#"+id).toggleClass("has-error")}
-if(errors.length>0){resetFile(id);console.log(errors);return false;}
 if(checkSum.length==2){if(checkSum[0]!=checkSum[1]){alert("Label Index Error: number of labels does not match number of dataset. ")
 resetFile(id);return false;}}}});return true;}
 $(function(){$("#dsearch").on("keyup",function(){var value=$(this).val().toLowerCase();$(".dataset").filter(function(){$(this).toggle($(this).find(".panel-title").text().toLowerCase().indexOf(value)>-1)});});$("#submitDataForm").find("input[type='file']").change(function(event){var selection=$(this);if(selection.attr("id")=="file-dataset"){if(check(selection)){$("#next1").removeAttr("disabled");}}
