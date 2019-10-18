@@ -15342,6 +15342,7 @@ body {
     width: 100%;
     height: 2px;
 } */
+
 .lds-rng {
     display: inline-block;
     position: relative;
@@ -15658,6 +15659,10 @@ div.tooltip {
     display: inline;
 }
 
+#chart-circle {
+    display: inline;
+}
+
 body {
     overflow: hidden;
 }
@@ -15739,7 +15744,7 @@ html {
 }
 
 .side-logo-newcastle {
-    width: 90%;
+    width: 80%;
     margin: 0 5%;
     margin-bottom: 10%;
 }
@@ -16081,6 +16086,7 @@ html {
 .about-header {
     font-size: 24px;
 }
+
 @font-face {
     font-family: LogoFont;
     src: url(../css/roboto-condensed/RobotoCondensed-Bold.ttf);

@@ -11,6 +11,7 @@ services:
     volumes:
       - '$MUSTACHE_WORKSPACE:/app/workspace'
       - '.:/usr/src/app:ro'
+      - '.:/app'
     ports:
       - '5000:5000'
     links:
@@ -26,6 +27,7 @@ services:
       volumes:
           - '$MUSTACHE_WORKSPACE:/app/workspace'
           - '.:/usr/src/app:ro'
+          - '.:/app'
 
   redis:
       image: redis

@@ -39,7 +39,7 @@ bundles = {
         'js/dashboard/lodash.min.js',
         'js/dashboard/underscore.js',
         "vendor/jquery/jquery.min.js",
-        'js/dashboard/d3.v4.js',
+        'js/dashboard/d3.v5.js',
         'js/dashboard/d3-array.v1.min.js',
         'js/dashboard/d3-scale-chromatic.v1.js',
         'js/dashboard/d3-drag.v1.min.js',
@@ -50,6 +50,7 @@ bundles = {
         'js/dashboard/layout.js',
         'js/dashboard/myplots.js',
         'js/dashboard/reach.js',
+        'js/dashboard/circle-hierarchy.js',
         'js/dashboard/info.js',
         output='gen/dashboard.js', filters="jsmin"),
 

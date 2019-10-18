@@ -8131,6 +8131,10 @@ div.tooltip {
     display: inline;
 }
 
+#chart-circle {
+    display: inline;
+}
+
 body {
     overflow: hidden;
 }
@@ -8212,7 +8216,7 @@ html {
 }
 
 .side-logo-newcastle {
-    width: 90%;
+    width: 80%;
     margin: 0 5%;
     margin-bottom: 10%;
 }
@@ -8554,6 +8558,7 @@ html {
 .about-header {
     font-size: 24px;
 }
+
 #wrapper .sidebar {
   background-color: #2B333E;
 }

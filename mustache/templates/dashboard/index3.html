@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>MustaCHE | Dashboard</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" /> {% assets "dashboard_css" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}"> {% endassets %}
+
+    <!-- ICONS -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='icon/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='icon/safari-pinned-tab.svg') }}" color="#097b43">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='icon/favicon.ico') }}">
+    <meta name="msapplication-TileColor" content="#097b43">
+    <meta name="msapplication-config" content="{{ url_for('static', filename='icon/browserconfig.xml') }}">
+    <meta name="theme-color" content="#097b43">
+
+
+    <style>
+        .selection {
+            border-radius: 10px;
+        }
+
+        .overlay {
+            fill: none;
+            pointer-events: all;
+        }
+
+        .highlight circle {
+            fill: steelblue;
+            stroke: steelblue;
+        }
+
+
+        .bar {
+            fill: blue;
+        }
+
+        .bar:hover {
+            fill: #ec008c;
+            opacity: 1;
+        }
+
+        .zoom {
+            cursor: move;
+            fill: none;
+            pointer-events: all;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .modal {
+            text-align: center;
+            padding: 0 !important;
+        }
+
+        .modal:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+            margin-right: -4px;
+        }
+
+        .modal-dialog {
+            display: inline-block;
+            text-align: left;
+            vertical-align: middle;
+        }
+    </style>
+
+</head>
+
+<body class="layout-default">
+
+    <div id="loading">
+        <div id="loader">
+            <object data="{{ url_for('static', filename='img/Mustache_Logo_SVG.svg') }}" type="image/svg+xml"
+                class="animated swing infinite loader-logo"></object>
+        </div>
+    </div>
+
+    <!-- WRAPPER -->
+    <div id="wrapper">
+
+        <!-- NAVBAR -->
+        <nav class="navbar navbar-default navbar-fixed-top grad">
+            <div class="text-center clearfix">
+                <div class="navbar-btn no-margin pad-l">
+                    <button type="button" class="btn-toggle-fullwidth">
+                        <i class="lnr lnr-menu"></i>
+                    </button>
+                </div>
+                <div class="branding">
+                    <h1 class="text-center brand-block">
+                        MustaCHE</h1>
+                    <img src="{{ url_for('static', filename='img/Mustache_Logo_SVG_black.svg') }}" class="brand-logo">
+                </div>
+
+                <div id="navbar-menu" class="pad-r hidden">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown hidden">
+                            <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
+                                <i class="lnr lnr-alarm"></i>
+                                <span class="badge bg-warning"></span>
+                            </a>
+                            <ul class="dropdown-menu notifications">
+                                <li>
+                                    <a href="#" class="notification-item">
+                                        <span class="dot bg-warning"></span>System space is almost full</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="notification-item">
+                                        <span class="dot bg-danger"></span>You have 9 unfinished tasks</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="notification-item">
+                                        <span class="dot bg-success"></span>Monthly report is available</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="notification-item">
+                                        <span class="dot bg-warning"></span>Weekly meeting in 1 hour</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="notification-item">
+                                        <span class="dot bg-success"></span>Your request has been approved</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="more">See all notifications</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span></span>
+                                <i class="lnr lnr-chevron-down"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">
+                                        <span></span>
+                                        <i class="ti ti-github"></i>GitHub</a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span></span>
+                                        <i class="ti ti-info-alt"></i>About</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- END NAVBAR -->
+
+        <!-- LEFT SIDEBAR -->
+        <div id="sidebar-nav" class="sidebar">
+            <nav class="side-nav">
+                <ul class="nav" id="sidebar-nav-menu">
+                    <li class="menu-group">Main</li>
+                    <li class="panel">
+                        <a href="{{ url_for('home.index') }}" data-parent="#sidebar-nav-menu" class="collapsed">
+                            <img src="{{ url_for('static', filename='img/pie-chart-2.svg') }}" class="side-icon" />
+                            <span class="title">Datasets</span>
+                            <!-- <i class="icon-submenu ti-angle-left"></i> -->
+                        </a>
+                        <div id="main">
+                        </div>
+                    </li>
+                    <li class="panel">
+                        <a href="#globalSettings" data-toggle="collapse" data-parent="#sidebar-nav-menu"
+                            class="collapsed">
+                            <img src="{{ url_for('static', filename='img/settings.svg') }}" class="side-icon" />
+                            <span class="title">Global Settings</span>
+                            <i class="icon-submenu ti-angle-left"></i>
+                        </a>
+                        <div id="globalSettings" class="collapse">
+                            <ul class="submenu">
+                                <li id="colorTheme">
+                                    <a>
+                                        <p>Color Theme:</p>
+                                        <select class="form-control input-sm">
+                                        </select>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="menu-group">Panels</li>
+                    <li class="panel">
+                        <a href="#settingsDendrogram" data-toggle="collapse" data-parent="#sidebar-nav-menu"
+                            class="collapsed">
+                            <img src="{{ url_for('static', filename='img/diagram.svg') }}" class="side-icon" />
+                            <span class="title">Dendrogram</span>
+                            <i class="icon-submenu ti-angle-left"></i>
+                        </a>
+                        <div id="settingsDendrogram" class="collapse">
+                            <ul class="submenu">
+                                <li>
+                                    <a>Y Scale:
+                                        <input type="range" id="yScale">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>Node Size:
+                                        <input type="range" id="nodeSize">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>Link Width:
+                                        <input type="range" id="linkWidth">
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="panel">
+                        <a href="#settingsHai" data-toggle="collapse" data-parent="#sidebar-nav-menu" class="collapsed">
+                            <img src="{{ url_for('static', filename='img/grid-2.svg') }}" class="side-icon" />
+                            <span class="title">HAI Plot</span>
+                            <i class="icon-submenu ti-angle-left"></i>
+                        </a>
+                        <div id="settingsHai" class="collapse ">
+                            <ul class="submenu">
+                                <li id="colorTheme">
+                                    <a>
+                                        <p>Color Theme: </p>
+                                        <div class="input-group-sm input-group">
+                                            <label class="input-group-addon nopadding-b" title="Invert color">
+                                                <input type="checkbox" id="haiInvert" checked>
+                                            </label>
+                                            <select class="form-control input-sm">
+                                            </select>
+                                        </div>
+
+                                    </a>
+                                </li>
+                                <li class="hidden">
+                                    <a>
+                                        <div class="btn-group btn-group-xs btn-group-justified" data-toggle="buttons">
+                                            <label class="btn btn-default btn-xs"
+                                                title="Framework for Optimal Selection of Clusters">
+                                                <input type="checkbox" name="radio">
+                                                <span class="ti-wand"></span>
+                                            </label>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="hidden">
+                                    <a>
+                                        <p>Color Theme:</p>
+                                        <select class="form-control input-sm">
+                                        </select>
+                                    </a>
+                                </li>
+                            </ul>
+                            </a>
+                    </li>
+                    <li class="panel">
+                        <a href="#settingsReach" data-toggle="collapse" data-parent="#sidebar-nav-menu"
+                            class="collapsed">
+                            <img src="{{ url_for('static', filename='img/area-chart.svg') }}" class="side-icon" />
+                            <span class="title">Reachabillity</span>
+                            <i class="icon-submenu ti-angle-left"></i>
+                        </a>
+                        <div id="settingsReach" class="collapse ">
+                            <ul class="submenu">
+                                <li>
+                                    <a>Y Scale:
+                                        <input type="range" id="yScale">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <p>Plots / page: </p>
+                                        <select class="input-sm form-control" id="reach-per-pg">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option selected>4</option>
+                                            <option>6</option>
+                                            <option>12</option>
+                                        </select>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="menu-group spec2">Project
+                        <a class="disabled spec text-capitalize">
+                            <strong>Name:</strong>
+                            <new id="projectTitle"></new>
+                        </a>
+                        <a class="disabled spec">
+                            <strong>Min mpts: </strong>{{minM}}</a>
+                        <a class="disabled spec">
+                            <strong>Max mpts: </strong>{{maxM}}</a>
+                        <a class="disabled spec text-capitalize">
+                            <strong>Distance: </strong> {{dist}}</a>
+                    </li>
+                </ul>
+            </nav>
+            <div style="position: absolute; bottom: 0;">
+                <nav>
+                    <ul class="nav" id="sidebar-nav-menu">
+                        <li class="panel">
+                            <a data-parent="#sidebar-nav-menu" data-toggle="modal" href='#about-modal'
+                                class="collapsed">
+                                <i class="side-icon ti ti-info-alt"></i>
+                                <span class="title">About</span>
+                                <!-- <i class="icon-submenu ti-angle-left"></i> -->
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <a href="">
+                    <img src="{{ url_for('static', filename='img/UA-EAC-COLOUR-REVERSE.svg') }}" class="side-logo-uofa">
+                </a>
+                <a href="">
+                    <img src="{{ url_for('static', filename='img/newcastle-logo.png') }}" class="side-logo-newcastle">
+                </a>
+            </div>
+        </div>
+        <!-- END LEFT SIDEBAR -->
+
+
+
+        <!-- MAIN -->
+        <div class="main pad-l pad-r pad-b">
+            <!-- MAIN CONTENT -->
+            <div class="main-content">
+                <div class="container-fluid">
+
+                    <div class="row" id="row-top">
+                        <!-- START DENDOGRAM -->
+                        <div class="col-xs-4 nopadding">
+                            <div class="panel panel-default nopadding grad" id="circle-panel">
+                                <div class="panel-heading clearfix">
+                                    <p class="pull-left">Circle Packing</p>
+
+                                    <div class="col-xs-2 pull-left">
+                                        <div class="btn-group btn-group-xs btn-group-justified fosc-select"
+                                            data-toggle="buttons">
+                                            <label class="btn btn-default btn-xs"
+                                                title="Framework for Optimal Selection of Clusters">
+                                                <input type="checkbox" name="checkbox" value="fosc">
+                                                <span class="ti-wand">FOSC</span>
+                                            </label>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-xs-2 pull-left">
+                                        <div class="input-group input-group-sm mpts-value">
+                                            <span class="input-group-addon">mtps</span>
+                                            <input class="form-control mpts-value" type="number" min="2" max="5">
+                                        </div>
+                                    </div>
+
+                                    <div class="right">
+                                        <li class="dropdown panel-options download-chart">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                <i class="lnr lnr-download"></i>
+                                            </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="panel-body" id="panel-circle">
+
+                                        <div>
+                                            <div id="chart-circle">
+                                            </div>
+                                            <input id="slider" type="range" value="50" class="hidden">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END DENDOGRAM -->
+
+                        <!-- START MULTIPLE CIRCLE -->
+                        <div class="col-xs-8 nopadding pad-l" id="reach-panel">
+                            <div class="panel panel-default nopadding grad">
+                                <div class="panel-heading clearfix">
+                                    <p class="pull-left">Multiple Circle Packing</p>
+
+                                    <div class="perpg btn-group pull-right nopadding-b no-border hidden">
+                                        <select class="input-sm" id="reach-per-pg">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option selected>4</option>
+                                            <option>6</option>
+                                            <option>12</option>
+                                        </select>
+                                    </div>
+
+                                    <ul class="pagination pagination-sm pull-right nopadding nopadding-b">
+                                        <li class="pg-nav" pg-val="-1">
+                                            <a href="#">
+                                                <span>&laquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                    <div class="right hidden">
+                                        <li class="dropdown panel-options">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                <i class="lnr lnr-download"></i>
+                                            </a>
+                                    </div>
+                                </div>
+                                <div class="panel-body nopadding">
+                                    <div class="container-fluid nopadding-v nopadding-l grouper">
+                                        <div class="row nopadding" id="reach-plot">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <!-- END MAIN CONTENT -->
+            <!-- END WRAPPER -->
+        </div>
+        <!-- END MAIN -->
+    </div>
+    <!-- Javascript -->
+
+    <script>
+        const project = "{{name}}"
+        const datasetId = "{{id}}"
+    </script> {% assets "dashboard_js" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script> {% endassets %}
+
+
+</body>
+
+</html>

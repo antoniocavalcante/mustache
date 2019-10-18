@@ -15,7 +15,7 @@ def index(id):
     minM = data['datasetMinMpts']
     maxM = data['datasetMaxMpts']
     dist = data['datasetDistance']
-    return render_template("dashboard/index.html", id=id, name=name, minM=minM, maxM=maxM, dist=dist)
+    return render_template("dashboard/index3.html", id=id, name=name, minM=minM, maxM=maxM, dist=dist)
 
 
 @dashboard.route('/<dataset>/<path:filename>')

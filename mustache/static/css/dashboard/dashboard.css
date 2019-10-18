@@ -139,6 +139,10 @@ div.tooltip {
     display: inline;
 }
 
+#chart-circle {
+    display: inline;
+}
+
 body {
     overflow: hidden;
 }
