@@ -73,17 +73,18 @@ var monoInterpolators = [
 
 var floor = Math.floor,
     abs = Math.abs;
-
-d3.text(datasetId + "/" + "ids", function (data) {
+console.log("datasetId: " + datasetId + "/" + "ids")
+d3.text("/dashboard/" + datasetId + "/" + "ids", function (data) {
+    // console.log("HERE: " + datasetId)
     ids = d3.csvParseRows(data);
-})
+});
 
-d3.text(datasetId + "/" + "FOSC", function (data) {
+d3.text("/dashboard/" + datasetId + "/" + "FOSC", function (data) {
     raw = d3.csvParseRows(data)[0];
     fosc = raw.map(function (d) {
         return parseInt(d);
     })
-})
+});
 
 $("#projectTitle").text(project)
 
@@ -286,7 +287,7 @@ function panelSize() {
         globalMainHeight = globalHeight - navBarH,
         padding = 10
 
-    console.log(globalMainHeight, globalHeight);
+    // console.log(globalMainHeight, globalHeight);
 
     panelH = (globalMainHeight / 2);
 
@@ -328,7 +329,7 @@ function setWindow(container) {
     panelW = panel.outerWidth(true);
 
     newH = parseInt(panelH - bodyH - footerH - headerH);
-    console.log(newH, panelW);
+    // console.log(newH, panelW);
     body.attr("width", panelW);
     body.attr("height", newH);
 
@@ -386,7 +387,7 @@ function update() {
         chart.select("path")
             .transition(t)
             .attr("fill", MultiReachcolorScale(medoids[d]));
-    })
+    });
 
     // add new
     u.enter()
@@ -394,7 +395,7 @@ function update() {
             return "chart_" + d;
         })
         .text(function (d, i) {
-            d3.text(datasetId + "/" + "visualization/" + d + "RNG_" + project + ".lr", function (d2) {
+            d3.text("/dashboard/" + datasetId + "/" + "visualization/" + d + "RNG_" + project + ".lr", function (d2) {
                 $('#chart_' + d).hide();
                 reachCharts[d] = createChart(d2, u, i, d);
                 $('#chart_' + d).show("fast");
@@ -819,7 +820,7 @@ function dendrogram() {
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-    var data = d3.json(datasetId + "/" + project + "_meta-hierarchy_.json", function (json) {
+    var data = d3.json("/dashboard/" + datasetId + "/" + project + "_meta-hierarchy_.json", function (json) {
         var root = d3.hierarchy(json);
 
         clusterLayout(root);
@@ -1217,7 +1218,7 @@ function haiPlot() {
     height = height - 20;
 
 
-    var dataset = datasetId + "/" + project + "_HAI_tree.out";
+    var dataset = "/dashboard/" + datasetId + "/" + project + "_HAI_tree.out";
 
     var heatmapChart = function (file) {
         d3.text(file,

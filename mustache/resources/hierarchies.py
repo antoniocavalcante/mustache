@@ -25,7 +25,7 @@ import DBCV
 
 import os
 
-import pyximport; pyximport.install()
+# import pyximport; pyximport.install()
 
 import hierarchy
 from hierarchy_tree import HierarchyTree
