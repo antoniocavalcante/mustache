@@ -275,9 +275,9 @@
                     <div class="row" id="row-top">
                         <!-- START DENDOGRAM -->
                         <div class="col-xs-4 nopadding">
-                            <div class="panel panel-default nopadding grad" id="circle-panel">
+                            <div class="panel panel-default nopadding grad" id="mst-panel">
                                 <div class="panel-heading clearfix">
-                                    <p class="pull-left">Circle Packing</p>
+                                    <p class="pull-left">Minimum Spanning Tree</p>
 
                                     <div class="col-xs-4 pull-left">
                                         <div class="btn-group btn-group-xs btn-group-justified fosc-select"
@@ -307,10 +307,10 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="panel-body" id="panel-circle">
+                                    <div class="panel-body" id="panel-mst">
 
                                         <div>
-                                            <div id="chart-circle">
+                                            <div id="chart-mst">
                                             </div>
                                             <input id="slider" type="range" value="50" class="hidden">
                                         </div>
@@ -322,13 +322,13 @@
                         <!-- END DENDOGRAM -->
 
                         <!-- START MULTIPLE CIRCLE -->
-                        <div class="col-xs-8 nopadding pad-l" id="reach-panel">
+                        <div class="col-xs-8 nopadding pad-l" id="x-mst-panel">
                             <div class="panel panel-default nopadding grad">
                                 <div class="panel-heading clearfix">
-                                    <p class="pull-left">Multiple Circle Packing</p>
+                                    <p class="pull-left">Multiple MSTs</p>
 
                                     <div class="perpg btn-group pull-right nopadding-b no-border hidden">
-                                        <select class="input-sm" id="reach-per-pg">
+                                        <select class="input-sm" id="mst-per-pg">
                                             <option>1</option>
                                             <option>2</option>
                                             <option>3</option>
@@ -355,7 +355,7 @@
                                 </div>
                                 <div class="panel-body nopadding">
                                     <div class="container-fluid nopadding-v nopadding-l grouper">
-                                        <div class="row nopadding" id="circle-plot">
+                                        <div class="row nopadding" id="mst-plot">
                                         </div>
                                     </div>
                                 </div>

@@ -26,69 +26,74 @@ function treeChart() {
     function my(selection) {
         selection.each(function(data, i) {
 
-            pack = data => d3.pack()
-                .size([width, height])
-                .padding(3)
-            (d3.hierarchy(data)
-                .sum(d => d.n)
-                .sort((a, b) => b.n - a.n))
+            var root = d3.tree()(d3.hierarchy(data));
 
-
-            var root = pack(data);
-            var focus = root;
-            var view;
+            var max_epsilon = root.data.birth;
+            
+            console.log("max epsilon", max_epsilon);
 
             var f = d3.format(".2f");
 
-            root.descendants().forEach(function (d) {
-                min_id = Math.min(min_id, d.data.id);
-                max_id = Math.max(max_id, d.data.id);
+            color = d3.scaleSequential(colorScale)
+                .domain([0, 125]);
 
-                min_stability = Math.min(min_stability, d.data.stability);
-                max_stability = Math.max(max_stability, d.data.stability);                        
+            var n = 125;
+
+            var yScale = d3.scaleLinear().domain([0, max_epsilon]).range([height, 0])
+            var xScale = d3.scaleLinear().domain([0, n]).range([0, width])    
+
+            // SETUP EACH NODE'S POSITION BEFORE PLOTTING.
+            root.each(function(d){
+                d["x"] = xScale(d.data.points[0][2]);
+                d["y"] = yScale(d.data.birth);
+                console.log(d.data.birth, d.data.death)
+                console.log(yScale(d.data.death) - yScale(d.data.birth))
             });
 
-            color = d3.scaleSequential(colorScale)
-                .domain([min_stability, max_stability]);
 
             // CREATES SVG.
             var svg = selection.append("svg")
-                .attr("preserveAspectRatio", "xMinYMin slice")
-                .attr("viewBox", "-380 -380 " + (width + 50) + " " + (height + 50))
+                .attr("preserveAspectRatio", "xMinYMin")
+                .attr("viewBox", [0, 0, width, height])
                 .style("display", "block")
                 .style("margin", "10 10 10 10")
                 .style("background", "white")
                 .style("cursor", "pointer")
-                .on("click", () => zoom(root));
 
-            // CREATES NODES OF THE PLOT.
+            var link = svg.append("g")
+                .attr("fill", "none")
+                .attr("stroke", "#555")
+                .attr("stroke-opacity", 0.4)
+                .attr("stroke-width", 1.5)
+                .selectAll("path")
+                .data(root.links())
+                .enter().append("path")
+                .attr("d", d => elbow(d))
+
+            // JOIN DATA.
             var node = svg.append("g")
-                .selectAll("circle")
-                .data(root.descendants())
-                .enter()
-                    .append("circle")
-                    .call(d => nodeSetup(d));
-  
-            // CREATES LABELS.
-            var label = svg.append("g")
-                    .style("font", "0px sans-serif")
-                    .attr("pointer-events", "none")
-                    .attr("text-anchor", "middle")
-                .selectAll("text")
-                .data(root.descendants())
-                .enter()
-                .append("text")
-                    .style("fill-opacity", d => d.parent === root ? 1 : 0)
-                    .style("display", d => d.parent === root ? "inline" : "none")
-                    .text(d => d.data.id);
-
+                .selectAll("g")
+                .data(root.descendants());
+            
+            // CREATES GROUPS CORRESPONDING TO NODES IN THE CLUSTER TREE.
+            node.enter()
+                .append("g")
+                .attr("cluster", d => d.data.id)
+                .attr("transform", d => `translate(${d.x},${d.y})`)
+                .selectAll("rect")
+                .data(d => d.data.points)
+                    .enter()
+                    .append("rect")
+                    .attr("width", d => xScale(d[3]-d[2]    ))
+                    .attr("height", d => yScale(d[1])-yScale(d[0]))
+                    .attr("fill", d => color(d[3]-d[2]))
+                    .attr("transform", d => `translate(${xScale(d[2])}, ${yScale(d[0])})`)
+            
             // LOADS PARTITIONING REGARDING THE CURRENT MPTS VALUE.
             d3.text("visualization/" + mpts + "RNG_" + project + ".lr", function (data) {
                 partitioning = new Set(d3.csvParseRows(data)[1].map(x => parseInt(x)));
             });
-    
-            zoomTo([root.x, root.y, root.r * 2]);
-            
+                
             tip = d3.tip()
                 .attr('class', 'd3-tip')
                 .offset([-10, 0])
@@ -103,52 +108,11 @@ function treeChart() {
             svg.call(tip);
             
             function nodeSetup(node) {
-                node
-                    .attr("fill", d => color(d.data.stability))
-                    .attr("stroke", "grey")
-                    .attr("id", d => (mpts + "-" + d.data.id))
-                    .on("mouseover", d => highlight(d))
-                    .on("mouseout", d => normal(d))
-                    .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
+
             };
 
             function labelSetup(label) {
-                label
-                    .style("fill-opacity", d => d.parent === root ? 1 : 0)
-                    .style("display", d => d.parent === root ? "inline" : "none")
-                    .text(d => d.data.id);
-            };
 
-            function zoomTo(v) {
-                const k = width / v[2];
-
-                view = v;
-
-                label
-                    .attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
-                svg.select("g").selectAll("circle")
-                    .attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`)
-                    .attr("r", d => d.r * k);
-            };
-
-            function zoom(d) {
-                const focus0 = focus;
-
-                focus = d;
-
-                const transition = svg.transition()
-                    .duration(d3.event.altKey ? 7500 : 750)
-                    .tween("zoom", d => {
-                      const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
-                      return t => zoomTo(i(t));
-                    });
-
-                label
-                  .filter(function(d) { return d.parent === focus || this.style.display === "inline"; })
-                  .transition(transition)
-                    .style("fill-opacity", d => d.parent === focus ? 1 : 0)
-                    .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
-                    .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
             };
 
             // MOUSEOVER EVENT.
@@ -188,7 +152,7 @@ function treeChart() {
 
             // MOUSEOUT EVENT.
             function normal(d) {
-                d3.select('#circle-plot')
+                d3.select('#tree-plot')
                     .selectAll("circle")
                     .transition()
                     .duration(350)
@@ -242,14 +206,15 @@ function treeChart() {
 
             updateData = function() {
 
-                pack = data => d3.pack()
-                    .size([width, height])
-                    .padding(3)
-                (d3.hierarchy(data)
-                    .sum(d => d.n)
-                    .sort((a, b) => b.n - a.n))
-
-                root = pack(my.data());
+                tree = data => {
+                    var root = d3.hierarchy(data);
+                    root.dx = width/2;
+                    root.dy = height;
+    
+                    return d3.tree().nodeSize([root.dx, root.dy])(root);
+                }
+    
+                root = tree(data);
                 
                 // RESETS MINIMUM AND MAXIMUM OF ATTRIBUTES.
                 min_id = Number.MAX_VALUE;
@@ -284,16 +249,12 @@ function treeChart() {
                     .call(d => nodeSetup(d))
                     .transition()
                         .duration(400)
-                        .attr("transform", d => `translate(${(d.x - root.x)},${(d.y - root.y)})`)
-                        .attr("r", d => d.r);
 
                 // UPDATE.
                 updateNode
                     .call(d => nodeSetup(d))
                     .transition()
                         .duration(400)
-                        .attr("transform", d => `translate(${(d.x - root.x)},${(d.y - root.y)})`)
-                        .attr("r", d => d.r);
 
                 // UPDATE LABELS OF CLUSTERS.
                 updateLabel = svg.selectAll("text")
@@ -306,18 +267,16 @@ function treeChart() {
                     .call(d => labelSetup(d))
                     .transition()
                         .duration(400)
-                        .attr("transform", d => `translate(${(d.x - root.x)},${(d.y - root.y)})`)
                 
                 updateLabel
                     .call(d => labelSetup(d))
                     .transition()
                     .duration(400)
-                        .attr("transform", d => `translate(${(d.x - root.x)},${(d.y - root.y)})`)
-                        .attr("r", d => d.r);
 
                 // CHECKS IF FOSC IS ACTIVE AND HIDES UNSELECTED NODES.
                 fosc();
             };
+
         });
     }
 
@@ -397,13 +356,13 @@ function get_transposed_file_url(data_name, kmin, kmax) {
 
 
 function drawChartTree(i) {
-    var chart = circlePacking();
+    var chart = treeChart();
     
     chart.mpts(i);
 
     d3.json(get_file_url(project, i),
         function(data) {
-            d3.select("#chart-circle")
+            d3.select("#chart-tree")
                 .datum(data)
                 .call(chart);
         });
@@ -432,7 +391,7 @@ function drawMultipleTreeCharts() {
     var charts = {};
 
     // ADD DIVS ACCORDING TO RANGE OF MPTS.
-    var u = d3.select('#circle-plot')
+    var u = d3.select('#tree-plot')
         .selectAll(".chart-scrollers")
         .data([...Array(max_mpts).keys()]);
 
@@ -443,13 +402,13 @@ function drawMultipleTreeCharts() {
         .classed("nopadding", "true")
         .classed("col-xs-" + 3, "true")
         .property("id", function (d) {
-            return "chart_" + (d + min_mpts);
+            return "tree-chart-" + (d + min_mpts);
         })
         .each(function (d) {            
             d3.json(get_file_url(project, (d + min_mpts)),
                 function(data) {
-                    charts[(d + min_mpts)] = circlePacking().mpts((d + min_mpts))
-                    d3.select("#chart_" + (d + min_mpts))
+                    charts[(d + min_mpts)] = treeChart().mpts((d + min_mpts))
+                    d3.select("#tree-chart-" + (d + min_mpts))
                         .datum(data)
                         .call(charts[(d + min_mpts)]);
                 })
@@ -470,5 +429,10 @@ function drawMultipleTreeCharts() {
 var min_mpts = 2;
 var max_mpts = 9;
 
-// chart  = drawChart(2)
-// charts = drawMultipleCirclePacking()
+function elbow(d) {
+    return "M" + d.source.x + "," + d.source.y
+        + "H" + d.target.x + "V" + d.target.y;
+}
+
+chart  = drawChartTree(10)
+// charts = drawMultipleTreeCharts()

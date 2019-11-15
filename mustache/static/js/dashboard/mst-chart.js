@@ -1,5 +1,9 @@
 function mstChart() {
+    var raw_data = [];
     var data = [];
+
+    var vertices = [];
+    var edges = [];
 
     var width = 720;
     var height = 720;
@@ -22,199 +26,121 @@ function mstChart() {
     var partitioning = new Set([]);
 
     var tip;
-
+    var radius = 6.5;
+    
     function my(selection) {
-        selection.each(function(data, i) {
+        selection.each(function(raw, i) {
 
-            pack = data => d3.pack()
-                .size([width, height])
-                .padding(3)
-            (d3.hierarchy(data)
-                .sum(d => d.n)
-                .sort((a, b) => b.n - a.n))
+            var map = new Map();
 
+            data = d3.dsvFormat(" ").parseRows(raw).map(function(row) {
+                if (!map.has(+row[0])) {
+                    vertices.push({"id" : +row[0]});
+                    map.set(+row[0], true);                   
+                }
+                
+                if (!map.has(+row[1])) {
+                    vertices.push({"id" : +row[1]});
+                    map.set(+row[1], true);                   
+                }
 
-            var root = pack(data);
-            var focus = root;
-            var view;
+                edges.push({"source": +row[0], "target": +row[1], "weight": +row[2]})
+                
+                return row.map(function(value) {
+                    return +value;
+                });
+            }); 
 
-            var f = d3.format(".2f");
-
-            root.descendants().forEach(function (d) {
-                min_id = Math.min(min_id, d.data.id);
-                max_id = Math.max(max_id, d.data.id);
-
-                min_stability = Math.min(min_stability, d.data.stability);
-                max_stability = Math.max(max_stability, d.data.stability);                        
-            });
-
-            color = d3.scaleSequential(colorScale)
-                .domain([min_stability, max_stability]);
+            // CREATES THE FORCE SIMULATION.
+            var simulation = d3.forceSimulation(vertices)
+                .force("charge", d3.forceManyBody(-30))
+                .force("link", d3.forceLink(edges).distance(d => d.weight))
+                .force("center", d3.forceCenter(width/2, height/2));
 
             // CREATES SVG.
             var svg = selection.append("svg")
                 .attr("preserveAspectRatio", "xMinYMin slice")
-                .attr("viewBox", "-380 -380 " + (width + 50) + " " + (height + 50))
+                .attr("viewBox", "-300 -300 " + (width + 500) + " " + (height + 500))
                 .style("display", "block")
                 .style("margin", "10 10 10 10")
                 .style("background", "white")
-                .style("cursor", "pointer")
-                .on("click", () => zoom(root));
+                .style("cursor", "pointer");
 
-            // CREATES NODES OF THE PLOT.
-            var node = svg.append("g")
-                .selectAll("circle")
-                .data(root.descendants())
-                .enter()
-                    .append("circle")
-                    .call(d => nodeSetup(d));
+                // .attr("viewBox", [-width / 2, -height / 2, width, height])
+
+
+            var drag = simulation => {
   
-            // CREATES LABELS.
-            var label = svg.append("g")
-                    .style("font", "0px sans-serif")
-                    .attr("pointer-events", "none")
-                    .attr("text-anchor", "middle")
-                .selectAll("text")
-                .data(root.descendants())
+                function dragstarted(d) {
+                    if (!d3.event.active) simulation.alphaTarget(0.9).restart();
+                    d.fx = d.x;
+                    d.fy = d.y;
+                }
+                
+                function dragged(d) {
+                    d.fx = d3.event.x;
+                    d.fy = d3.event.y;
+                }
+                
+                function dragended(d) {
+                    if (!d3.event.active) simulation.alphaTarget(0);
+                    d.fx = null;
+                    d.fy = null;
+                }
+                
+                return d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended);
+            };
+
+            var link = svg.append("g")
+                .attr("stroke", "#999")
+                .attr("stroke-opacity", 0.6)
+                .selectAll("line")
+                .data(edges)
                 .enter()
-                .append("text")
-                    .style("fill-opacity", d => d.parent === root ? 1 : 0)
-                    .style("display", d => d.parent === root ? "inline" : "none")
-                    .text(d => d.data.id);
+                .append("line");
+
+            var node = svg.append("g")
+                .attr("fill", "#fff")
+                .attr("stroke", "#000")
+                .attr("stroke-width", 1.5)
+                .selectAll("circle")
+                .data(vertices)
+                .enter()
+                .append("circle")
+                .attr("r", radius)
+                .call(drag(simulation));
+
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+                
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+            });
 
             // LOADS PARTITIONING REGARDING THE CURRENT MPTS VALUE.
             d3.text("visualization/" + mpts + "RNG_" + project + ".lr", function (data) {
                 partitioning = new Set(d3.csvParseRows(data)[1].map(x => parseInt(x)));
             });
-    
-            zoomTo([root.x, root.y, root.r * 2]);
-            
-            tip = d3.tip()
-                .attr('class', 'd3-tip')
-                .offset([-10, 0])
-                .html(function(d) {
-                    return "<div><span>Cluster:</span> <span style='color:white'>" + d.data.id + "</span></div>" +
-                            "<div><span>#points:</span> <span style='color:white'>" + d.data.n + "</span></div>" +
-                            "<div><span>Birth:</span> <span style='color:white'>" + f(d.data.birth) + "</span></div>" +
-                            "<div><span>Death:</span> <span style='color:white'>" + f(d.data.death) + "</span></div>" +
-                            "<div><span>Stability:</span> <span style='color:white'>" + f(d.data.stability) + "</span></div>";
-                    });
-            
-            svg.call(tip);
-            
-            function nodeSetup(node) {
-                node
-                    .attr("fill", d => color(d.data.stability))
-                    .attr("stroke", "grey")
-                    .attr("id", d => (mpts + "-" + d.data.id))
-                    .on("mouseover", d => highlight(d))
-                    .on("mouseout", d => normal(d))
-                    .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
-            };
-
-            function labelSetup(label) {
-                label
-                    .style("fill-opacity", d => d.parent === root ? 1 : 0)
-                    .style("display", d => d.parent === root ? "inline" : "none")
-                    .text(d => d.data.id);
-            };
-
-            function zoomTo(v) {
-                const k = width / v[2];
-
-                view = v;
-
-                label
-                    .attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
-                svg.select("g").selectAll("circle")
-                    .attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`)
-                    .attr("r", d => d.r * k);
-            };
-
-            function zoom(d) {
-                const focus0 = focus;
-
-                focus = d;
-
-                const transition = svg.transition()
-                    .duration(d3.event.altKey ? 7500 : 750)
-                    .tween("zoom", d => {
-                      const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
-                      return t => zoomTo(i(t));
-                    });
-
-                label
-                  .filter(function(d) { return d.parent === focus || this.style.display === "inline"; })
-                  .transition(transition)
-                    .style("fill-opacity", d => d.parent === focus ? 1 : 0)
-                    .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
-                    .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
-            };
-
-            // MOUSEOVER EVENT.
-            function highlight(d) {
-                d3.json(get_transposed_file_url(project, 2, 9), 
-                    function(error, data) {
-                        
-                        if (error) return console.error(error);
-
-                        // TAKES CARE OF THE CHARTS REGARDING HIGHER MPTS.
-                        var sequence = [d.data.id]
-                        for (let k = mpts; k <= max_mpts; k++) {
-                            var aux = []
-
-                            d3.select('#chart_' + (k))
-                                .filter(x => x !== selection[0])
-                                .selectAll("circle")
-                                .filter(x => !sequence.includes(x.data.id))
-                                .transition()
-                                .duration(150)
-                                .ease(d3.easeLinear)
-                                .style("opacity", 0.0);
-
-                            sequence.forEach(element => {
-                                aux = aux.concat(data[k][element])
-                            });
-                            
-                            sequence = aux
-                        }
-
-                        // TAKES CARE OF THE CHARTS REGARDING LOWER MPTS.
-
-                    });
-
-                tip.show(d);
-            };
-
-            // MOUSEOUT EVENT.
-            function normal(d) {
-                d3.select('#circle-plot')
-                    .selectAll("circle")
-                    .transition()
-                    .duration(350)
-                    .ease(d3.easeCubicIn)
-                    .style("opacity", 1.0);
-
-                tip.hide(d);
-            };
 
             function fosc() {
                 
                 nodes = svg.selectAll("circle");
-                labels = svg.selectAll("text");
-                
+
                 if(d3.select('.fosc-select input[type=checkbox]').property("checked")){
                     nodes
-                        .style("visibility", d => !partitioning.has(d.data.id) ? "hidden" : "visible");
+                        .style("visibility", d => !partitioning.has(d.id) ? "hidden" : "visible");
 
-                    labels
-                        .style("visibility", d => !partitioning.has(d.data.id) ? "hidden" : "visible");
                 } else {
                     nodes
                         .style("visibility", "visible");
-                    labels
-                        .style("visibility", "visible");
-
                 }
             };
 
@@ -232,7 +158,7 @@ function mstChart() {
                 
                     if(d3.select('.fosc-select input[type=checkbox]').property("checked")){
                         nodes
-                            .style("visibility", d => !partitioning.has(d.data.id) ? "hidden" : "visible");
+                            .style("visibility", d => !partitioning.has(d.id) ? "hidden" : "visible");
                     } else {
                         nodes
                             .style("visibility", "visible");
@@ -242,38 +168,36 @@ function mstChart() {
 
             updateData = function() {
 
-                pack = data => d3.pack()
-                    .size([width, height])
-                    .padding(3)
-                (d3.hierarchy(data)
-                    .sum(d => d.n)
-                    .sort((a, b) => b.n - a.n))
+                var map = new Map();
+                vertices = [];
+                edges = [];
 
-                root = pack(my.data());
+                d3.dsvFormat(" ").parseRows(data).map(function(row) {
+                    if (!map.has(+row[0])) {
+                        vertices.push({"id" : +row[0]});
+                        map.set(+row[0], true);                   
+                    }
+                    
+                    if (!map.has(+row[1])) {
+                        vertices.push({"id" : +row[1]});
+                        map.set(+row[1], true);                   
+                    }
+    
+                    edges.push({"source": +row[0], "target": +row[1], "weight": +row[2]})
+                    
+                    return row.map(function(value) {
+                        return +value;
+                    });
+                }); 
+    
                 
-                // RESETS MINIMUM AND MAXIMUM OF ATTRIBUTES.
-                min_id = Number.MAX_VALUE;
-                max_id = Number.MIN_VALUE;            
-
-                min_stability = Number.MAX_VALUE;
-                max_stability = Number.MIN_VALUE;            
-
-                // UPDATES MINIMUM AND MAXIMUM IDS OF CLUSTERS.
-                root.descendants().forEach(function (d) {
-                    min_id = Math.min(min_id, d.data.id)
-                    max_id = Math.max(max_id, d.data.id)
-
-                    min_stability = Math.min(min_stability, d.data.stability);
-                    max_stability = Math.max(max_stability, d.data.stability);
-                });
-
                 // UPDATES COLOR SCALE.
-                color = d3.scaleSequential(colorScale)
-                    .domain([min_stability, max_stability]);
+                // color = d3.scaleSequential(colorScale)
+                    // .domain([min_stability, max_stability]);
 
-                // JOIN.
+                // JOIN NODES.
                 var updateNode = svg.select("g").selectAll("circle")
-                    .data(root.descendants());                
+                    .data(vertices);                
 
                 // EXIT.
                 updateNode.exit().remove();
@@ -281,42 +205,35 @@ function mstChart() {
                 // ENTER.
                 updateNode.enter()
                     .append("circle")
-                    .call(d => nodeSetup(d))
                     .transition()
-                        .duration(400)
-                        .attr("transform", d => `translate(${(d.x - root.x)},${(d.y - root.y)})`)
-                        .attr("r", d => d.r);
+                        .duration(200);
 
                 // UPDATE.
                 updateNode
-                    .call(d => nodeSetup(d))
-                    .transition()
-                        .duration(400)
-                        .attr("transform", d => `translate(${(d.x - root.x)},${(d.y - root.y)})`)
-                        .attr("r", d => d.r);
-
-                // UPDATE LABELS OF CLUSTERS.
-                updateLabel = svg.selectAll("text")
-                    .data(root.descendants())
-
-                updateLabel.exit().remove();
-
-                updateLabel.enter()
-                    .append("text")
-                    .call(d => labelSetup(d))
-                    .transition()
-                        .duration(400)
-                        .attr("transform", d => `translate(${(d.x - root.x)},${(d.y - root.y)})`)
+                    .attr("fill", "#fff")
+                    .attr("stroke", "#000")
+                    .attr("stroke-width", 1.5)
+                    .selectAll("circle")
+                    .data(vertices)
+                    .enter()
+                    .append("circle")
+                    .attr("r", 6.5)
+                    .call(drag(simulation));
+    
+                // JOIN LINKS.
+                var updateLink = svg.select("g").selectAll("circle")
+                    .data(edges);                
                 
-                updateLabel
-                    .call(d => labelSetup(d))
-                    .transition()
-                    .duration(400)
-                        .attr("transform", d => `translate(${(d.x - root.x)},${(d.y - root.y)})`)
-                        .attr("r", d => d.r);
+                // EXIT.
+                updateLink.exit().remove()
+
+                // ENTER.
+                updateLink.enter()
+                    .append("line");
+
 
                 // CHECKS IF FOSC IS ACTIVE AND HIDES UNSELECTED NODES.
-                fosc();
+                // fosc();
             };
         });
     }
@@ -395,15 +312,41 @@ function get_transposed_file_url(data_name, kmin, kmax) {
     return "http://localhost:8000/data/" + data_name + "/" + data_name + "-t-" + kmin + "-" + kmax + ".json"
 }
 
+function readMST(data) {
+    var map = new Map();
+
+    data = d3.dsvFormat(" ").parseRows(raw).map(function(row) {
+        if (!map.has(+row[0])) {
+            vertices.push({"id" : +row[0]});
+            map.set(+row[0], true);                   
+        }
+        
+        if (!map.has(+row[1])) {
+            vertices.push({"id" : +row[1]});
+            map.set(+row[1], true);                   
+        }
+
+        edges.push({"source": +row[0], "target": +row[1], "weight": +row[2]})
+        
+        return row.map(function(value) {
+            return +value;
+        });
+    }); 
+    
+}
+
+
 
 function drawChartMST(i) {
-    var chart = circlePacking();
+    var chart = mstChart();
     
     chart.mpts(i);
 
-    d3.json(get_file_url(project, i),
-        function(data) {
-            d3.select("#chart-circle")
+    d3.text("/dashboard/" + datasetId + "/msts/" + i + "RNG_" + project + ".mst", 
+        function(error, data) {
+            if (error) throw error;
+
+            d3.select("#chart-mst")
                 .datum(data)
                 .call(chart);
         });
@@ -414,15 +357,15 @@ function drawChartMST(i) {
         chart.mpts(parseInt(this.value));
 
         // LOADS AND UPDATES THE DATA IN THE CHART.
-        d3.json(get_file_url(project, chart.mpts()),
-            function(data) {
+        d3.text("/dashboard/" + datasetId + "/msts/" + chart.mpts() + "RNG_" + project + ".mst",
+            function(error, data) {
+                if (error) throw error;
                 chart.data(data);
             });
     });
 
     return chart
 }
-
 
 function drawMultipleMSTCharts() {
 
@@ -443,13 +386,13 @@ function drawMultipleMSTCharts() {
         .classed("nopadding", "true")
         .classed("col-xs-" + 3, "true")
         .property("id", function (d) {
-            return "chart_" + (d + min_mpts);
+            return "mst-chart-" + (d + min_mpts);
         })
         .each(function (d) {            
             d3.json(get_file_url(project, (d + min_mpts)),
                 function(data) {
                     charts[(d + min_mpts)] = circlePacking().mpts((d + min_mpts))
-                    d3.select("#chart_" + (d + min_mpts))
+                    d3.select("#mst-chart-" + (d + min_mpts))
                         .datum(data)
                         .call(charts[(d + min_mpts)]);
                 })
@@ -470,5 +413,5 @@ function drawMultipleMSTCharts() {
 var min_mpts = 2;
 var max_mpts = 9;
 
-// chart  = drawChart(2)
+chart  = drawChartMST(30)
 // charts = drawMultipleCirclePacking()

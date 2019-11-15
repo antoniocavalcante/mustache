@@ -11,10 +11,7 @@ function panelSize() {
 
     panelH = (globalMainHeight - (padding * 2)) / 2;
 
-    console.log("panel size is: " + panelH);
-
     return panelH;
-
 }
 
 
