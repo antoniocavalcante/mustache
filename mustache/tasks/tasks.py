@@ -33,7 +33,7 @@ def process(self, workspace, root, files, settings):
             json.dump(settings, fp)
 
     root = str(os.path.dirname(root))
-    venv = str(os.path.join(root, 'resources/run.sh'))
+
     sh = str(os.path.join(root, 'resources/run.sh'))
     in_file = str(os.path.join(path, files[0]['name']))
 
