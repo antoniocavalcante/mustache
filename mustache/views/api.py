@@ -56,9 +56,7 @@ def directory():
 
 @api.route('/distance')
 def distance():
-    # list(dict(hdbscan.dist_metrics.METRIC_MAPPING).keys())
-    d = ["euclidean", "cosine", "pearson", "manhattan", "supremum"]
-    return jsonify(d)
+    return jsonify(["euclidean", "cosine", "pearson", "manhattan", "supremum", "angular"])
 
 
 @api.route('/rng')
