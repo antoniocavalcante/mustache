@@ -1,7 +1,13 @@
-from flask import Flask, request, Config
-from celery import Celery
-import uuid
 import datetime as dt
+import uuid
+
+from celery import Celery
+from flask import Config, Flask, request
+
+from .util.assests import assets
+from .views.api import api
+from .views.dashboard import dashboard
+from .views.home import home
 
 app = Flask(__name__)
 app.config.from_json("settings.json")
@@ -17,12 +23,7 @@ app.jinja_env.filters['datetime'] = format_datetime
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
 
-from .views.dashboard import dashboard
-from .views.home import home
-from .views.api import api
 
 app.register_blueprint(home, url_prefix="/")
 app.register_blueprint(dashboard, url_prefix="/dashboard")
 app.register_blueprint(api)
-
-from .util.assests import assets

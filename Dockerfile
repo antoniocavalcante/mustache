@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 USER root
 RUN apt-get update -y
-#RUN apt-get install -y apt-utils
+RUN apt-get install -y apt-utils
 RUN apt-get install -y python3-dev python3-pip build-essential
 RUN apt-get install -y python-dev python-pip
 

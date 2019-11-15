@@ -1,14 +1,18 @@
-from flask import Blueprint, request, jsonify, current_app as app, Response, redirect, url_for, send_file, send_from_directory
+import datetime as dt
 import json
+import os
 import shutil
 import time
-import datetime as dt
-# import hdbscan
 import tkinter as tk
-import os
 import zipfile
 from io import BytesIO
 from tkinter import filedialog
+
+from flask import Blueprint, Response
+from flask import current_app as app
+from flask import (jsonify, redirect, request, send_file, send_from_directory,
+                   url_for)
+
 from .. import __file__ as base
 from ..tasks.tasks import process
 from ..util.helpers import rngl
@@ -41,8 +45,7 @@ def workspace():
 @api.route("/directory")
 def directory():
     root = tk.Tk()
-    # root.iconbitmap(os.path.join(
-    #     os.path.dirname(base), 'static/icon/favicon.ico'))
+
     root.attributes("-topmost", True)
     root.withdraw()
     dirStr = filedialog.askdirectory()
@@ -56,9 +59,7 @@ def directory():
 
 @api.route('/distance')
 def distance():
-    # list(dict(hdbscan.dist_metrics.METRIC_MAPPING).keys())
-    d = ["euclidean", "cosine", "pearson", "manhattan", "supremum"]
-    return jsonify(d)
+    return jsonify(["euclidean", "cosine", "pearson", "manhattan", "supremum", "angular", "sqeuclidean"])
 
 
 @api.route('/rng')
@@ -77,13 +78,13 @@ def submit():
             data.append({"name": files['file-dataset'].filename,
                          "data": files['file-dataset'].read()})
         except Exception as e:
-            print("file datatset error!")
+            print("file datatset error!", e)
 
         try:
             data.append({"name": files['file-labels'].filename,
                          "data": files['file-labels'].read()})
         except Exception as e:
-            print("file labels error!")
+            print("file labels error!", e)
 
         process.apply_async(
             args=[app.config['WORKSPACE'], base, data, result])
@@ -113,7 +114,7 @@ def delete(id):
             shutil.rmtree(os.path.join(root, id))
             return Response("{}", status=200, mimetype='application/json')
         except OSError as e:
-            print("Error:")
+            print("Error:", e)
             return Response("{}", status=404, mimetype='application/json')
     else:
         print("Sorry, I can not find %s file.")
