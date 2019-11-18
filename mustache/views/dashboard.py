@@ -11,7 +11,7 @@ def index(id):
         os.path.join(app.config['WORKSPACE'], id), "settings")
     with open(fn) as f:
         data = json.load(f)
-    name = data['datasetName'].lower()
+    name = data['datasetName']
     minM = data['datasetMinMpts']
     maxM = data['datasetMaxMpts']
     dist = data['datasetDistance']
@@ -24,7 +24,7 @@ def index_circles(id):
         os.path.join(app.config['WORKSPACE'], id), "settings")
     with open(fn) as f:
         data = json.load(f)
-    name = data['datasetName'].lower()
+    name = data['datasetName']
     minM = data['datasetMinMpts']
     maxM = data['datasetMaxMpts']
     dist = data['datasetDistance']
@@ -37,7 +37,7 @@ def index_msts(id):
         os.path.join(app.config['WORKSPACE'], id), "settings")
     with open(fn) as f:
         data = json.load(f)
-    name = data['datasetName'].lower()
+    name = data['datasetName']
     minM = data['datasetMinMpts']
     maxM = data['datasetMaxMpts']
     dist = data['datasetDistance']
@@ -50,7 +50,7 @@ def index_trees(id):
         os.path.join(app.config['WORKSPACE'], id), "settings")
     with open(fn) as f:
         data = json.load(f)
-    name = data['datasetName'].lower()
+    name = data['datasetName']
     minM = data['datasetMinMpts']
     maxM = data['datasetMaxMpts']
     dist = data['datasetDistance']

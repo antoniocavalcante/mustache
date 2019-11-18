@@ -267,7 +267,7 @@ var checkSum = [];
 
 function submitData() {
 
-    console.log("submiited!");
+    console.log("File Submitted!");
 
     var form = $("#submitDataForm")
 
