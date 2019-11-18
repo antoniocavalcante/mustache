@@ -1,6 +1,7 @@
 from flask_assets import Bundle, Environment
 from .. import app
 
+
 bundles = {
 
     'home_js': Bundle(
@@ -42,18 +43,14 @@ bundles = {
         'js/dashboard/d3-array.v1.min.js',
         'js/dashboard/d3-scale-chromatic.v1.js',
         'js/dashboard/d3-drag.v1.min.js',
-        'vendor/bootstrap/js/bootstrap.min.js',
+        "vendor/bootstrap/js/bootstrap.min.js",
         'vendor/jquery-slimscroll/jquery.slimscroll.min.js',
         'js/dashboard/klorofil-2.js',
         'js/dashboard/tippy.all.min.js',
         'js/dashboard/layout.js',
         'js/dashboard/myplots.js',
-        'js/dashboard/circle-chart.js',
-        'js/dashboard/mst-chart.js',
-        'js/dashboard/tree-chart.js',
         'js/dashboard/reach.js',
         'js/dashboard/info.js',
-        'js/dashboard/d3.tip.js',
         output='gen/dashboard.js', filters="jsmin"),
 
     'dashboard_css': Bundle(

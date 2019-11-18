@@ -267,7 +267,7 @@ var checkSum = [];
 
 function submitData() {
 
-    console.log("File Submitted!");
+    console.log("submiited!");
 
     var form = $("#submitDataForm")
 
@@ -315,16 +315,16 @@ function startStep() {
 
 function nextStep() {
 
-    // GETS THE FILE NAME FROM THE FILE JUST READ.
     var filename = $("#file-dataset")[0].files[0].name
 
-    // INITIALIZES THE NAME AND NUMBER OF POINTS FIELDS WITH THE NAME OF THE FILE.
     $("input[name='datasetName']").val(filename);
     $("input[name='datasetPoints']").val(checkSum[0]);
+    if (checkSum[0] < 100) {
+        $("input[name='datasetMaxMpts']").attr("value", checkSum[0]);
+    } else {
+        $("input[name='datasetMaxMpts']").attr("value", 100);
+    }
 
-    $("input[name='datasetMaxMpts']").attr("value", Math.min(checkSum[0], 100));
-
-    // FORCES MAXMPTS TO BE AT LEAST ONE AND AT MOST THE NUMBER OF POINTS IN THE DATASET.
     $("input[name='datasetMaxMpts']").attr("data-validation-allowing", "range[" + 1 + ";" + (checkSum[0] - 1) + "]")
 
     $("input[name='datasetMaxMpts']").on("input", function () {
@@ -334,6 +334,7 @@ function nextStep() {
     $("input[name='datasetMinMpts']").on("input", function () {
         $("input[name='datasetMaxMpts']").attr("data-validation-allowing", "range[" + $(this).val() + ";" + (checkSum[0] - 1) + "]")
     })
+
 
     $.validate({
         form: '#submitDataForm',
@@ -361,6 +362,7 @@ function nextStep() {
         }
     })
 
+
     $("#next1").attr("disabled", true);
 
 }
@@ -377,6 +379,7 @@ var modal = $('#addDataModal').modalSteps({
 });
 
 $("#next1").attr("disabled", true);
+
 
 function check(selection) {
     var labels = selection[0].files[0]
@@ -402,6 +405,12 @@ function check(selection) {
                 drEvent.clearElement();
                 $('.dropify-wrapper').has("#" + id).toggleClass("has-error")
             }
+
+            // if (errors.length > 0) {
+            //     resetFile(id);
+            //     console.log(errors);
+            //     return false;
+            // }
 
             if (checkSum.length == 2) {
                 if (checkSum[0] != checkSum[1]) {

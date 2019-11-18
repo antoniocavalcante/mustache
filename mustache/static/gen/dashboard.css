@@ -8131,10 +8131,6 @@ div.tooltip {
     display: inline;
 }
 
-#chart-circle {
-    display: inline;
-}
-
 body {
     overflow: hidden;
 }
@@ -8216,7 +8212,7 @@ html {
 }
 
 .side-logo-newcastle {
-    width: 80%;
+    width: 90%;
     margin: 0 5%;
     margin-bottom: 10%;
 }
@@ -8227,7 +8223,7 @@ html {
 }
 
 .grouper>.row {
-    overflow-y: scroll;
+    overflow-x: scroll;
     white-space: nowrap;
 }
 
@@ -8558,37 +8554,6 @@ html {
 .about-header {
     font-size: 24px;
 }
-
-.d3-tip {
-    line-height: 1;
-    font: 14px sans-serif;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.8);
-    color: rgb(185, 185, 185);
-    border-radius: 2px;
-    box-shadow: 0 0 11px 0px black;
-    z-index: 10000;
-}
-  
-  /* Creates a small triangle extender for the tooltip */
-  .d3-tip:after {
-    box-sizing: border-box;
-    display: inline;
-    font-size: 10px;
-    width: 100%;
-    line-height: 1;
-    color: rgba(0, 0, 0, 0.8);
-    content: "\25BC";
-    position: absolute;
-    text-align: center;
-  }
-  
-.d3-tip.n:after {
-    margin: -1px 0 0 0;
-    top: 100%;
-    left: 0;
-    z-index: -1;
-  }
 #wrapper .sidebar {
   background-color: #2B333E;
 }

@@ -1,18 +1,14 @@
-import datetime as dt
+from flask import Blueprint, request, jsonify, current_app as app, Response, redirect, url_for, send_file, send_from_directory
 import json
-import os
 import shutil
 import time
+import datetime as dt
+# import hdbscan
 import tkinter as tk
+import os
 import zipfile
 from io import BytesIO
 from tkinter import filedialog
-
-from flask import Blueprint, Response
-from flask import current_app as app
-from flask import (jsonify, redirect, request, send_file, send_from_directory,
-                   url_for)
-
 from .. import __file__ as base
 from ..tasks.tasks import process
 from ..util.helpers import rngl
@@ -45,7 +41,8 @@ def workspace():
 @api.route("/directory")
 def directory():
     root = tk.Tk()
-
+    # root.iconbitmap(os.path.join(
+    #     os.path.dirname(base), 'static/icon/favicon.ico'))
     root.attributes("-topmost", True)
     root.withdraw()
     dirStr = filedialog.askdirectory()
@@ -59,7 +56,7 @@ def directory():
 
 @api.route('/distance')
 def distance():
-    return jsonify(["euclidean", "cosine", "pearson", "manhattan", "supremum", "angular"])
+    return jsonify(["euclidean", "angular", "pearson", "manhattan", "supremum"])
 
 
 @api.route('/rng')
@@ -70,7 +67,7 @@ def rng():
 @api.route("/submit", methods=['GET', 'POST'])
 def submit():
     if request.method == 'POST':
-        form = request.form.to_dict()
+        result = request.form.to_dict()
         files = request.files
         data = []
 
@@ -78,16 +75,16 @@ def submit():
             data.append({"name": files['file-dataset'].filename,
                          "data": files['file-dataset'].read()})
         except Exception as e:
-            print("Error reading dataset file:", e)
+            print("file datatset error!")
 
         try:
             data.append({"name": files['file-labels'].filename,
                          "data": files['file-labels'].read()})
         except Exception as e:
-            print("Error reading labels file:", e)
+            print("file labels error!")
 
         process.apply_async(
-            args=[app.config['WORKSPACE'], base, data, form])
+            args=[app.config['WORKSPACE'], base, data, result])
 
         time.sleep(1)
 
@@ -114,7 +111,7 @@ def delete(id):
             shutil.rmtree(os.path.join(root, id))
             return Response("{}", status=200, mimetype='application/json')
         except OSError as e:
-            print("Error:", e)
+            print("Error:")
             return Response("{}", status=404, mimetype='application/json')
     else:
         print("Sorry, I can not find %s file.")

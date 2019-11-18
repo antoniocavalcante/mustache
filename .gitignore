@@ -150,5 +150,3 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
-# .sh
-run.sh

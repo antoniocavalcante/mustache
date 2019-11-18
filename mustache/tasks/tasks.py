@@ -20,15 +20,10 @@ def createDatasetPath(workspace, directory):
 
 @celery.task(bind=True)
 def process(self, workspace, root, files, settings):
-
     task_id = self.request.id.__str__()
-        
-    settings['date-added'] = str(dt.datetime.now().timestamp())
-
-    settings['labels-file'] = str()
-
+    print("task {} queued!".format(task_id))
+    settings['date_added'] = str(dt.datetime.now().timestamp())
     path = createDatasetPath(workspace, task_id)
-    
     if path:
         for file in files:
             f = open(os.path.join(path, file['name']), 'wb')
@@ -38,7 +33,7 @@ def process(self, workspace, root, files, settings):
             json.dump(settings, fp)
 
     root = str(os.path.dirname(root))
-
+    venv = str(os.path.join(root, 'resources/run.sh'))
     sh = str(os.path.join(root, 'resources/run.sh'))
     in_file = str(os.path.join(path, files[0]['name']))
 
@@ -53,7 +48,7 @@ def process(self, workspace, root, files, settings):
         outp = True
         distance = str(settings['datasetDistance'])
         com = False
-        
+
         subprocess.check_call([sh, in_file, mpts, minCluster,
                                rng, str(outp), distance, str(com), path], cwd=os.path.join(root, 'resources'))
     else:
