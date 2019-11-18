@@ -70,7 +70,7 @@ def rng():
 @api.route("/submit", methods=['GET', 'POST'])
 def submit():
     if request.method == 'POST':
-        result = request.form.to_dict()
+        form = request.form.to_dict()
         files = request.files
         data = []
 
@@ -78,16 +78,16 @@ def submit():
             data.append({"name": files['file-dataset'].filename,
                          "data": files['file-dataset'].read()})
         except Exception as e:
-            print("file datatset error!", e)
+            print("Error reading dataset file:", e)
 
         try:
             data.append({"name": files['file-labels'].filename,
                          "data": files['file-labels'].read()})
         except Exception as e:
-            print("file labels error!", e)
+            print("Error reading labels file:", e)
 
         process.apply_async(
-            args=[app.config['WORKSPACE'], base, data, result])
+            args=[app.config['WORKSPACE'], base, data, form])
 
         time.sleep(1)
 
