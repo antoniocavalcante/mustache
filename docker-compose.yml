@@ -4,6 +4,7 @@ services:
 
   flask:
     build: .
+    container_name: flask
     command: >
       gunicorn -b 0.0.0.0:5000
         -w 4
@@ -18,16 +19,18 @@ services:
       - celery
 
   celery:
-      build: .
-      command: "celery -A mustache.celery worker --loglevel=info"
-      user: nobody
-      links:
-          - redis
-      volumes:
-          - '$MUSTACHE_WORKSPACE:/app/workspace'
-          - '.:/usr/src/app:ro'
+    build: .
+    container_name: celery
+    command: "celery -A mustache.celery worker --loglevel=info"
+    user: nobody
+    links:
+      - redis
+    volumes:
+      - '$MUSTACHE_WORKSPACE:/app/workspace'
+      - '.:/usr/src/app:ro'
 
   redis:
-      image: redis
-      ports:
-          - '6378:6379'
+    container_name: redis
+    image: redis
+    ports:
+      - '6378:6379'

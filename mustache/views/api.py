@@ -75,13 +75,16 @@ def submit():
             data.append({"name": files['file-dataset'].filename,
                          "data": files['file-dataset'].read()})
         except Exception as e:
-            print("file datatset error!")
+            print("Error loading data file:", e)
 
         try:
             data.append({"name": files['file-labels'].filename,
                          "data": files['file-labels'].read()})
+
+            result['labels-file'] = files['file-labels'].filename
+
         except Exception as e:
-            print("file labels error!")
+            print("Error loading labels file:", e)
 
         process.apply_async(
             args=[app.config['WORKSPACE'], base, data, result])

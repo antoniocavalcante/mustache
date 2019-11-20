@@ -186,8 +186,8 @@ try{var labelsFile=form.find("#file-labels")[0].files[0];form_data.append("file-
 var fields=form.serializeArray();for(i=0;i<fields.length;i++){form_data.append(fields[i].name,fields[i].value);}
 var xhr=new XMLHttpRequest();xhr.open(request_method,post_url,true);xhr.onload=function(){if(xhr.status===200){location.reload();}else{}};xhr.send(form_data);}
 function startStep(){$("#submitDataForm").trigger("reset");console.log("Opening data submission form...");}
-function nextStep(){var filename=$("#file-dataset")[0].files[0].name.split(".")[0]
-$("input[name='datasetName']").val(filename[0].toUpperCase()+filename.substring(1));$("input[name='datasetPoints']").val(checkSum[0]);if(checkSum[0]<100){$("input[name='datasetMaxMpts']").attr("value",checkSum[0]);}else{$("input[name='datasetMaxMpts']").attr("value",100);}
+function nextStep(){var filename=$("#file-dataset")[0].files[0].name
+$("input[name='datasetName']").val(filename);$("input[name='datasetPoints']").val(checkSum[0]);if(checkSum[0]<100){$("input[name='datasetMaxMpts']").attr("value",checkSum[0]);}else{$("input[name='datasetMaxMpts']").attr("value",100);}
 $("input[name='datasetMaxMpts']").attr("data-validation-allowing","range["+1+";"+(checkSum[0]-1)+"]")
 $("input[name='datasetMaxMpts']").on("input",function(){$("input[name='datasetMinMpts']").attr("data-validation-allowing","range["+1+";"+$(this).val()+"]")})
 $("input[name='datasetMinMpts']").on("input",function(){$("input[name='datasetMaxMpts']").attr("data-validation-allowing","range["+$(this).val()+";"+(checkSum[0]-1)+"]")})

@@ -5,6 +5,5 @@ VERSION
 README.md
 Changelog.md
 Makefile
-venv
-/venv
 venv/
+__pycache__/

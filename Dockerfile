@@ -27,6 +27,7 @@ RUN apt-get update && apt-get install -y \
 COPY . /app
 ENV HOME=/app
 RUN chmod a+rwx app
+
 WORKDIR /app
 RUN mkdir -p workspace
 RUN chmod a+rwx workspace

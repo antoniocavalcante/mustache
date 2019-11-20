@@ -7,35 +7,33 @@ import glob
 
 home = Blueprint('home', __name__)
 
-
 def get_datasets():
     root = app.config['WORKSPACE']
     datasets = {}
 
-    dirlist = [item for item in os.listdir(
-        root) if os.path.isdir(os.path.join(root, item))]
+    dirlist = [item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item))]
 
     for dir in dirlist:
 
-        file = glob.glob(os.path.join(
+        settingsFile = glob.glob(os.path.join(
             os.path.join(root, dir), "settings"))[0]
 
-        file2 = glob.glob(os.path.join(
+        progressFile = glob.glob(os.path.join(
             os.path.join(root, dir), "progress.json"))[0]
 
-        with open(file) as f:
-            data = json.load(f)
+        with open(settingsFile) as f:
+            settings = json.load(f)
 
-        with open(file2) as f:
+        with open(progressFile) as f:
             progress = json.load(f)
 
         if progress['stage'] == 'meta-clustering' and progress['state']['current'] == 1:
-            data['state'] = {'stage': 'done', 'message': '',
+            settings['state'] = {'stage': 'done', 'message': '',
                              'state': {'current': 1, 'end': 1}}
         else:
-            data['state'] = progress
+            settings['state'] = progress
 
-        datasets[dir] = data
+        datasets[dir] = settings
 
     return OrderedDict(sorted(datasets.items(), key=lambda x: float(x[1]['date_added']), reverse=True))
 
