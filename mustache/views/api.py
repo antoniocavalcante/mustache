@@ -78,7 +78,7 @@ def submit():
             print("Error loading data file:", e)
 
         try:
-            data.append({"name": files['file-labels'].filename,
+            data.append({"name": "ids",
                          "data": files['file-labels'].read()})
 
             result['labels-file'] = files['file-labels'].filename
