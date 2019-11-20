@@ -1,0 +1,16 @@
+Flask==1.0.2
+scipy==1.1.0
+celery==3.1.17
+redis==2.10.*
+numpy==1.15.1
+Cython==0.28.5
+flask_assets==0.12
+jsmin==2.2.2 
+hai==0.0.6
+# hdbscan==0.8.15
+matplotlib==2.2.3
+mpmath==1.0.0
+pandas==0.23.4
+seaborn==0.9.0
+scikit_learn==0.19.2
+gunicorn==19.9.0

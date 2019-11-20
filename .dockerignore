@@ -1,0 +1,9 @@
+.git
+circle.yml
+LICENSE
+VERSION
+README.md
+Changelog.md
+Makefile
+venv/
+__pycache__/
