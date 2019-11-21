@@ -49,8 +49,12 @@ bundles = {
         'js/dashboard/tippy.all.min.js',
         'js/dashboard/layout.js',
         'js/dashboard/myplots.js',
+        'js/dashboard/circle-chart.js',
+        'js/dashboard/mst-chart.js',
+        'js/dashboard/tree-chart.js',
         'js/dashboard/reach.js',
         'js/dashboard/info.js',
+        'js/dashboard/d3.tip.js',
         output='gen/dashboard.js', filters="jsmin"),
 
     'dashboard_css': Bundle(
