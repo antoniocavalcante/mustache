@@ -11,7 +11,7 @@ app.config['SECRET_KEY'] = uuid.uuid4()
 def format_datetime(value):
     return dt.datetime.fromtimestamp(float(value)).strftime('%m/%d/%Y').upper()
 
-
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.filters['datetime'] = format_datetime
 
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])

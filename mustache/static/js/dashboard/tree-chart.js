@@ -15,7 +15,7 @@ function treeChart() {
 
     var color;
 
-    var colorScale = d3.interpolateOrRd;
+    var colorScale = d3.interpolateViridis;
 
     var mpts = -1;
 
@@ -29,27 +29,20 @@ function treeChart() {
             var root = d3.tree()(d3.hierarchy(data));
 
             var max_epsilon = root.data.birth;
-            
-            // console.log("max epsilon", max_epsilon);
+            var min_epsilon = d3.min(root.leaves(), 
+                function(d) {
+                    return d.data.death;
+                });
+
+            console.log(max_epsilon, min_epsilon)
 
             var f = d3.format(".2f");
 
             color = d3.scaleSequential(colorScale)
                 .domain([0, 125]);
-
+            
+            // READS THE NUMBER OF POINTS IN THE DATA.
             var n = 125;
-
-            var yScale = d3.scaleLinear().domain([0, max_epsilon]).range([height, 0])
-            var xScale = d3.scaleLinear().domain([0, n]).range([0, width])    
-
-            // SETUP EACH NODE'S POSITION BEFORE PLOTTING.
-            root.each(function(d){
-                d["x"] = xScale(d.data.points[0][2]);
-                d["y"] = yScale(d.data.birth);
-                // console.log(d.data.birth, d.data.death)
-                // console.log(yScale(d.data.death) - yScale(d.data.birth))
-            });
-
 
             // CREATES SVG.
             var svg = selection.append("svg")
@@ -60,6 +53,68 @@ function treeChart() {
                 .style("background", "white")
                 .style("cursor", "pointer")
 
+            // SORTS NODES IN ORDER OF DEPTH TO MAKE CHILDREN ALWAYS COME FIRST 
+            // THAN THEIR PARENTS IN THE ARRAY.
+            var leaves = root.leaves()
+            var nodes  = root.descendants().sort((a, b) => b.depth - a.depth)
+
+            // JOINS DATA.
+            var node = svg.append("g")
+                .selectAll("g")
+                .data(nodes);
+            
+            // GETS THE NUMBER OF LEAVES IN THE TREE
+            var nleaves = root.leaves().length
+            
+            var widthleaves = d3.sum(root.leaves(), 
+                function(d) {
+                    return d.data.n
+                });
+            
+            console.log("WIDTH LEAVES: ", widthleaves)
+            
+            var min_node_size = 1;
+            var max_node_size = width/10;
+
+            // DEFINE THE SCALES.
+            var yScale = d3.scaleLinear()
+                        .domain([min_epsilon, max_epsilon])
+                        .range([height, 0])
+            
+            var widthScale = d3.scaleLinear()
+                        .domain([1, n])
+                        .range([min_node_size, max_node_size])
+
+            var separation = (width - widthScale(widthleaves))/(nleaves + 1)
+            var offset = separation
+            
+            leaves.forEach(function(d) {
+                d.x = offset
+                offset += widthScale(d.data.n) + separation
+            });
+
+            nodes.forEach(function(d) {                
+                if (d.children) {
+                    d.x = 0
+                    d.children.forEach(function(c) {d.x += c.x})
+                    d.x = d.x/d.children.length
+                }
+            });
+
+            // CREATES GROUPS CORRESPONDING TO NODES IN THE CLUSTER TREE.
+            node.enter()
+                .append("g")
+                .attr("cluster", d => d.data.id)
+                .attr("transform", d => `translate(${d.x}, ${d.y})`)
+                .selectAll("rect")
+                .data(d => d.data.points)
+                    .enter()
+                    .append("rect")
+                    .attr("width", d => widthScale(d[3] - d[2] + 1))
+                    .attr("height", d => yScale(d[1]) - yScale(d[0]) + 1)
+                    .attr("fill", d => color(d[3]-d[2]))
+                    .attr("transform", d => `translate(0, ${yScale(d[0])})`)
+
             var link = svg.append("g")
                 .attr("fill", "none")
                 .attr("stroke", "#555")
@@ -67,48 +122,19 @@ function treeChart() {
                 .attr("stroke-width", 1.5)
                 .selectAll("path")
                 .data(root.links())
-                .enter().append("path")
-                .attr("d", d => elbow(d))
+                    .enter().append("path")
+                    .attr("d", function(d) {
+                        return "M" + d.source.x + "," + yScale(d.source.data.death)
+                            + "H" + d.target.x + "V" + yScale(d.target.data.birth);
+                    })
+    
 
-            // JOIN DATA.
-            var node = svg.append("g")
-                .selectAll("g")
-                .data(root.descendants());
-            
-            // CREATES GROUPS CORRESPONDING TO NODES IN THE CLUSTER TREE.
-            node.enter()
-                .append("g")
-                .attr("cluster", d => d.data.id)
-                .attr("transform", d => `translate(${d.x},${d.y})`)
-                .selectAll("rect")
-                .data(d => d.data.points)
-                    .enter()
-                    .append("rect")
-                    .attr("width", d => xScale(d[3]-d[2]))
-                    .attr("height", d => yScale(d[1]))
-                    .attr("fill", d => color(d[3]-d[2]))
-                    // .attr("transform", d => `translate(${xScale(d[2])}, 0)`)
-            
-            console.log("UHHHHHHHHHEAH")
-            console.log("IIIIIIIIIIIIIIII")
 
             // LOADS PARTITIONING REGARDING THE CURRENT MPTS VALUE.
             d3.text("visualization/" + mpts + "RNG_" + project + ".lr", function (data) {
                 partitioning = new Set(d3.csvParseRows(data)[1].map(x => parseInt(x)));
             });
                 
-            tip = d3.tip()
-                .attr('class', 'd3-tip')
-                .offset([-10, 0])
-                .html(function(d) {
-                    return "<div><span>Cluster:</span> <span style='color:white'>" + d.data.id + "</span></div>" +
-                            "<div><span>#points:</span> <span style='color:white'>" + d.data.n + "</span></div>" +
-                            "<div><span>Birth:</span> <span style='color:white'>" + f(d.data.birth) + "</span></div>" +
-                            "<div><span>Death:</span> <span style='color:white'>" + f(d.data.death) + "</span></div>" +
-                            "<div><span>Stability:</span> <span style='color:white'>" + f(d.data.stability) + "</span></div>";
-                    });
-            
-            svg.call(tip);
             
             function nodeSetup(node) {
 
@@ -432,10 +458,5 @@ function drawMultipleTreeCharts() {
 var min_mpts = 2;
 var max_mpts = 9;
 
-function elbow(d) {
-    return "M" + d.source.x + "," + d.source.y
-        + "H" + d.target.x + "V" + d.target.y;
-}
-
-chart  = drawChartTree(10)
-// charts = drawMultipleTreeCharts()
+chart  = drawChartTree(2)
+charts = drawMultipleTreeCharts()
