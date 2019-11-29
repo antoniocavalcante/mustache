@@ -1,41 +1,31 @@
-import numpy as np
+import json
+import os
+import sys
+import time
 
+import hai
+import hdbscan
 import matplotlib
 matplotlib.use('Agg')
 
-import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as colors
-
-import sys
-
-from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, leaves_list, to_tree, leaders
-
-import hdbscan
-
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
-
-import time
-
-from mpl_toolkits.mplot3d.axes3d import Axes3D
-
 import seaborn as sns
+from mpl_toolkits.mplot3d.axes3d import Axes3D
+from scipy.cluster.hierarchy import (dendrogram, fcluster, leaders,
+                                     leaves_list, linkage, to_tree)
+from scipy.spatial import distance_matrix
+from sklearn.metrics.cluster import (mutual_info_score,
+                                     normalized_mutual_info_score)
 
-import DBCV
-
-import os
-
-import pyximport; pyximport.install()
-
+# import DBCV
 import hierarchy
 from hierarchy_tree import HierarchyTree
-import hai
 
-from scipy.spatial import distance_matrix
-
-from sklearn.metrics.cluster import normalized_mutual_info_score, mutual_info_score
-
-import json
+# import pyximport; pyximport.install()
 
 def load_hierarchies(datafile, kmin, kmax, skip):
 
@@ -359,7 +349,7 @@ def run_hdbscan(hs, mpts, labels, metric):
     # plt.xlabel('mpts')
     # plt.ylabel('distance')
 
-    dbcv = np.zeros((kmax - kmin)/skip)
+    # dbcv = np.zeros((kmax - kmin)/skip)
 
     # for i in range(kmin, kmax, skip):
     #     dbcv[i-kmin] = compute_DBCV(basedir + '/' + filename, resudir + '/' + filename + '_partition_' + str(i) + '.csv')
@@ -475,10 +465,10 @@ def correlation_dendrogram(hs):
     plt.show()
 
 
-def compute_DBCV(datafile, labelsfile):
-    data, labels, clusters, nclusters, psize = DBCV.load(datafile, labelsfile)
+# def compute_DBCV(datafile, labelsfile):
+#     data, labels, clusters, nclusters, psize = DBCV.load(datafile, labelsfile)
 
-    return DBCV.DBCV(data, labels, clusters, psize)
+#     return DBCV.DBCV(data, labels, clusters, psize)
 
 
 # kmin = 2

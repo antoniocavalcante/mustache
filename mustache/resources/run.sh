@@ -1,16 +1,30 @@
 #!/bin/bash
 
-FILE=$1 # Input file.
+PROGNAME=$(basename $0)
+
+error_exit()
+{
+    #	----------------------------------------------------------------
+    #	Function for exit due to fatal program error
+    #		Accepts 1 argument:
+    #			string containing descriptive error message
+    #	----------------------------------------------------------------
+
+	echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+	exit 1
+}
+
+FILE=$1 # String: Input file.
 MPTS=$2 # Integer: mpts value.
 MCLS=$3 # Integer: minimum cluster size.
 FILT=$4 # RNG filter.
-OUTP=$5 # Boolean:
-DIST=$6 # Distance function
-COMP=$7 # Boolean
+OUTP=$5 # Boolean: output or no output.
+DIST=$6 # Distance function.
+COMP=$7 # Boolean.
 
 OUTPUT_PATH=$8
 
-mkdir -p $8
+mkdir -p $8 || error_exit "$LINENO: An error has occurred: could not create directory in workspace."
 
 echo "File to be clustered: $1"
 echo "mpts: $2"
@@ -20,14 +34,15 @@ echo "Distance function: $6"
 echo "Compact hierarchy: $7"
 
 # Creates all the folder structure
-cp $1 $8 # copies the dataset into the folder
-mkdir -p "$8/msts" # creates the msts directory
+cp $1 $8                    # copies the dataset into the folder
+mkdir -p "$8/msts"          # creates the msts directory
+mkdir -p "$8/trees"         # creates the trees directory
 mkdir -p "$8/visualization" # creates the visualization directory
 
 FILE_NAME=$(basename "$1")
 
 # Runs the pre-processing.
-java -jar -Xmx12G IHDBSCAN.jar file=$8/$FILE_NAME minPts=$2 minClSize=$3 filter=$4 output=$5 dist_function=$6 compact=$7 separator=","
+java -jar -Xmx12G IHDBSCAN.jar file=$8/$FILE_NAME minPts=$MPTS minClSize=$MCLS filter=$FILT output=$OUTP dist_function=$DIST compact=$COMP separator=","
 
 mv $8/visualization/*.mst $8/msts
 # rm $8/visualization/*.tree
@@ -47,5 +62,11 @@ done
 
 mv "$8/visualization/${FILE_NAME}_HAI_tree.out" $8
 mv "$8/visualization/${FILE_NAME}_meta-hierarchy_.json" $8
+
+# Converts the cluster trees in JSON files.
+python clustertree.py $8/$FILE_NAME $MPTS
+
+# Computes the horizontal connections between hierarchies.
+python mdclustertree.py $8/$FILE_NAME $MPTS
 
 python progress.py $8

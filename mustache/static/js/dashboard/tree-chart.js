@@ -27,15 +27,13 @@ function treeChart() {
         selection.each(function(data, i) {
 
             var root = d3.tree()(d3.hierarchy(data));
-
+            
             var max_epsilon = root.data.birth;
             var min_epsilon = d3.min(root.leaves(), 
                 function(d) {
                     return d.data.death;
                 });
-
-            console.log(max_epsilon, min_epsilon)
-
+            
             var f = d3.format(".2f");
 
             color = d3.scaleSequential(colorScale)
@@ -60,6 +58,7 @@ function treeChart() {
 
             // JOINS DATA.
             var node = svg.append("g")
+                .attr("id", "clusters")
                 .selectAll("g")
                 .data(nodes);
             
@@ -70,13 +69,11 @@ function treeChart() {
                 function(d) {
                     return d.data.n
                 });
-            
-            console.log("WIDTH LEAVES: ", widthleaves)
-            
+                        
             var min_node_size = 1;
             var max_node_size = width/10;
 
-            // DEFINE THE SCALES.
+            // DEFINES THE SCALES NECESSARY TO PLOT THE CONDENSED TREE.
             var yScale = d3.scaleLinear()
                         .domain([min_epsilon, max_epsilon])
                         .range([height, 0])
@@ -84,10 +81,10 @@ function treeChart() {
             var widthScale = d3.scaleLinear()
                         .domain([1, n])
                         .range([min_node_size, max_node_size])
-
+            
             var separation = (width - widthScale(widthleaves))/(nleaves + 1)
             var offset = separation
-            
+
             leaves.forEach(function(d) {
                 d.x = offset
                 offset += widthScale(d.data.n) + separation
@@ -104,6 +101,15 @@ function treeChart() {
             // CREATES GROUPS CORRESPONDING TO NODES IN THE CLUSTER TREE.
             node.enter()
                 .append("g")
+                .attr("class", "cluster")
+                .attr("title", function(d) {
+                    return "<div><span>Cluster:</span> <span style='color:white'>" + d.data.id + "</span></div>" +
+                            "<div><span>#points:</span> <span style='color:white'>" + d.data.n + "</span></div>" +
+                            "<div><span>Birth:</span> <span style='color:white'>" + f(d.data.birth) + "</span></div>" +
+                            "<div><span>Death:</span> <span style='color:white'>" + f(d.data.death) + "</span></div>" +
+                            "<div><span>Stability:</span> <span style='color:white'>" + f(d.data.stability) + "</span></div>";
+                    })
+                .call(d => nodeSetup(d))
                 .attr("cluster", d => d.data.id)
                 .attr("transform", d => `translate(${d.x}, ${d.y})`)
                 .selectAll("rect")
@@ -115,7 +121,11 @@ function treeChart() {
                     .attr("fill", d => color(d[3]-d[2]))
                     .attr("transform", d => `translate(0, ${yScale(d[0])})`)
 
+            // console.log(node.select("#clusters").selectAll("g"))
+            // tippy(selection.select("#clusters"))
+            
             var link = svg.append("g")
+                .attr("id", "links")
                 .attr("fill", "none")
                 .attr("stroke", "#555")
                 .attr("stroke-opacity", 0.4)
@@ -129,15 +139,22 @@ function treeChart() {
                     })
     
 
-
             // LOADS PARTITIONING REGARDING THE CURRENT MPTS VALUE.
             d3.text("visualization/" + mpts + "RNG_" + project + ".lr", function (data) {
                 partitioning = new Set(d3.csvParseRows(data)[1].map(x => parseInt(x)));
             });
-                
             
             function nodeSetup(node) {
-
+                node
+                    .on("mouseover", d => highlight(d))
+                    .on("mouseout", d => normal(d));
+                    
+                // ADDS A TOOLTIP TO THIS NODE.
+                tippy('.cluster', {
+                    placement: 'bottom',
+                    flip: false,
+                    inlinePositioning: false,
+                });
             };
 
             function labelSetup(label) {
@@ -156,10 +173,28 @@ function treeChart() {
                         for (let k = mpts; k <= max_mpts; k++) {
                             var aux = []
 
-                            d3.select('#chart_' + (k))
-                                .filter(x => x !== selection[0])
-                                .selectAll("circle")
+                            var charts = d3.select('#tree-chart-' + (k))
+                                        .filter(x => x !== selection[0])
+
+                            charts
+                                .selectAll("#clusters")
+                                .selectAll("g")
                                 .filter(x => !sequence.includes(x.data.id))
+                                .transition()
+                                .duration(150)
+                                .ease(d3.easeLinear)
+                                .style("opacity", 0.0);
+
+                            charts
+                                .selectAll("#clusters")
+                                .selectAll("g")
+                                .filter(x => sequence.includes(x.data.id))
+                                .nodes()
+                                .forEach(d => d._tippy.show())
+
+                            charts
+                                .selectAll("#links")
+                                .selectAll("path")
                                 .transition()
                                 .duration(150)
                                 .ease(d3.easeLinear)
@@ -176,32 +211,47 @@ function treeChart() {
 
                     });
 
-                tip.show(d);
             };
 
             // MOUSEOUT EVENT.
             function normal(d) {
-                d3.select('#tree-plot')
-                    .selectAll("circle")
+                var charts = d3.select('#tree-plot')
+
+                charts
+                    .selectAll("#clusters")
+                    .selectAll("g")
                     .transition()
                     .duration(350)
                     .ease(d3.easeCubicIn)
                     .style("opacity", 1.0);
 
-                tip.hide(d);
+                charts
+                    .selectAll("#clusters")
+                    .selectAll("g")
+                    .nodes()
+                    .forEach(d => d._tippy.hide())
+
+                charts
+                    .selectAll("#links")
+                    .selectAll("path")
+                    .transition()
+                    .duration(350)
+                    .ease(d3.easeCubicIn)
+                    .style("opacity", 1.0);
+
             };
 
             function fosc() {
                 
-                nodes = svg.selectAll("circle");
-                labels = svg.selectAll("text");
+                nodes = svg.selectAll(".cluster");
+                labels = svg.selectAll("#links");
                 
                 if(d3.select('.fosc-select input[type=checkbox]').property("checked")){
                     nodes
                         .style("visibility", d => !partitioning.has(d.data.id) ? "hidden" : "visible");
 
                     labels
-                        .style("visibility", d => !partitioning.has(d.data.id) ? "hidden" : "visible");
+                        .style("visibility", "hidden");
                 } else {
                     nodes
                         .style("visibility", "visible");
@@ -375,12 +425,14 @@ function treeChart() {
 }
 
 function get_file_url(data_name, mpts) {
-    return "http://localhost:8000/data/" + data_name + "/server/" + data_name + "-ct-" + mpts + ".json"
+    return "/dashboard/" + datasetId + "/trees/" + data_name + "-ct-" + mpts + ".json"
+    // return "http://localhost:8000/data/" + data_name + "/server/" + data_name + "-ct-" + mpts + ".json"
 }
 
 
 function get_transposed_file_url(data_name, kmin, kmax) {
-    return "http://localhost:8000/data/" + data_name + "/" + data_name + "-t-" + kmin + "-" + kmax + ".json"
+    return "/dashboard/" + datasetId + "/" + data_name + "-t-" + kmin + "-" + kmax + ".json"
+    // return "http://localhost:8000/data/" + data_name + "/" + data_name + "-t-" + kmin + "-" + kmax + ".json"
 }
 
 
@@ -415,7 +467,7 @@ function drawChartTree(i) {
 function drawMultipleTreeCharts() {
 
     var min_mpts = 2;
-    var max_mpts = 8;
+    var max_mpts = 19;
 
     var charts = {};
 
@@ -456,7 +508,7 @@ function drawMultipleTreeCharts() {
 }
 
 var min_mpts = 2;
-var max_mpts = 9;
+var max_mpts = 60;
 
 chart  = drawChartTree(2)
 charts = drawMultipleTreeCharts()

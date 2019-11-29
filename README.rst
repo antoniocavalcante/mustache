@@ -60,11 +60,11 @@ To build simply run the build script passing a path to a workspace folder on you
 .. code:: bash
 
     # change <USER> to your local user name.
-    # Builds the docker image and creates the required containers. 
+    # Builds the docker image and creates the required containers.
     sudo ./compose.sh /home/<USER>/Documents/datasets
     
     # Run the containers and open the application. 
-    sudo ./run.sh 
+    sudo ./start.sh 
     
     # Stop the containers and close the application.
     sudo ./stop.sh

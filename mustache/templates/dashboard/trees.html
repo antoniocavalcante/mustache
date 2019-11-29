@@ -169,7 +169,7 @@
                     <li class="panel">
                         <a href="{{ url_for('home.index') }}" data-parent="#sidebar-nav-menu" class="collapsed">
                             <img src="{{ url_for('static', filename='img/pie-chart-2.svg') }}" class="side-icon" />
-                            <span class="title">DatasetsA</span>
+                            <span class="title">Datasets</span>
                             <!-- <i class="icon-submenu ti-angle-left"></i> -->
                         </a>
                         <div id="main">
@@ -327,16 +327,15 @@
                                 <div class="panel-heading clearfix">
                                     <p class="pull-left">Multiple Tree</p>
 
-                                    <div class="perpg btn-group pull-right nopadding-b no-border hidden">
-                                        <select class="input-sm" id="reach-per-pg">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option selected>4</option>
-                                            <option>6</option>
-                                            <option>12</option>
-                                        </select>
-                                    </div>
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination pagination-sm pull-right nopadding nopadding-b">
+                                          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                          <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                          <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                          <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                        </ul>
+                                    </nav>
 
                                     <ul class="pagination pagination-sm pull-right nopadding nopadding-b">
                                         <li class="pg-nav" pg-val="-1">
@@ -355,7 +354,7 @@
                                 </div>
                                 <div class="panel-body nopadding">
                                     <div class="container-fluid nopadding-v nopadding-l grouper">
-                                        <div class="row nopadding" id="tree-plot">
+                                        <div class="row nopadding overflow-auto" id="tree-plot">
                                         </div>
                                     </div>
                                 </div>
@@ -424,7 +423,6 @@
         const datasetId = "{{id}}"
     </script> {% assets "dashboard_js" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script> {% endassets %}
-
 
 </body>
 
