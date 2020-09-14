@@ -86,7 +86,7 @@ function circlePacking() {
             d3.text("visualization/" + mpts + "RNG_" + project + ".lr", function (data) {
                 partitioning = new Set(d3.csvParseRows(data)[1].map(x => parseInt(x)));
             });
-    
+
             zoomTo([root.x, root.y, root.r * 2]);
             
             tip = d3.tip()
@@ -153,7 +153,7 @@ function circlePacking() {
 
             // MOUSEOVER EVENT.
             function highlight(d) {
-                d3.json(get_transposed_file_url(project, 2, 9), 
+                d3.json(get_transposed_file_url(project, 2, 50), 
                     function(error, data) {
                         
                         if (error) return console.error(error);
@@ -427,7 +427,7 @@ function drawChart(i) {
 function drawMultipleCirclePacking() {
 
     var min_mpts = 2;
-    var max_mpts = 8;
+    var max_mpts = 16;
 
     var charts = {};
 
@@ -454,6 +454,9 @@ function drawMultipleCirclePacking() {
                         .call(charts[(d + min_mpts)]);
                 })
         })
+        .insert("p").text(function (d) {
+            return "mpts: " + (d + min_mpts);
+        })
         .property("overflow-y", "scroll")
         .append("a")
         .classed("no-link", "true")
@@ -468,7 +471,7 @@ function drawMultipleCirclePacking() {
 }
 
 var min_mpts = 2;
-var max_mpts = 9;
+var max_mpts = 16;
 
 chart  = drawChart(2)
 charts = drawMultipleCirclePacking()

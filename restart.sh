@@ -1,2 +1,2 @@
 ./stop.sh
-./run.sh
+./start.sh

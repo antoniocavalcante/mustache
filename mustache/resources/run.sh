@@ -42,7 +42,7 @@ mkdir -p "$8/visualization" # creates the visualization directory
 FILE_NAME=$(basename "$1")
 
 # Runs the pre-processing.
-java -jar -Xmx12G IHDBSCAN.jar file=$8/$FILE_NAME minPts=$MPTS minClSize=$MCLS filter=$FILT output=$OUTP dist_function=$DIST compact=$COMP separator=","
+java -jar -Xmx12G IHDBSCAN.jar file=$8/$FILE_NAME minPts=$MPTS minClSize=$MCLS run="1" filter="quick" output=$OUTP dist_function=$DIST output="true" compact=$COMP separator=","  mrd="star"  outputExtension="vis"
 
 mv $8/visualization/*.mst $8/msts
 # rm $8/visualization/*.tree

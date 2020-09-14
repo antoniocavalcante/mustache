@@ -15755,9 +15755,38 @@ html {
     white-space: nowrap;
 }
 
+.grouper-y>.row {
+    overflow-y: scroll;
+    white-space: nowrap;
+    max-height: 100%;
+}
+
+.fill-full { 
+    min-height: 100%;
+    height: 100%;
+}
+
+.fill-half { 
+    min-height: 50%;
+    height: 50%;
+}
+
 .chart-scroller {
     display: inline-block;
     float: none;
+}
+
+.chart-scrollers p {
+    color: #333333; 
+    font-family: 'Helvetica Neue', sans-serif; 
+    font-size: 14px; 
+    line-height: 16px; 
+    text-align: center;
+    font-weight: bold; 
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
 #reach-panel>::-webkit-scrollbar {

@@ -1,14 +1,13 @@
 function pagination(selection) {
 
-    // GET HOW MANY ELEMENTS PER PAGE
+    // GETS THE NUMBER OF ELEMENTS PER PAGE.
+    elements_per_page = $("#elements-per-pg").find(":selected").text();
 
-    ppg = $("#tree-per-pg").find(":selected").text();
-    meds = Object.keys(clusters).length / ppg;
-    count = Math.ceil(meds);
-    pages = [];
-    for (i = 0; i < count; i++) {
-        pages.push(i);
-    }
+    // CALCULATES THE NUMBER OF PAGES.
+    number_of_pages = Math.ceil(Object.keys(clusters).length / elements_per_page);
+
+    // CREATES PAGES.
+    pages = new Array(number_of_pages);
 
     // JOIN DATA.
     pgLinks = d3.select(".pagination")

@@ -15,13 +15,15 @@ function treeChart() {
 
     var color;
 
-    var colorScale = d3.interpolateViridis;
+    var colorScale = d3.interpolateWarm;
 
     var mpts = -1;
 
-    var partitioning = new Set([]);
+    var partitioning = [];
 
     var tip;
+
+    var myColor;
 
     function my(selection) {
         selection.each(function(data, i) {
@@ -36,12 +38,50 @@ function treeChart() {
             
             var f = d3.format(".2f");
 
-            color = d3.scaleSequential(colorScale)
-                .domain([0, 125]);
-            
             // READS THE NUMBER OF POINTS IN THE DATA.
-            var n = 125;
+            var n = root.data.n;
 
+            root.descendants().forEach(function (d) {
+                min_id = Math.min(min_id, d.data.id);
+                max_id = Math.max(max_id, d.data.id);
+
+                min_stability = Math.min(min_stability, d.data.stability);
+                max_stability = Math.max(max_stability, d.data.stability);
+
+
+                d.data.selected = false;
+            });
+            
+            // LOADS PARTITIONING REGARDING THE CURRENT MPTS VALUE.
+            d3.text("visualization/" + mpts + "RNG_" + project + ".lr", function (data) {
+                mapping = d3.csvParseRows(data)[0].map(x => parseInt(x));
+
+                labels = d3.csvParseRows(data)[1].map(x => parseInt(x));
+
+                for (let i = 0; i < mapping.length; i++) {
+                    partitioning[mapping[i]] = labels[i];                   
+                }
+
+                var clusters = Array.from(new Set(labels), x => parseInt(x))
+
+                clusters.sort(function (a, b) {
+                    return a - b;
+                })
+                    
+                // partitioning = labels
+
+                for (let i = 0; i < clusters.length; i++) {
+                    partitioning[partitioning == labels[i]] = i;
+                }
+
+                myColor = d3.scaleSequential(d3.interpolateInferno)
+                    .domain([0, Math.max.apply(null, partitioning)]);
+
+            });
+            
+            color = d3.scaleSequential(colorScale)
+                .domain([min_stability, max_stability]);
+            
             // CREATES SVG.
             var svg = selection.append("svg")
                 .attr("preserveAspectRatio", "xMinYMin")
@@ -71,7 +111,7 @@ function treeChart() {
                 });
                         
             var min_node_size = 1;
-            var max_node_size = width/10;
+            var max_node_size = width/6;
 
             // DEFINES THE SCALES NECESSARY TO PLOT THE CONDENSED TREE.
             var yScale = d3.scaleLinear()
@@ -82,7 +122,7 @@ function treeChart() {
                         .domain([1, n])
                         .range([min_node_size, max_node_size])
             
-            var separation = (width - widthScale(widthleaves))/(nleaves + 1)
+            var separation = ((width - widthScale(widthleaves))/(nleaves + 1))*0.95
             var offset = separation
 
             leaves.forEach(function(d) {
@@ -112,17 +152,20 @@ function treeChart() {
                 .call(d => nodeSetup(d))
                 .attr("cluster", d => d.data.id)
                 .attr("transform", d => `translate(${d.x}, ${d.y})`)
+                .attr("stability", d => d.data.stability)
                 .selectAll("rect")
                 .data(d => d.data.points)
                     .enter()
                     .append("rect")
-                    .attr("width", d => widthScale(d[3] - d[2] + 1))
+                    .attr("width", function(d) {
+                        return widthScale(d[3] - d[2] + 1);
+                    })
                     .attr("height", d => yScale(d[1]) - yScale(d[0]) + 1)
-                    .attr("fill", d => color(d[3]-d[2]))
-                    .attr("transform", d => `translate(0, ${yScale(d[0])})`)
+                    .attr("fill", function(d) {
+                        return color(d3.select(this.parentNode).attr("stability"));
+                    })
+                    .attr("transform", d => `translate(0, ${yScale(d[0])})`);
 
-            // console.log(node.select("#clusters").selectAll("g"))
-            // tippy(selection.select("#clusters"))
             
             var link = svg.append("g")
                 .attr("id", "links")
@@ -147,8 +190,9 @@ function treeChart() {
             function nodeSetup(node) {
                 node
                     .on("mouseover", d => highlight(d))
-                    .on("mouseout", d => normal(d));
-                    
+                    .on("mouseout", d => normal(d))
+                    .on("click",    d => mouseclick(d));
+
                 // ADDS A TOOLTIP TO THIS NODE.
                 tippy('.cluster', {
                     placement: 'bottom',
@@ -163,7 +207,7 @@ function treeChart() {
 
             // MOUSEOVER EVENT.
             function highlight(d) {
-                d3.json(get_transposed_file_url(project, 2, 9), 
+                d3.json(get_transposed_file_url(project, 2, 50), 
                     function(error, data) {
                         
                         if (error) return console.error(error);
@@ -238,6 +282,59 @@ function treeChart() {
                     .duration(350)
                     .ease(d3.easeCubicIn)
                     .style("opacity", 1.0);
+
+            };
+
+
+            // MOUSECLICK EVENT.
+            function mouseclick(d) {
+                d3.json(get_transposed_file_url(project, 2, 50), 
+                    function(error, data) {
+                        
+                        if (error) return console.error(error);
+
+                        // TAKES CARE OF THE CHARTS REGARDING HIGHER MPTS.
+                        var sequence = [d.data.id]
+                        for (let k = mpts; k <= max_mpts; k++) {
+                            var aux = []
+
+                            var charts = d3.select('#tree-chart-' + (k))
+                                        .filter(x => x !== selection[0])
+
+                            charts
+                                .selectAll("#clusters")
+                                .selectAll("g")
+                                .filter(x => !sequence.includes(x.data.id))
+                                .transition()
+                                .duration(150)
+                                .ease(d3.easeLinear)
+                                .style("opacity", 0.0);
+
+                            charts
+                                .selectAll("#clusters")
+                                .selectAll("g")
+                                .filter(x => sequence.includes(x.data.id))
+                                .nodes()
+                                .forEach(d => d._tippy.show())
+
+                            charts
+                                .selectAll("#links")
+                                .selectAll("path")
+                                .transition()
+                                .duration(150)
+                                .ease(d3.easeLinear)
+                                .style("opacity", 0.0);
+
+                            sequence.forEach(element => {
+                                aux = aux.concat(data[k][element])
+                            });
+                            
+                            sequence = aux
+                        }
+
+                        // TAKES CARE OF THE CHARTS REGARDING LOWER MPTS.
+
+                    });
 
             };
 
@@ -467,7 +564,7 @@ function drawChartTree(i) {
 function drawMultipleTreeCharts() {
 
     var min_mpts = 2;
-    var max_mpts = 19;
+    var max_mpts = 16;
 
     var charts = {};
 
@@ -494,6 +591,9 @@ function drawMultipleTreeCharts() {
                         .call(charts[(d + min_mpts)]);
                 })
         })
+        .insert("p").text(function (d) {
+            return "mpts: " + (d + min_mpts);
+        })
         .property("overflow-y", "scroll")
         .append("a")
         .classed("no-link", "true")
@@ -508,7 +608,7 @@ function drawMultipleTreeCharts() {
 }
 
 var min_mpts = 2;
-var max_mpts = 60;
+var max_mpts = 16;
 
 chart  = drawChartTree(2)
 charts = drawMultipleTreeCharts()

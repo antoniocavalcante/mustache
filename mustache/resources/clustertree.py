@@ -97,7 +97,7 @@ class ClusterTree:
             json.dump(self.tree.get(1)[0],
                       write_file,
                       cls = ClusterTree.ClusterNodeEncoder,
-                      indent = 4)
+                      separators=(',', ':'))
 
 
     def to_json(self):

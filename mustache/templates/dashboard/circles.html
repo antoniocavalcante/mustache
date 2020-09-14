@@ -198,7 +198,7 @@
                     <li class="panel">
                         <a href="{{ url_for('dashboard.index', id=id) }}" data-parent="#sidebar-nav-menu" class="collapsed">
                             <img src="{{ url_for('static', filename='img/diagram.svg') }}" class="side-icon" />
-                            <span class="title">Hierarchies</span>
+                            <span class="title">Meta-Clustering</span>
                         </a>
                         <div id="main">
                         </div>
@@ -206,23 +206,23 @@
                     <li class="panel">
                         <a href="{{ url_for('dashboard.index_circles', id=id) }}" data-parent="#sidebar-nav-menu" class="collapsed">
                             <img src="{{ url_for('static', filename='img/diagram.svg') }}" class="side-icon" />
-                            <span class="title">Circles</span>
+                            <span class="title">Circle Packing</span>
                         </a>
                         <div id="main">
                         </div>
                     </li>
-                    <li class="panel">
+                    <!-- <li class="panel">
                         <a href="{{ url_for('dashboard.index_msts', id=id) }}" data-parent="#sidebar-nav-menu" class="collapsed">
                             <img src="{{ url_for('static', filename='img/diagram.svg') }}" class="side-icon" />
                             <span class="title">MSTs</span>
                         </a>
                         <div id="main">
                         </div>
-                    </li>
+                    </li> -->
                     <li class="panel">
                         <a href="{{ url_for('dashboard.index_trees', id=id) }}" data-parent="#sidebar-nav-menu" class="collapsed">
                             <img src="{{ url_for('static', filename='img/diagram.svg') }}" class="side-icon" />
-                            <span class="title">Trees</span>
+                            <span class="title">Condensed Trees</span>
                         </a>
                         <div id="main">
                         </div>
@@ -270,147 +270,135 @@
         <div class="main pad-l pad-r pad-b">
             <!-- MAIN CONTENT -->
             <div class="main-content">
-                <div class="container-fluid">
+                <!-- <div class="container-fluid"> -->
+                    <div class=row>
 
-                    <div class="row" id="row-top">
-                        <!-- START DENDOGRAM -->
-                        <div class="col-xs-4 nopadding">
-                            <div class="panel panel-default nopadding grad" id="circle-panel">
-                                <div class="panel-heading clearfix">
-                                    <p class="pull-left">Circle Packing</p>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" id="col-left">
 
-                                    <div class="col-xs-4 pull-left">
-                                        <div class="btn-group btn-group-xs btn-group-justified fosc-select"
-                                            data-toggle="buttons">
-                                            <label class="btn btn-default btn-xs"
-                                                title="Framework for Optimal Selection of Clusters">
-                                                <input type="checkbox" name="fosc-checkbox" value="fosc">
-                                                <span class="ti-wand">FOSC</span>
-                                            </label>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-xs-4 pull-left">
-                                        <div class="input-group input-group-sm mpts-value">
-                                            <span class="input-group-addon">mtps</span>
-                                            <input class="form-control mpts-value" type="number" min={{minM}}
-                                                max={{maxM}} value=2>
-                                        </div>
-                                    </div>
-
-                                    <div class="right">
-                                        <li class="dropdown panel-options download-chart">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                                <i class="lnr lnr-download"></i>
-                                            </a>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="panel-body" id="panel-circle">
-
-                                        <div>
-                                            <div id="chart-circle">
+                            <!-- START DENDOGRAM -->
+                            <div class="row nopadding">
+                                <div class="panel panel-default nopadding grad" id="circle-panel">
+                                    <div class="panel-heading clearfix">
+                                        <p class="pull-left">Circle Packing</p>
+    
+                                        <div class="col-xs-4 pull-left">
+                                            <div class="btn-group btn-group-xs btn-group-justified fosc-select"
+                                                data-toggle="buttons">
+                                                <label class="btn btn-default btn-xs"
+                                                    title="Framework for Optimal Selection of Clusters">
+                                                    <input type="checkbox" name="fosc-checkbox" value="fosc">
+                                                    <span class="ti-wand">FOSC</span>
+                                                </label>
                                             </div>
-                                            <input id="slider" type="range" value="50" class="hidden">
+    
                                         </div>
-
+    
+                                        <div class="col-xs-4 pull-left">
+                                            <div class="input-group input-group-sm mpts-value">
+                                                <span class="input-group-addon">mtps</span>
+                                                <input class="form-control mpts-value" type="number" min={{minM}}
+                                                    max={{maxM}} value=2>
+                                            </div>
+                                        </div>
+    
+                                        <div class="right">
+                                            <li class="dropdown panel-options download-chart">
+                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                    <i class="lnr lnr-download"></i>
+                                                </a>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END DENDOGRAM -->
-
-                        <!-- START MULTIPLE CIRCLE -->
-                        <div class="col-xs-8 nopadding pad-l" id="reach-panel">
-                            <div class="panel panel-default nopadding grad">
-                                <div class="panel-heading clearfix">
-                                    <p class="pull-left">Multiple Circle Packing</p>
-
-                                    <div class="perpg btn-group pull-right nopadding-b no-border hidden">
-                                        <select class="input-sm" id="reach-per-pg">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option selected>4</option>
-                                            <option>6</option>
-                                            <option>12</option>
-                                        </select>
-                                    </div>
-
-                                    <ul class="pagination pagination-sm pull-right nopadding nopadding-b">
-                                        <li class="pg-nav" pg-val="-1">
-                                            <a href="#">
-                                                <span>&laquo;</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-
-                                    <div class="right hidden">
-                                        <li class="dropdown panel-options">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                                <i class="lnr lnr-download"></i>
-                                            </a>
-                                    </div>
-                                </div>
-                                <div class="panel-body nopadding">
-                                    <div class="container-fluid nopadding-v nopadding-l grouper">
-                                        <div class="row nopadding" id="circle-plot">
+                                    <div class="row">
+                                        <div class="panel-body" id="panel-circle">
+    
+                                            <div>
+                                                <div id="chart-circle">
+                                                </div>
+                                                <input id="slider" type="range" value="50" class="hidden">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <!-- END DENDOGRAM -->
+                            <!-- START ALLUVIAL DIAGRAM -->
+                            <div class="row nopadding pad-t" id="selection-panel">
+                                <div class="panel panel-default nopadding grad">
+                                    <div class="panel-heading clearfix">
+                                        <p class="pull-left">Selected Clusters</p>
+    
+                                        <div class="col-xs-4 pull-right">
+                                            <div class="btn-group btn-group-xs btn-group-justified export right"
+                                                data-toggle="buttons">
+                                                <label class="btn btn-default btn-xs"
+                                                    title="Export Selected Clusters">
+                                                    <input type="checkbox" name="export-checkbox" value="export">
+                                                    <span class="ti-download">Export</span>
+                                                </label>
+                                            </div>
+    
+                                        </div>
+        
+                                    </div>
+                                    <div class="panel-body nopadding">
+                                        <div class="container-fluid nopadding-v nopadding-l fill">
+                                            <div class="row nopadding" id="alluvial-plot">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END ALLUVIAL DIAGRAM -->
 
+                        </div>
+    
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" id="col-right">
+    
+                            <!-- START MULTIPLE CIRCLE -->
+                            <div class="nopadding" id="reach-panel">
+                                <div class="panel panel-default nopadding grad">
+                                    <div class="panel-heading clearfix">
+                                        <p class="pull-left">Multiple Circle Packing</p>
+    
+                                        <div class="perpg btn-group pull-right nopadding-b no-border hidden">
+                                            <select class="input-sm" id="reach-per-pg">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option selected>4</option>
+                                                <option>6</option>
+                                                <option>12</option>
+                                            </select>
+                                        </div>
+    
+                                        <ul class="pagination pagination-sm pull-right nopadding nopadding-b">
+                                            <li class="pg-nav" pg-val="-1">
+                                                <a href="#">
+                                                    <span>&laquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <div class="right hidden">
+                                            <li class="dropdown panel-options">
+                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                    <i class="lnr lnr-download"></i>
+                                                </a>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body nopadding">
+                                        <div class="container-fluid nopadding-v nopadding-l nopadding-r grouper-y">
+                                            <div class="row nopadding" id="circle-plot">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
                     </div>
 
-                    <div class="row pad-t col-12" id="row-bottom">
-                        <!-- START ALLUVIAL DIAGRAM -->
-                        <div class="col-xs-8 nopadding pad-l h-50" id="alluvial-panel">
-                            <div class="panel panel-default nopadding grad">
-                                <div class="panel-heading clearfix">
-                                    <p class="pull-left">Alluvial Panel</p>
-
-                                    <div class="perpg btn-group pull-right nopadding-b no-border hidden">
-                                        <select class="input-sm" id="reach-per-pg">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option selected>4</option>
-                                            <option>6</option>
-                                            <option>12</option>
-                                        </select>
-                                    </div>
-
-                                    <ul class="pagination pagination-sm pull-right nopadding nopadding-b">
-                                        <li class="pg-nav" pg-val="-1">
-                                            <a href="#">
-                                                <span>&laquo;</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-
-                                    <div class="right hidden">
-                                        <li class="dropdown panel-options">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                                <i class="lnr lnr-download"></i>
-                                            </a>
-                                    </div>
-                                </div>
-                                <div class="panel-body nopadding">
-                                    <div class="container-fluid nopadding-v nopadding-l grouper">
-                                        <div class="row nopadding" id="alluvial-plot">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END ALLUVIAL DIAGRAM -->
-
-
-
-                    </div>
-                </div>
+                <!-- </div> -->
             </div>
             <!-- END MAIN CONTENT -->
             <!-- END WRAPPER -->

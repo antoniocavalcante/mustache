@@ -5146,6 +5146,7 @@
 
 html {
     position: relative;
+    height: 100%;
     max-height: 100%;
 }
 
@@ -5154,6 +5155,8 @@ body {
     font-family: "Source Sans Pro", sans-serif;
     font-size: 15px;
     color: #676a6d;
+    height: 100%;
+    max-height: 100%; 
 }
 
 a {
@@ -5209,6 +5212,7 @@ footer {
     transition: all 0.3s ease-in-out;
     width: 200px;
     height: 100%;
+    min-height: 100%;
     float: left;
     background-color: #2B333E;
     position: fixed;
@@ -5223,6 +5227,7 @@ footer {
     transition: all 0.3s ease-in-out;
     width: calc(100% - 200px);
     height: 100%;
+    min-height: 100%;
     left: 0;
     position: relative;
     float: right;
@@ -5286,8 +5291,12 @@ footer {
 }
 
 .main-content {
+    height: 100%;
+    min-height: 100%;
     padding: 0px 0px;
 }
+
+
 
 .navbar+.main-content {
     padding: 105px 0 28px 5px;
@@ -6268,6 +6277,7 @@ fieldset[disabled] .btn {
 .panel .panel-body {
     padding-top: 0px;
     padding-bottom: 0px;
+    height: 100%;
 }
 
 .panel .panel-note {
@@ -8227,9 +8237,38 @@ html {
     white-space: nowrap;
 }
 
+.grouper-y>.row {
+    overflow-y: scroll;
+    white-space: nowrap;
+    max-height: 100%;
+}
+
+.fill-full { 
+    min-height: 100%;
+    height: 100%;
+}
+
+.fill-half { 
+    min-height: 50%;
+    height: 50%;
+}
+
 .chart-scroller {
     display: inline-block;
     float: none;
+}
+
+.chart-scrollers p {
+    color: #333333; 
+    font-family: 'Helvetica Neue', sans-serif; 
+    font-size: 14px; 
+    line-height: 16px; 
+    text-align: center;
+    font-weight: bold; 
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
 #reach-panel>::-webkit-scrollbar {
