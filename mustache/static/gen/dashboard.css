@@ -8154,6 +8154,12 @@ html {
     margin: 0 !important;
 }
 
+.customHeight {
+    height: calc(100vh - 119px);
+    overflow-y: auto;
+    overflow-x: unset !important;
+}
+
 .nopadding-v {
     padding-top: 0;
     padding-bottom: 0;

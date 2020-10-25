@@ -275,7 +275,7 @@
                 <!-- <div class="container-fluid"> -->
                     <div class=row>
 
-                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" id="col-left">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" id="col-left" style="height: calc(100hv - 77px); display: flex; flex-direction: column;">
 
                             <!-- START DENDOGRAM -->
                             <div class="row nopadding">
@@ -324,8 +324,8 @@
                             </div>
                             <!-- END DENDOGRAM -->
                             <!-- START ALLUVIAL DIAGRAM -->
-                            <div class="row nopadding pad-t" id="selection-panel">
-                                <div class="panel panel-default nopadding grad">
+                            <div class="row nopadding pad-t" id="selection-panel" style="flex: 1">
+                                <div class="panel panel-default nopadding grad" style="height: 100%;">
                                     <div class="panel-heading clearfix">
                                         <p class="pull-left">Selected Clusters</p>
 
@@ -396,7 +396,7 @@
                                     </div>
                                     <div class="panel-body nopadding">
                                         <div class="container-fluid nopadding-v nopadding-l grouper">
-                                            <div class="row nopadding overflow-auto" id="tree-plot">
+                                            <div class="row nopadding customHeight overflow-auto" id="tree-plot">
                                             </div>
                                         </div>
                                     </div>

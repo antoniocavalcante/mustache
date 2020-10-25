@@ -382,15 +382,14 @@ function treeChart() {
 
             updateData = function() {
 
-                tree = data => {
-                    var root = d3.hierarchy(data);
-                    root.dx = width/2;
-                    root.dy = height;
-    
-                    return d3.tree().nodeSize([root.dx, root.dy])(root);
-                }
-    
-                root = tree(data);
+                root = d3.tree()(d3.hierarchy(data));
+            
+                max_epsilon = root.data.birth;
+                min_epsilon = d3.min(root.leaves(), 
+                    function(d) {
+                    return d.data.death;
+                    });
+
                 
                 // RESETS MINIMUM AND MAXIMUM OF ATTRIBUTES.
                 min_id = Number.MAX_VALUE;
@@ -413,41 +412,88 @@ function treeChart() {
                     .domain([min_stability, max_stability]);
 
                 // JOIN.
-                var updateNode = svg.select("g").selectAll("circle")
-                    .data(root.descendants());                
+                var updateNode = svg.select("#clusters")
+                    .data(root.descendants().sort((a, b) => b.depth - a.depth));                
+
+                console.log(updateNode);
 
                 // EXIT.
                 updateNode.exit().remove();
 
+                console.log(updateNode);
+
+
                 // ENTER.
                 updateNode.enter()
-                    .append("circle")
-                    .call(d => nodeSetup(d))
-                    .transition()
-                        .duration(400)
+                .append("g")
+                .attr("class", "cluster")
+                .attr("title", function(d) {
+                    return "<div><span>Cluster:</span> <span style='color:white'>" + d.data.id + "</span></div>" +
+                            "<div><span>#points:</span> <span style='color:white'>" + d.data.n + "</span></div>" +
+                            "<div><span>Birth:</span> <span style='color:white'>" + f(d.data.birth) + "</span></div>" +
+                            "<div><span>Death:</span> <span style='color:white'>" + f(d.data.death) + "</span></div>" +
+                            "<div><span>Stability:</span> <span style='color:white'>" + f(d.data.stability) + "</span></div>";
+                    })
+                .call(d => nodeSetup(d))
+                .attr("cluster", d => d.data.id)
+                .attr("transform", d => `translate(${d.x}, ${d.y})`)
+                .attr("stability", d => d.data.stability)
+                .selectAll("rect")
+                .data(d => d.data.points)
+                .exit().remove()
 
-                // UPDATE.
-                updateNode
-                    .call(d => nodeSetup(d))
-                    .transition()
-                        .duration(400)
+                // // ENTER.
+                // updateNode.enter()
+                // .append("g")
+                // .attr("class", "cluster")
+                // .attr("title", function(d) {
+                //     return "<div><span>Cluster:</span> <span style='color:white'>" + d.data.id + "</span></div>" +
+                //             "<div><span>#points:</span> <span style='color:white'>" + d.data.n + "</span></div>" +
+                //             "<div><span>Birth:</span> <span style='color:white'>" + f(d.data.birth) + "</span></div>" +
+                //             "<div><span>Death:</span> <span style='color:white'>" + f(d.data.death) + "</span></div>" +
+                //             "<div><span>Stability:</span> <span style='color:white'>" + f(d.data.stability) + "</span></div>";
+                //     })
+                // .call(d => nodeSetup(d))
+                // .attr("cluster", d => d.data.id)
+                // .attr("transform", d => `translate(${d.x}, ${d.y})`)
+                // .attr("stability", d => d.data.stability)
+                // .selectAll("rect")
+                // .data(d => d.data.points)
+                //     .enter()
+                //     .append("rect")
+                //     .attr("width", function(d) {
+                //         console.log(d[3])
+                //         return widthScale(d[3] - d[2] + 1);
+                //     })
+                //     .attr("height", d => yScale(d[1]) - yScale(d[0]) + 1)
+                //     .attr("fill", function(d) {
+                //         return color(d3.select(this.parentNode).attr("stability"));
+                //     })
+                //     .attr("transform", d => `translate(0, ${yScale(d[0])})`);
 
-                // UPDATE LABELS OF CLUSTERS.
-                updateLabel = svg.selectAll("text")
-                    .data(root.descendants())
 
-                updateLabel.exit().remove();
+                // // UPDATE.
+                // updateNode
+                //     .call(d => nodeSetup(d))
+                //     .transition()
+                //         .duration(400)
 
-                updateLabel.enter()
-                    .append("text")
-                    .call(d => labelSetup(d))
-                    .transition()
-                        .duration(400)
+                // // UPDATE LABELS OF CLUSTERS.
+                // updateLabel = svg.selectAll("text")
+                //     .data(root.descendants())
+
+                // updateLabel.exit().remove();
+
+                // updateLabel.enter()
+                //     .append("text")
+                //     .call(d => labelSetup(d))
+                //     .transition()
+                //         .duration(400)
                 
-                updateLabel
-                    .call(d => labelSetup(d))
-                    .transition()
-                    .duration(400)
+                // updateLabel
+                //     .call(d => labelSetup(d))
+                //     .transition()
+                //     .duration(400)
 
                 // CHECKS IF FOSC IS ACTIVE AND HIDES UNSELECTED NODES.
                 fosc();
@@ -555,6 +601,16 @@ function drawChartTree(i) {
             function(data) {
                 chart.data(data);
             });
+
+        // d3.select("svg").remove();
+
+        // d3.json(get_file_url(project, chart.mpts()),
+        // function(data) {
+        //     d3.select("#chart-tree")
+        //         .datum(data)
+        //         .call(chart);
+        // });
+
     });
 
     return chart
@@ -610,5 +666,8 @@ function drawMultipleTreeCharts() {
 var min_mpts = 2;
 var max_mpts = 16;
 
-chart  = drawChartTree(2)
+covered_points = []
+selected_clusters = {}
+
+chart  = drawChartTree(18)
 charts = drawMultipleTreeCharts()
