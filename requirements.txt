@@ -2,7 +2,7 @@ Flask==1.0.2
 scipy==1.1.0
 celery==3.1.17
 redis==2.10.*
-numpy==1.15.1
+numpy==1.22.0
 Cython==0.28.5
 flask_assets==0.12
 jsmin==2.2.2 
